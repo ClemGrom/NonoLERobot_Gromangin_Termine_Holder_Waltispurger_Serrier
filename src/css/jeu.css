@@ -1,86 +1,84 @@
-header{
-    display: grid;
-    grid-template-columns: 12 1fr;
-
-}
-header button
-{
-    grid-column: 1/8;
-}
-.nav{
-    grid-column: 9/13;
-    display: grid;
-    grid-template-columns: 3 1fr;
-   height: 40px;
-   
-}
-.start{
-    grid-column: 1/2;
-    border-radius: 5px;
-    border: 5px solid #000;
-    
-    background: #292323;
-}
-.reset{
-    grid-column: 2/3;
-    border-radius: 5px;
-    border: 5px solid #000;
-    
-    background: #292323;
-}
-.stop{
-    grid-column: 3/4;
-    border-radius: 5px;
-    border: 5px solid #000;
-    
-    background: #292323;
+* {
+  color: #fff;
+  background-color: rgb(163, 157, 200);
 }
 
-
-.jeu{
-width: 1000px;
-height: 300px;
-background-color: grey;
-
+header {
+  display: grid;
+  grid-template-columns: repeat(12 1fr);
+  margin: 10px;
 }
-body nav{
-    display: grid;
-    grid-template-columns: 12 1fr;
-    height: 40px;
-    margin:5px;
-    
+header button {
+  grid-column: 1/8;
+  border-radius: 5px;
+  border: 5px solid #000;
+  height: 60px;
+  background: #de0a23;
+  font-size: 20px;
 }
-
-
-body nav button{
-    
-    border-radius: 5px;
-    border: 5px solid #000;
-    
-    background: #292323;
+header .nav {
+  grid-column: 8/13;
+  display: grid;
+  grid-template-columns: 12 1fr;
 }
-
-.log{
-   
-    background-color: #282626;
-    grid-column: 1/7;
-    border-radius: 5px;
-border: 5px solid #000;
-color:#16b02a;
-background: #292323;
+header .nav .start {
+  grid-column: 1/4;
+  border-radius: 5px;
+  background-color: #448E59;
 }
-.mode{
-    background-color: red;
-    grid-column: 7/8;
+header .nav .stop {
+  grid-column: 4/7;
+  border-radius: 5px;
+  background-color: #A9263E;
 }
-.programmation{
-    
-    background-color: red;
-    grid-column: 8/11;
+header .nav .reset {
+  grid-column: 7/10;
+  border-radius: 5px;
+  background-color: #32BFE0;
 }
-.simulation{
-   
-    background-color: red;
-    grid-column: 11/13;
+header .nav .exit {
+  grid-column: 10/13;
+  border-radius: 5px;
+  background-color: red;
 }
 
+body .jeu {
+  width: 1000px;
+  height: 300px;
+  background-color: grey;
+}
+body nav {
+  display: grid;
+  grid-template-columns: 12 1fr;
+  height: 60px;
+  font-size: 40px;
+  margin: 5px;
+}
+body nav button {
+  border-radius: 5px;
+  border: 5px solid #000;
+  background: #292323;
+  font-size: 30px;
+}
+body .log {
+  background-color: #282626;
+  grid-column: 1/7;
+  border-radius: 5px;
+  border: 5px solid #000;
+  color: #16b02a;
+  background: #292323;
+}
+body .mode {
+  background-color: #332D2D;
+  grid-column: 7/8;
+}
+body .programmation {
+  background-color: #448E59;
+  grid-column: 8/11;
+}
+body .simulation {
+  background-color: #7A6B6B;
+  grid-column: 11/13;
+}
+
+/*# sourceMappingURL=jeu.css.map */
