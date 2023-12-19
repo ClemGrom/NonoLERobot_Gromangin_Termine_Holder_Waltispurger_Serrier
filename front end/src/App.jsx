@@ -1,5 +1,5 @@
-import logo from '../logo.svg';
-import './App.css';
+import logo from './style/images/logo.svg';
+import './style/sass/_global.scss'
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -7,8 +7,8 @@ import {
   Link,
   Routes
 } from "react-router-dom";
-import Home from "../pages/HomePage/Home";
-import About from "../pages/AboutPage/About";
+import Home from "./pages/HomePage/Home";
+import About from "./pages/AboutPage/About";
 
 function App() {
   return (
