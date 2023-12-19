@@ -1,58 +1,66 @@
-*{
-    color: #fff;
-    background-color: rgb(163, 157, 200);
-    
+* {
+  color: #fff;
+  background-color: rgb(50, 50, 51);
 }
-header {
+body {
+  
   display: grid;
- 
-  grid-template-columns: repeat(12 1fr);
-  margin: 10px;
+  grid-row: auto;
 
-  button {
-    grid-column: 1/8;
-    border-radius: 5px;
-    border: 5px solid #000;
-    height: 60px;
-    background: #de0a23;
-    font-size: 20px;
+  button{
+    cursor: pointer;
   }
-
-  .nav {
-    grid-column: 8/13;
+  header {
+    grid-row:1/2;
     display: grid;
-    grid-template-columns: 12 1fr;
 
-    .start {
-      grid-column: 1/4;
+    grid-template-columns: repeat(12 1fr);
+    margin: 10px;
+
+    button {
+      grid-column: 1/8;
       border-radius: 5px;
-      background-color: #448E59;
+      border: 5px solid #000;
+      height: 60px;
+      background: #a9263e;
+      font-size: 20px;
     }
-    .stop {
-      grid-column: 4/7;
-      border-radius: 5px;
-      background-color: #A9263E;
-    }
-    .reset {
-      grid-column: 7/10;
-      border-radius: 5px;
-      background-color: #32BFE0;
-    }
-    .exit{
+
+    .nav {
+      grid-column: 8/13;
+      display: grid;
+      grid-template-columns: 12 1fr;
+
+      .start {
+        grid-column: 1/4;
+        border-radius: 5px;
+        background-color: #448e59;
+      }
+      .stop {
+        grid-column: 4/7;
+        border-radius: 5px;
+        background-color: #a9263e;
+      }
+      .reset {
+        grid-column: 7/10;
+        border-radius: 5px;
+        background-color: #32bfe0;
+      }
+      .exit {
         grid-column: 10/13;
         border-radius: 5px;
-        background-color: red;
+        background-color: #a9263e;
+      }
     }
   }
-}
-
-body {
-  .jeu {
-    width: 1000px;
-    height: 300px;
-    background-color: grey;
+  canvas{
+    grid-row:2/3;
+    margin: 10px;
+    border-radius: 5px;
   }
+ 
   nav {
+    grid-row: 3/4;
     display: grid;
     grid-template-columns: 12 1fr;
     height: 60px;
@@ -76,15 +84,15 @@ body {
     background: #292323;
   }
   .mode {
-    background-color: #332D2D;
+    background-color: #332d2d;
     grid-column: 7/8;
   }
   .programmation {
-    background-color: #448E59;
+    background-color: #448e59;
     grid-column: 8/11;
   }
   .simulation {
-    background-color: #7A6B6B;
+    background-color: #7a6b6b;
     grid-column: 11/13;
   }
 }
