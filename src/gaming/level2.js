@@ -8,6 +8,12 @@ const config = {
             gravity: { x: 0 },
         }
     },
+    wallephysics: {
+        default: 'arcade',
+        arcade: {
+            gravity: { x: 0 },
+        }
+    },
     scene: {
         preload: preload,
         create: create,
@@ -99,6 +105,8 @@ function update() {
         asteroid.setVelocity(Phaser.Math.Between(-100, 100), Phaser.Math.Between(-100, 100));
     }
 
+    walle.setVelocityX(100); // Fait avancer walle vers la droite
+
     // Déplacement du fond
     background.tilePositionX += 1;
 
@@ -116,5 +124,12 @@ function update() {
         else if (obstacle.y > config.height) {
             obstacle.y = 0;
         }
+
+        let distance = Phaser.Math.Distance.Between(walle.x, walle.y, obstacle.x, obstacle.y);
+        if (distance < 300) { // Si l'obstacle est proche
+            walle.angle += 50; // Fait tourner walle
+            walle.setVelocityY(50)
+        }
     });
+  
 }
