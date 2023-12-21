@@ -1,0 +1,19 @@
+.slider-content {
+  display: block;
+  text-align: justify;
+
+  .list-images {
+    display: flex;
+
+    align-items: center;
+
+    #img1 {
+      height: 50vh;
+      width: 50vh;
+    }
+
+    #img2 {
+      height: 100%;
+    }
+  }
+}

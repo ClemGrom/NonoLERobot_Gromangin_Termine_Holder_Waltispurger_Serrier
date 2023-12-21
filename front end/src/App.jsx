@@ -43,7 +43,7 @@ function App() {
                                             </Link>
                                         </li>
                                         <li className="menu-transition-enter">
-                                            <Link className="App-link" to="/play" onClick={() => changeColor("#9c27b0")}>
+                                            <Link className="App-link" to="/play" onClick={() => changeColor("#282828")}>
                                                 Play
                                             </Link>
                                         </li>

@@ -4,42 +4,50 @@
   display: flex;
   flex-direction: column;
   width: 98vw;
-  height: 85vh;
+  height: 90vh;
 
   overflow-x: hidden;
 
   background-color: #254bd2;
 
   .upper-div {
-    height: 80vh;
+    height: 85vh;
+
+    .slick-slider {
+      .custom-slick-dots {
+        position: absolute;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+        list-style: none;
+        padding: 0;
+      }
+
+      .custom-slick-dots li {
+        margin-bottom: 10px;
+      }
+
+      .custom-slick-dots button {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #ccc;
+        border: none;
+      }
+
+      .custom-slick-dots button.slick-active {
+        background-color: #000;
+      }
+    }
+
+
+
+    .content-left {
+      text-align: left;
+      padding: 0 20px; /* Ajustez la marge à gauche selon vos besoins */
+    }
+
   }
 
-  img {
-    height: 50vh;
-    width: 50vw;
-  }
 
-  .slick-dots {
-    /* Ajoutez vos styles pour la boîte des dots ici */
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0;
-  }
-
-  .slick-dot {
-    /* Ajoutez vos styles pour chaque dot individuel ici */
-    width: 10px;
-    height: 10px;
-    margin: 5px 0;
-    background-color: #4caf50; /* Couleur verte pour les dots */
-    border-radius: 50%;
-    cursor: pointer;
-  }
-
-  .slick-dot.slick-active {
-    /* Ajoutez vos styles pour les dots actifs ici */
-    background-color: #ff9800; /* Couleur orange pour les dots actifs */
-  }
 }

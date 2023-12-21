@@ -1,0 +1,19 @@
+.rotatable {
+  animation: rotate 5s infinite linear; /* 5s pour la durée de l'animation, ajustez selon vos besoins */
+  transform-origin: center; /* Pour faire tourner l'élément autour de son centre */
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .rotatable {
+    animation: rotate infinite 10s linear;
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

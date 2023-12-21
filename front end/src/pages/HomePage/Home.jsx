@@ -1,57 +1,62 @@
-// Home.jsx
-
-import React, { Component } from 'react';
+import React from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 import './Home.scss';
+import '../../style/sass/_animations.scss';
 
-import slide1 from '../../style/images/logo.svg';
+import HomeTemplate from '../../components/templates/home/homeTemplate';
 
-import HomeTemplate from "../../components/templates/home/homeTemplate";
+const Home = () => {
 
-class Home extends Component {
-    render() {
-        const settings = {
-            dots: true,
-            infinite: true,
-            speed: 800,
-            slidesToShow: 1,
-            slidesToScroll: 1,
-            vertical: true, // Affiche les points verticalement
-            verticalSwiping: true, // Permet le défilement vertical
-        };
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: true,
+    };
 
-        return (
-            <div id="home-container">
-                <div className="upper-div">
-                    <Slider {...settings}>
-                        <div>
-                            home
+    return (
+        <div id="home-container">
+            <div className="upper-div">
+                <Slider {...settings}>
+                    <div className="slide">
+                        <div className="content-left">
+                            <p>home</p>
                             <HomeTemplate />
                         </div>
-                        <div>
-                            presentation
+                    </div>
+                    <div className="slide">
+                        <div className="content-left">
+                            <p>presentation</p>
                             <HomeTemplate />
                         </div>
-                        <div>
-                            tutoriel
+                    </div>
+                    <div className="slide">
+                        <div className="content-left">
+                            <p>tutoriel</p>
                             <HomeTemplate />
                         </div>
-                        <div>
-                            Qui sommes-nous
+                    </div>
+                    <div className="slide">
+                        <div className="content-left">
+                            <p>Qui sommes-nous</p>
                             <HomeTemplate />
                         </div>
-                        <div>
-                            Jouer
+                    </div>
+                    <div className="slide">
+                        <div className="content-left">
+                            <p>Jouer</p>
                             <HomeTemplate />
                         </div>
-                    </Slider>
-                </div>
+                    </div>
+                </Slider>
             </div>
-        );
-    }
-}
+        </div>
+    );
+};
 
 export default Home;
