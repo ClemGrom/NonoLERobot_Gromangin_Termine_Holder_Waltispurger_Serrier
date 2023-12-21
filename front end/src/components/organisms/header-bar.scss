@@ -1,0 +1,16 @@
+.header-bar {
+  display: flex;
+  margin-left: 10px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  color: white;
+
+  #title {
+    font-size: 1.25em;
+  }
+
+  #links-list {
+    justify-content: right;
+  }
+}

@@ -4,6 +4,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import LinkItem from '../atoms/link-item';
 
+import './link-list.scss';
+
 const LinkList = ({ links }) => (
   <div className="link-list">
     {links.map((link, index) => (
@@ -11,6 +13,7 @@ const LinkList = ({ links }) => (
         key={index}
         url={link.url}
         imageSrc={link.imageSrc}
+        alt={link.alt}
       />
     ))}
   </div>
