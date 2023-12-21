@@ -1,6 +1,45 @@
 @import '~bootstrap/scss/bootstrap';
 
+#home-container {
+  display: flex;
+  flex-direction: column;
+  width: 98vw;
+  height: 85vh;
 
-#home-content {
+  overflow-x: hidden;
 
+  background-color: #254bd2;
+
+  .upper-div {
+    height: 80vh;
+  }
+
+  img {
+    height: 50vh;
+    width: 50vw;
+  }
+
+  .slick-dots {
+    /* Ajoutez vos styles pour la boîte des dots ici */
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+  }
+
+  .slick-dot {
+    /* Ajoutez vos styles pour chaque dot individuel ici */
+    width: 10px;
+    height: 10px;
+    margin: 5px 0;
+    background-color: #4caf50; /* Couleur verte pour les dots */
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .slick-dot.slick-active {
+    /* Ajoutez vos styles pour les dots actifs ici */
+    background-color: #ff9800; /* Couleur orange pour les dots actifs */
+  }
 }

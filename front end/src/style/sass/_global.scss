@@ -9,6 +9,17 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+
+  padding-left: 1vw;
+  padding-right: 1vw;
+}
+
+.home-background {
+  background-color: #0054ff; /* Fond pour la vue Home */
+}
+
+.base-background {
+  background-color: #456789; /* Fond pour la vue About */
 }
 
 #navigation {

@@ -5,12 +5,19 @@
   align-items: center;
   padding: 10px;
   color: white;
+  font-size: 0.75em;
 
   #title {
-    font-size: 1.25em;
+    font-size: 0.75em;
   }
 
-  #links-list {
-    justify-content: right;
+  #nav {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+
+    #navigation {
+      align-items: center;
+    }
   }
 }

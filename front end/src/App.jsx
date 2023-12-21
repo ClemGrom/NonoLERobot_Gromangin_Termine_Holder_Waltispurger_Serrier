@@ -1,8 +1,9 @@
 // App.jsx
 import './style/sass/main.scss'
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
+import React, {useState} from 'react';
+import {BrowserRouter as Router, Route, Link, Routes} from 'react-router-dom';
 import Home from './pages/HomePage/Home';
+import Play from './pages/PlayPage/Play';
 import HeaderBar from './components/organisms/header-bar';
 
 function App() {
@@ -12,16 +13,18 @@ function App() {
         setMenuOpen(!isMenuOpen);
     };
 
+    const [color, changeColor] = useState("#282c34");
+
     return (
-        <div className="App">
+
+        <div className="App" style={{ background: color }}>
             <Router>
-                {/* Le HeaderBar reste en dehors de Routes */}
                 <HeaderBar
                     isMenuOpen={isMenuOpen}
                     toggleMenu={toggleMenu}
                     navigation={(
                         <nav id="navigation">
-                            <p>Menu</p>
+                            <div>Menu</div>
                             <div id="menu-icon" onClick={toggleMenu}>
                                 &#9776;
                             </div>
@@ -35,8 +38,13 @@ function App() {
                                 {isMenuOpen && (
                                     <>
                                         <li className="menu-transition-enter">
-                                            <Link className="App-link" to="/">
+                                            <Link className="App-link" to="/" onClick={() => changeColor("#282c34")}>
                                                 Home
+                                            </Link>
+                                        </li>
+                                        <li className="menu-transition-enter">
+                                            <Link className="App-link" to="/play" onClick={() => changeColor("#9c27b0")}>
+                                                Play
                                             </Link>
                                         </li>
                                         {/* Ajoutez d'autres liens ici */}
@@ -50,6 +58,7 @@ function App() {
                 <Routes>
                     {/* Le contenu spécifique à la route Home */}
                     <Route path="/" element={<Home />} />
+                    <Route path="/play" element={<Play />} />
                     {/* Ajoutez d'autres routes ici */}
                 </Routes>
             </Router>
