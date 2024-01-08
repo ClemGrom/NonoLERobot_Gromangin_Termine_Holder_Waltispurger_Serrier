@@ -19,11 +19,13 @@ class Level1 extends Phaser.Scene {
         this.load.image('obstacle2', 'images/chad.jpg');
         this.load.image('asteroid', 'images/asteroid.png');
         this.load.audio('hit', 'images/boum.mp3');
+        this.load.image('tiles', 'images/TileSet.png');
+        this.load.tilemapTiledJSON('map', 'images/niveau1.json');
     }
     
     create() {
     
-        hitSound = this.sound.add('hit');   
+        hitSound = this.sound.add('hit');
     
         this.add.image(0, 0, 'background').setOrigin(0, 0);
         walle = this.physics.add.image(150, 50, 'wall-e');
