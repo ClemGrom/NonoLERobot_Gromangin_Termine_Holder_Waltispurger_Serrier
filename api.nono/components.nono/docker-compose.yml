@@ -1,0 +1,67 @@
+version: '3'
+networks:
+  nono.net:
+    driver: bridge
+services:
+
+  #
+  # service administration des bases sql
+  #
+  adminer:
+    image: adminer
+    command: php -S 0.0.0.0:8080 -t /var/www/html
+    ports:
+      - '8081:8080' ## 8081 40510
+    networks:
+      - nono.net
+
+  ######################################
+  ###  AUTH Service : service d'authentification JWT
+  ###  api api.auth : auth, check, refresh de token JWT
+  ###  utilise sa propre base de données
+  ######################################
+  api.nono-auth:
+    image: 'canals/php:8.2'
+    env_file: ./api.nono/nono.components/auth.env
+    ports:
+      - '2082:80' ## 2082 45053
+      - '1444:443' ## 1444 45054
+    volumes:
+      - ./api.nono/auth.nono/public:/var/www/html
+      - ./api.nono/auth.nono:/var/www
+    working_dir: /var/www
+    networks:
+      nono.net:
+        aliases:
+          - auth.nono.local
+    depends_on:
+      - nono.auth.db
+    command: >
+      bash -c "composer install && composer update && apache2-foreground"
+
+  nono.auth.db:
+    image: 'mariadb:latest'
+    command: '--default-authentication-plugin=mysql_native_password --character-set-server=utf8 --collation-server=utf8_general_ci'
+    env_file: ./api.nono/nono.components/auth.env
+    ports:
+      - '45055:3306' ## 3309
+    networks:
+      - nono.net
+    volumes:
+      - ./api.nono/auth.nono/sql:/var/sql
+      - ./api.nono/auth.nono/sql:/docker-entrypoint-initdb.d
+
+  nono.client:
+    build:
+      context: ./front end
+      dockerfile: Dockerfile
+    volumes:
+      - ./front end/:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    working_dir: /app
+    networks:
+      - nono.net
+    depends_on:
+      - api.nono-auth
