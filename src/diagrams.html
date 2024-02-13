@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/gojs@2.3.11/release/go.js"></script>
+    <script src="js/diagrams.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+<h1>Test GoJS et de ses diagrammes</h1>
+<div id="myDiagramDiv"
+     style="width: 600px; height: 500px; border: 1px solid black; position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0);">
+    <canvas tabindex="0" width="747" height="622"
+            style="position: absolute; top: 0; left: 0; z-index: 2; user-select: none; touch-action: none; width: 598px; height: 498px;"></canvas>
+    <div style="position: absolute; overflow: auto; width: 598px; height: 498px; z-index: 1;">
+        <div style="position: absolute; width: 1px; height: 1px;"></div>
+    </div>
+</div>
+
+<div>
+    <button id="SaveButton" onclick="save()" disabled="">Save</button>
+    <button onclick="Import()">Import</button>
+    <button onclick="Export()">Export</button>
+</div>
+
+<label for="mySavedModel"></label><textarea id="mySavedModel" style="width:100%;height:500px;">
+{   "class": "GraphLinksModel",
+    "copiesArrays": true,
+    "copiesArrayObjects": true,
+    "linkFromPortIdProperty": "fromPort",
+    "linkToPortIdProperty": "toPort",
+    "nodeDataArray": [
+        {"key":"Capteurs","isGroup":"true"},
+        {"key":"Moteurs","isGroup":"true"},
+        {"key":"Capteur1","name":"Capteur Gauche","loc":"100 150","group":"Capteurs","coeff":"1","bottomArray":[{"portColor":"red","portId":"bottom0"}]},
+        {"key":"Capteur2","name":"Capteur Droit","loc":"420 150","group":"Capteurs","coeff":"1","bottomArray":[{"portColor":"red","portId":"bottom0"}]},
+        {"key":"Moteur1","name":"Moteur Gauche","loc":"100 350","group":"Moteurs","coeff":"1","topArray":[{"portColor":"green","portId":"top0"}]},
+        {"key":"Moteur2","name":"Moteur Droit","loc":"420 350","group":"Moteurs","coeff":"1","topArray":[{"portColor":"green","portId":"top0"}]}
+    ],
+    "linkDataArray": []
+}</textarea>
+</body>
+<input type="file" id="jsonFile" accept=".json" style="display: none;"/>
+
+
+</html>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    #myDiagramDiv {
+        border: 1px solid black;
+        width: 100%;
+        height: 500px;
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    #SaveButton, #ImportButton, #ExportButton {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    textarea {
+        width: 100%;
+        height: 200px;
+        resize: vertical;
+        box-sizing: border-box;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    input[type="file"] {
+        display: none;
+    }
+    .nodeText {
+        margin: 10px;
+        font: bold 14px Segoe UI, sans-serif;
+        stroke: #484848;
+        editable: true;
+    }
+
+    .nodeItalicText {
+        margin: 10px;
+        font: italic 14px Segoe UI, sans-serif;
+        stroke: #484848;
+        editable: true;
+    }
+
+    .nodePort {
+        stroke: none;
+        strokeWidth: 0;
+        desiredSize: 8 8;
+        margin: 0 1;
+    }
+
+    .nodeBody {
+        fill: #dbf6cb;
+        stroke: none;
+        strokeWidth: 0;
+        minSize: 200 100;
+    }
+
+    .nodePanel {
+        stretch: go.GraphObject.Fill;
+    }
+
+    .diagramContainer {
+        border: 1px solid black;
+        width: 100%;
+        height: 500px;
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    .button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+
+</style>
