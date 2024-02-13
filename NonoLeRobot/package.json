@@ -16,7 +16,6 @@
   "dependencies": {
     "@ion-phaser/core": "^1.3.0",
     "gojs": "^2.3.14",
-    "gojs-vue": "^1.0.1",
     "phaser": "^3.70.0",
     "vue": "^3.4.15",
     "vue-router": "^4.2.5"
