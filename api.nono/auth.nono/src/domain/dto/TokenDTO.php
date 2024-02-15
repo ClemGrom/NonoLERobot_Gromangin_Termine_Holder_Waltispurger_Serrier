@@ -1,8 +1,6 @@
 <?php
 
-namespace nono\auth\api\domain\dto\auth;
-
-use nono\auth\api\domain\dto\DTO;
+namespace nono\auth\api\domain\dto;
 
 class TokenDTO extends DTO
 {

@@ -2,43 +2,56 @@
 
 namespace nono\auth\api\app\actions;
 
-use nono\auth\api\domain\exceptions\CredentialsException;
-use nono\auth\api\domain\exceptions\UserException;
-use nono\auth\api\domain\service\classes\JWTAuthService;
-use Psr\Container\ContainerInterface;
-use Slim\Psr7\Request;
-use Slim\Psr7\Response;
+use nono\auth\api\domain\DTO\CredentialsDTO;
+use nono\auth\api\domain\exceptions\EmailFormatException;
+use nono\auth\api\domain\exceptions\RegisterExistException;
+use nono\auth\api\domain\exceptions\RegisterValueException;
+use nono\auth\api\domain\service\AuthServiceInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
-class SignupAction extends AbstractAction
-{
-    private JWTAuthService $JWTAuthService;
+class SignUpAction extends AbstractAction {
 
-    public function __construct(ContainerInterface $container)
-    {
-        $this->JWTAuthService = $container->get('jwtauth.service');
+    private AuthServiceInterface $authService;
+
+    public function __construct(AuthServiceInterface $s) {
+        $this->authService = $s;
     }
 
-    public function __invoke(Request $request, Response $response, array $args)
-    {
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface {
         $data = $request->getParsedBody();
-        $email = $data['email'];
-        echo $email;
-        $password = $data['password'];
-        $username = $data['username'];
+        if (isset($data['email']) && isset($data['mdp']) && isset($data['pseudo'])) {
+            $email = $data['email'];
+            $mdp = $data['mdp'];
+            $pseudo = $data['pseudo'];
 
-        if (isset($email) && isset($password) && isset($username)) {
             try {
-                $response->getBody()->write(json_encode($this->JWTAuthService->signUp($username, $email, $password)));
-                return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
-            } catch (CredentialsException) {
-                $response->getBody()->write(json_encode(['error' => 'Invalid credentials']));
-                return $response->withHeader('Content-Type', 'application/json')->withStatus(401);
-            } catch (UserException $e) {
-                $response->getBody()->write(json_encode(['error' => $e->getMessage()]));
-                return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+                $userDTO = $this->authService->signup(new CredentialsDTO($email, $mdp, $pseudo));
+                $data = [
+                    'email' => $userDTO->email,
+                    'pseudo' => $userDTO->username,
+                ];
+                $response->getBody()->write(json_encode($data));
+                $response = $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+            } catch (RegisterValueException | RegisterExistException | EmailFormatException $e) {
+                $responseMessage = array(
+                    "message" => "401 Inscription failed",
+                    "exception" => array(
+                        "type" => $e::class,
+                        "code" => $e->getCode(),
+                        "message" => $e->getMessage(),
+                        "file" => $e->getFile(),
+                        "line" => $e->getLine()
+                    )
+                );
+                $response->getBody()->write(json_encode($responseMessage));
+                $response = $response->withStatus(401)->withHeader('Content-Type', 'application/json');
             }
+
+        } else {
+            $response->getBody()->write(json_encode(array("message" => "Données d'inscription incomplètes")));
+            $response = $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
-        $response->getBody()->write(json_encode(['error' => 'Invalid credentials']));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(401);
+        return $response;
     }
 }

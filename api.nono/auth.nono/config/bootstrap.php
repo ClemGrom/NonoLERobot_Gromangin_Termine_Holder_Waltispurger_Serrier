@@ -1,41 +1,51 @@
 <?php
 
 use DI\ContainerBuilder;
+use Illuminate\Database\Capsule\Manager as DB;
+use nono\auth\api\domain\exceptions\JwtSecretWritingException;
 use Slim\Factory\AppFactory;
-use Illuminate\Database\Capsule\Manager as Eloquent;
 
-$settings = require_once __DIR__ . '/settings.php';
-$actions = require_once __DIR__ . '/actions_dependencies.php';
-$services = require_once __DIR__.'/services_dependencies.php';
+session_start();
 
-try {
-    $eloquent = new Eloquent();
-    $eloquent->addConnection(parse_ini_file(__DIR__ . '/auth.db.ini'));
-    $eloquent->setAsGlobal();
-    $eloquent->bootEloquent();
-} catch (Exception $e) {
-    echo $e->getMessage();
-}
+// initialise le chemin vers le .env et le nom du fichier
+$envFileDir = __DIR__.'/../../../config';
+$envFilePath = $envFileDir.'/.env';
 
+// initialise dotenv pour accéder au .env partout dans l'app
+$dotenv = Dotenv\Dotenv::createImmutable($envFileDir);
+$dotenv->load();
+
+//Container
 $builder = new ContainerBuilder();
-$builder->addDefinitions($settings);
-$builder->addDefinitions($actions);
 
-$builder->addDefinitions($services);
-try {
-    $c = $builder->build();
-    $app = AppFactory::createFromContainer($c);
-    $app->add(function ($request, $handler) {
-        $response = $handler->handle($request);
-        return $response
-            ->withHeader('Access-Control-Allow-Origin', '*')
-            ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-    });
-    $app->addRoutingMiddleware();
-    $app->addBodyParsingMiddleware();
-    $app->addErrorMiddleware(true, false, false);
-    return $app;
-} catch (Exception $e) {
-    echo $e->getMessage();
+$builder->addDefinitions(
+    include('dependencies/services_dependencies.php'),
+    include('dependencies/action_dependencies.php')
+);
+
+$c = $builder->build();
+
+$app = AppFactory::createFromContainer($c);
+$container = $app->getContainer();
+
+$app->addBodyParsingMiddleware();
+$app->addRoutingMiddleware();
+$app->addErrorMiddleware(true, false, false);
+$app->setBasePath('');
+
+// initialise Eloquent avec les fichiers de config
+$db = new DB();
+$db->addConnection(parse_ini_file('auth.db.ini'), 'auth');
+$db->setAsGlobal();
+$db->bootEloquent();
+
+if  (!$_ENV['JWT_SECRET']) {
+    try {
+        $secret = bin2hex(random_bytes(32));
+    } catch (Exception $e) {
+        throw new JwtSecretWritingException();
+    }
+    file_put_contents($envFilePath, 'JWT_SECRET=' . $secret . PHP_EOL, FILE_APPEND);
 }
+
+return $app;

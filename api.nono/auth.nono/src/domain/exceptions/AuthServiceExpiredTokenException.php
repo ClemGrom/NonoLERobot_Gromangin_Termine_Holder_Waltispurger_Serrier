@@ -1,6 +1,6 @@
 <?php
 
-namespace nono\auth\api\domain\exception;
+namespace nono\auth\api\domain\exceptions;
 
 class AuthServiceExpiredTokenException extends \Exception {
     public function __construct() {

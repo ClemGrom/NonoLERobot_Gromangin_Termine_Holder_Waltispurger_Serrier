@@ -2,43 +2,60 @@
 
 namespace nono\auth\api\app\actions;
 
-use nono\auth\api\domain\exceptions\CredentialsException;
-use nono\auth\api\domain\exceptions\UserException;
-use nono\auth\api\domain\service\classes\JWTAuthService;
-use Psr\Container\ContainerInterface;
+use Exception;
+use nono\auth\api\domain\dto\CredentialsDTO;
+use nono\auth\api\domain\service\AuthServiceInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
-class SigninAction extends AbstractAction
+class SignInAction extends AbstractAction
 {
 
-    private JWTAuthService $JWTAuthService;
+    private AuthServiceInterface $authService;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(AuthServiceInterface $s)
     {
-        $this->JWTAuthService = $container->get('jwtauth.service');
+        $this->authService = $s;
     }
-
-    public function __invoke($request, $response, $args)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
-        $h = $request->getHeader('Authorization')[0];
-        $tokenstring = sscanf($h, "Basic %s")[0];
-        $tokenstring = base64_decode($tokenstring);
-        $tokenstring = explode(':', $tokenstring);
-        $email = $tokenstring[0];
-        $password = $tokenstring[1];
+        $headers = $request->getHeaders();
+        if (isset($headers['Authorization'])) {
+            $auth = $headers['Authorization'][0];
 
-        if (isset ($email)) {
-            try {
-                $response->getBody()->write(json_encode($this->JWTAuthService->signIn($email, $password)));
-                return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
-            } catch (CredentialsException) {
-                $response->getBody()->write(json_encode(['error' => 'Invalid credentials']));
-                return $response->withHeader('Content-Type', 'application/json')->withStatus(401);
-            } catch (UserException $e) {
-                $response->getBody()->write(json_encode(['error' => $e->getMessage()]));
-                return $response->withHeader('Content-Type', 'application/json')->withStatus(401);
+            list($scheme, $Credentials_encode) = explode(' ', $auth, 2);
+
+            $credentials = base64_decode($Credentials_encode);
+
+            list($email, $password) = explode(':', $credentials);
+
+            try{
+                $token = $this->authService->signin(new CredentialsDTO($email,$password));
+                $data = [
+                    'access_token' => $token->jwt,
+                    'expiration' => 43200,
+                    'refresh_token' => $token->refreshToken,
+                ];
+
+                $response = $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+                $response->getBody()->write(json_encode($data));
+
+            } catch(Exception $e) {
+                $responseMessage = array(
+                    "message" => "401 Authentification failed",
+                    "exception" => array(
+                        "type" => $e::class,
+                        "code" => $e->getCode(),
+                        "message" => $e->getMessage(),
+                        "file" => $e->getFile(),
+                        "line" => $e->getLine()
+                    )
+                );
+                $response = $response->withStatus(401)->withHeader('Content-Type', 'application/json');
+                $response->getBody()->write(json_encode($responseMessage));
             }
         }
-        $response->getBody()->write(json_encode(['error' => 'Invalid credentials']));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(401);
+
+        return $response->withStatus(200)->withHeader('Content-Type', 'application/json');;
     }
 }
