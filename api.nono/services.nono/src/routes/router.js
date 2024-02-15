@@ -1,6 +1,7 @@
 import express from 'express';
 import getEnvironnementsAction from "../actions/Envionnement/getEnvironnementsAction.js";
 import getEnvironnementByIdAction from "../actions/Envionnement/getEnvironnementsByIdAction.js";
+import getPartyActions from "../actions/Party/getPartyActions.js";
 
 const router = express.Router();
 
@@ -19,6 +20,7 @@ router
 
 router
     .route("/party")
+    .get(getPartyActions)
     .all((req, res, next) => next(405));
 
 export default router;

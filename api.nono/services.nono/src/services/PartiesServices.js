@@ -4,7 +4,7 @@ import knexConfig from '../configs/db.config.js'
 const db = knex(knexConfig);
 
 export const getParty = async (token) => {
-    await db('parties').select('*').where('token', '=', token).first();
+    return db('parties').select('*').where('token', '=', token).first();
 }
 
 export const updatePartyStatus = async (token, nouvelEtat) => {
