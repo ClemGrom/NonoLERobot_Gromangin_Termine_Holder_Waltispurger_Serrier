@@ -1,82 +1,108 @@
-<template>
-  <div>
-    <h1>Test GoJS et de ses diagrammes</h1>
-    <div id="myDiagramDiv" style="width: 600px; height: 500px; border: 1px solid black;"></div>
-
-    <div>
-      <button @click="save">Save</button>
-      <button @click="importDiagram">Import</button>
-      <button @click="exportDiagram">Export</button>
-    </div>
-
-    <label for="mySavedModel"></label>
-    <textarea id="mySavedModel" style="width: 100%; height: 500px;"></textarea>
-
-    <input type="file" id="jsonFile" accept=".json" style="display: none;" @change="handleFileChange">
-  </div>
-</template>
-
 <script>
-import * as go from 'gojs';
+import {computed, reactive, watch} from 'vue';
+import {useRoute, RouterView, RouterLink} from 'vue-router';
+import AccueilRobot from "@/components/accueilRobot.vue";
+
+
 
 export default {
+
+  components: {
+    AccueilRobot
+
+  },
   data() {
     return {
-      diagram: null,
-      nodeDataArray: [],
-      linkDataArray: []
-    };
-  },
-  mounted() {
-    this.initDiagram();
-  },
-  methods: {
-    initDiagram() {
-      const $ = go.GraphObject.make;
-      this.diagram = new go.Diagram('myDiagramDiv', { 'undoManager.isEnabled': true });
-
-      // Définir le modèle de nœuds et de liens
-      this.diagram.nodeTemplate = $(
-          go.Node,
-          'Auto',
-          $(go.Shape, 'Rectangle', { fill: 'lightblue' }),
-          $(go.TextBlock, { margin: 8 }, new go.Binding('text', 'name'))
-      );
-
-      // Charger le modèle depuis le texte JSON
-      this.diagram.model = go.Model.fromJson(document.getElementById('mySavedModel').value);
-    },
-    save() {
-      localStorage.setItem('savedModel', this.diagram.model.toJson());
-      document.getElementById('mySavedModel').value = this.diagram.model.toJson();
-      this.diagram.isModified = false;
-    },
-    importDiagram() {
-      const fileInput = document.getElementById('jsonFile');
-      fileInput.click();
-    },
-    handleFileChange(event) {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const data = e.target.result;
-        document.getElementById('mySavedModel').value = data;
-        this.diagram.model = go.Model.fromJson(data);
-      };
-      reader.readAsText(file);
-    },
-    exportDiagram() {
-      const data = document.getElementById('mySavedModel').value;
-      const blob = new Blob([data], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.style.display = 'none';
-      a.href = url;
-      a.download = `sauvegarde_Configuration_Robot_${Date.now()}.json`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
+      isHomeRoute: true,
+      isConnected: false,
     }
-  }
+  },
+
+
+
+
+
+
 };
 </script>
+
+<template>
+  <header class="bg-zinc-900">
+    <div class="header flex flex-wrap p-1 m-2 lg:flex-row lg:justify-between max-lg:flex-col max-lg:items-center">
+      <div class="headerLogoText flex flex-row flex-wrap max-lg:mb-8 max-lg:mr-20">
+        <!-- Logo à gauche -->
+
+        <router-link to="/" class="logo">
+          <img class="w-28" src="@/components/icons/logo.png" alt="logo">
+        </router-link>
+
+        <!-- Textes à gauche -->
+        <div class="flex-col ml-4 w-20">
+          <div>
+            <h1 class="text-7xl font-extrabold drop-shadow-[0_8px_4px_rgba(34,0,4,6)] text-blue-500">
+              Geo
+            </h1>
+          </div>
+          <div>
+            <h1 class="text-5xl font-extrabold text-gray-400">
+              Quizz
+            </h1>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-row items-center">
+        <div
+            class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105">
+          <RouterLink to="/">
+            <button class="h-full w-full ">Home</button>
+          </RouterLink>
+        </div>
+        <div
+            class=" max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105">
+          <RouterLink to="/simulation">
+            <button class="h-full w-full">Jouer</button>
+          </RouterLink>
+        </div>
+
+        <div class="notConnected flex flex-row items-center sm:flex-row">
+          <!-- Boutons de connexion et inscription -->
+          <div>
+            <RouterLink to="/inscription">
+              <button class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105">Inscription</button>
+            </RouterLink>
+            <RouterLink to="/connexion">
+              <button class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105">Connexion</button>
+            </RouterLink>
+          </div>
+
+          <!-- Bouton de déconnexion -->
+          <div >
+            <button class="max-sm:text-sm sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105" @click="logout">Déconnexion</button>
+            <RouterLink to="/">
+              <img class="max-sm:h-10 max-sm:mr-1.5 max-sm:w-10 h-12 w-12 min-w-10 hover:transition duration-300 ease-in-out transform hover:scale-110" src="@/components/icons/user.png" alt="logoUser">
+            </RouterLink>
+
+          </div>
+        </div>
+        <div class="connected flex flex-row items-center">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <accueil-robot/>
+  <div class="flex justify-center items-center mb-2">
+    <!-- Bouton à droite -->
+    <RouterLink to="/selectgame">
+      <button class="text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-lg shadow-green-500/50 dark:shadow-lg dark:shadow-green-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105 mb-14 ">
+        Lancer la simulation !
+      </button>
+    </RouterLink>
+  </div>
+  <RouterView/>
+
+  <footer class="bg-zinc-900 text-zinc-500 text-center p-4 flex flex-row justify-between frelative bottom-0 w-full">
+    <p>Nono le robot - 2024</p>
+    <p>Copyright IUT-Charlemagne</p>
+  </footer>
+</template>
