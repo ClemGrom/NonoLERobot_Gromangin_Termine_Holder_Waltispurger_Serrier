@@ -3,6 +3,7 @@ import getEnvironnementsAction from "../actions/Envionnement/getEnvironnementsAc
 import getEnvironnementByIdAction from "../actions/Envionnement/getEnvironnementsByIdAction.js";
 import getPartyActions from "../actions/Party/getPartyActions.js";
 import getUserPartiesAction from "../actions/Party/getUsersPartiesAction.js";
+import updatePartyAction from "../actions/Party/updatePartyAction.js";
 
 const router = express.Router();
 
@@ -22,6 +23,7 @@ router
 router
     .route("/party")
     .get(getPartyActions)
+    .patch(updatePartyAction)
     .all((req, res, next) => next(405));
 
 //filtre dispo sur le status
