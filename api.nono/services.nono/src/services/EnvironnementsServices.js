@@ -8,30 +8,6 @@ export const getEnvironnements = async () => {
         Environnement {
             id
             nom
-            robot_id {
-                Robot_id {
-                    id
-                    nom
-                    type
-                    batterie
-                    posX
-                    posY
-                    createDate
-                }
-            }
-            obstacle_id {
-                Obstacles_id {
-                    id
-                    obstacleType
-                    posX
-                    posY
-                }
-            }
-            Configuration_id {
-                id
-                size
-                densiteObst
-            }
         }
     }
 `;
