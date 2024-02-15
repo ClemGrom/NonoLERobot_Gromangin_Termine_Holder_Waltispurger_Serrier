@@ -6,6 +6,8 @@ use nono\auth\api\app\actions\GetProfileAction;
 use nono\auth\api\app\actions\ModifyProfileAction;
 use nono\auth\api\app\actions\SigninAction;
 use nono\auth\api\app\actions\SignupAction;
+use nono\auth\api\app\actions\UserRefreshAction;
+use nono\auth\api\app\actions\ValidateTokenJWTAction;
 use Slim\App;
 
 return function (App $app): void {
@@ -27,6 +29,12 @@ return function (App $app): void {
 
     $app->post('/api/users/signup', SignupAction::class)
         ->setName('sign_up');
+
+    $app->get('/api/users/validate', ValidateTokenJWTAction::class)
+        ->setName('validateTokenJWT');
+
+    $app->post('/users/refresh', UserRefreshAction::class)
+        ->setName('refreshUser');
 
     $app->get('/api/users/profile', GetProfileAction::class)
         ->setName('get_profile');
