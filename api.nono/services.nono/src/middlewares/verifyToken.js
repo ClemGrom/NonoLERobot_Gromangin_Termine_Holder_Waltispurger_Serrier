@@ -10,7 +10,7 @@ const verifyToken = async (req, res, next) => {
     }
 
     try {
-        const response = await axios.post('http://localhost:2082/api/users/validate', {
+        const response = await axios.post('http://api.nono-auth/api/users/validate', {
             token: token,
         });
 
