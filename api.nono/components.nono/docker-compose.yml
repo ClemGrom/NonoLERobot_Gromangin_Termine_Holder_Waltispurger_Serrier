@@ -22,13 +22,13 @@ services:
   ######################################
   api.nono-auth:
     image: 'canals/php:8.2'
-    env_file: ./api.nono/nono.components/auth.env
+    env_file: ./auth.env
     ports:
       - '2082:80' ## 2082 45053
       - '1444:443' ## 1444 45054
     volumes:
-      - ./api.nono/auth.nono/public:/var/www/html
-      - ./api.nono/auth.nono:/var/www
+      - ../auth.nono/public:/var/www/html
+      - ../auth.nono:/var/www
     working_dir: /var/www
     networks:
       nono.net:
@@ -42,26 +42,60 @@ services:
   nono.auth.db:
     image: 'mariadb:latest'
     command: '--default-authentication-plugin=mysql_native_password --character-set-server=utf8 --collation-server=utf8_general_ci'
-    env_file: ./api.nono/nono.components/auth.env
+    env_file: ./auth.env
     ports:
       - '45055:3306' ## 3309
     networks:
       - nono.net
     volumes:
-      - ./api.nono/auth.nono/sql:/var/sql
-      - ./api.nono/auth.nono/sql:/docker-entrypoint-initdb.d
+      - ../auth.nono/sql:/var/sql
+      - ../auth.nono/sql:/docker-entrypoint-initdb.d
 
-  nono.client:
-    build:
-      context: ./front end
-      dockerfile: Dockerfile
-    volumes:
-      - ./front end/:/app
-      - /app/node_modules
-    ports:
-      - "3000:3000"
-    working_dir: /app
+  nono.environnement.db:
+    image: postgis/postgis:13-master
+    # Required when running on platform other than amd64, like Apple M1/M2:
+    # platform: linux/amd64
     networks:
       - nono.net
+    volumes:
+      - ../environnement.nono/data/database:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "directus"
+      POSTGRES_PASSWORD: "directus"
+      POSTGRES_DB: "directus"
+
+  cache:
+    image: redis:6
+    networks:
+      - nono.net
+
+  directus:
+    image: directus/directus:10.9.0
+    ports:
+      - '8055:8055'
+    volumes:
+      - ../environnement.nono/uploads:/directus/uploads
+      # If you want to load extensions from the host
+      # - ./extensions:/directus/extensions
     depends_on:
-      - api.nono-auth
+      - cache
+      - nono.environnement.db
+    networks:
+      - nono.net
+    environment:
+      KEY: "255d861b-5ea1-5996-9aa3-922530ec40b1"
+      SECRET: "6116487b-cda1-52c2-b5b5-c8022c45e263"
+
+      DB_CLIENT: "pg"
+      DB_HOST: "nono.environnement.db"
+      DB_PORT: "5432"
+      DB_DATABASE: "directus"
+      DB_USER: "directus"
+      DB_PASSWORD: "directus"
+
+      CACHE_ENABLED: "false"
+      CACHE_STORE: "redis"
+      REDIS: "redis://cache:6379"
+
+      ADMIN_EMAIL: "admin@example.com"
+      ADMIN_PASSWORD: "d1r3ctu5"
