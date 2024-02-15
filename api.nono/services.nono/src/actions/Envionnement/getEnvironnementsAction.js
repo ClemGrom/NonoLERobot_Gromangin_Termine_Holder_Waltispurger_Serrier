@@ -1,4 +1,4 @@
-import { getEnvironnements } from "../services/EnvironnementsServices.js";
+import { getEnvironnements } from "../../services/EnvironnementsServices.js";
 
 export default async (req, res, next) => {
     try {

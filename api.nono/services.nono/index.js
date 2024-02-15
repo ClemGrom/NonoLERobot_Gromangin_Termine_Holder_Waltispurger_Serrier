@@ -6,6 +6,7 @@ import router from './src/routes/router.js';
 
 import catch404errors from "./src/middlewares/catch404errors.js";
 import catchAllErrors from "./src/middlewares/catchAllErrors.js";
+import verifyToken from "./src/middlewares/verifyToken.js";
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.get('/api/', (req, res) => {
     res.json({'message': 'ok ça roule'});
 })
 
+//app.use(verifyToken)
 app.use(catch404errors);
 app.use(catchAllErrors);
 

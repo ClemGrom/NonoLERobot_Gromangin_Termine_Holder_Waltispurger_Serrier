@@ -31,7 +31,7 @@ export const getEnvironnements = async () => {
     }
 }
 
-const getEnvironnementById = async (id) => {
+export const getEnvironnementById = async (id) => {
     const query = `
     query Environnements_by_id {
         Environnement_by_id(id: ${id}) {
