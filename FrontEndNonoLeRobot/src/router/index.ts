@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AccueilRobot from "@/components/accueilRobot.vue";
 import HomeView from "@/views/HomeView.vue";
+import Page404 from "@/views/Page404.vue";
 
 
 const router = createRouter({
@@ -31,6 +32,12 @@ const router = createRouter({
       name: 'accueilRobot',
       component: AccueilRobot
     },
+
+    {
+      path: '/:pathMatch(.*)',
+      name: 'page404',
+      component: Page404
+    }
   ]
 })
 

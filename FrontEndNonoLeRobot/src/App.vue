@@ -27,25 +27,25 @@ export default {
 </script>
 
 <template>
-  <header class="bg-zinc-900">
+  <header class="">
     <div class="header flex flex-wrap p-1 m-2 lg:flex-row lg:justify-between max-lg:flex-col max-lg:items-center">
       <div class="headerLogoText flex flex-row flex-wrap max-lg:mb-8 max-lg:mr-20">
         <!-- Logo à gauche -->
 
         <router-link to="/" class="logo">
-          <img class="w-28" src="@/components/icons/logo.png" alt="logo">
+          <img class="w-20" src="@/components/icons/logo.png" alt="logo">
         </router-link>
 
         <!-- Textes à gauche -->
         <div class="flex-col ml-4 w-20">
           <div>
-            <h1 class="text-7xl font-extrabold drop-shadow-[0_8px_4px_rgba(34,0,4,6)] text-blue-500">
-              Geo
+            <h1 class="text-7xl font-extrabold drop-shadow-[0_8px_4px_rgba(34,0,4,6)] text-red-500">
+              NONO
             </h1>
           </div>
           <div>
             <h1 class="text-5xl font-extrabold text-gray-400">
-              Quizz
+              Le Robot
             </h1>
           </div>
         </div>
@@ -77,11 +77,7 @@ export default {
 
           <!-- Bouton de déconnexion -->
           <div >
-            <button class="max-sm:text-sm sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105" @click="logout">Déconnexion</button>
-            <RouterLink to="/">
-              <img class="max-sm:h-10 max-sm:mr-1.5 max-sm:w-10 h-12 w-12 min-w-10 hover:transition duration-300 ease-in-out transform hover:scale-110" src="@/components/icons/user.png" alt="logoUser">
-            </RouterLink>
-
+            <button class="max-sm:text-sm sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105">Déconnexion</button>
           </div>
         </div>
         <div class="connected flex flex-row items-center">
@@ -106,3 +102,5 @@ export default {
     <p>Copyright IUT-Charlemagne</p>
   </footer>
 </template>
+
+
