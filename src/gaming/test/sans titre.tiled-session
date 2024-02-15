@@ -1,5 +1,5 @@
 {
-    "activeFile": "",
+    "activeFile": "C:/Users/matth/Desktop/Travail/Atelier_Projet/NonoLERobot_Gromangin_Termine_Holder_Waltispurger_Serrier/src/gaming/images/niveau2.tmx",
     "expandedProjectPaths": [
     ],
     "fileStates": {
@@ -21,8 +21,8 @@
             "scale": 0.86390625,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 604.2322300596853,
-                "y": 97.81153915717124
+                "x": 435.2324109242178,
+                "y": 222.82510399710617
             }
         },
         "C:/Users/matth/Desktop/Travail/Atelier_Projet/NonoLERobot_Gromangin_Termine_Holder_Waltispurger_Serrier/src/gaming/images/niveau2.tmx#vaisseau": {
@@ -44,12 +44,16 @@
     "last.exportedFilePath": "C:/Users/matth/Desktop/Travail/Atelier_Projet/NonoLERobot_Gromangin_Termine_Holder_Waltispurger_Serrier/src/gaming/images",
     "map.lastUsedExportFilter": "Tous les Fichiers (*)",
     "openFiles": [
+        "C:/Users/matth/Desktop/Travail/Atelier_Projet/NonoLERobot_Gromangin_Termine_Holder_Waltispurger_Serrier/src/gaming/images/niveau1.json",
+        "C:/Users/matth/Desktop/Travail/Atelier_Projet/NonoLERobot_Gromangin_Termine_Holder_Waltispurger_Serrier/src/gaming/images/vaisseau.tsx",
+        "C:/Users/matth/Desktop/Travail/Atelier_Projet/NonoLERobot_Gromangin_Termine_Holder_Waltispurger_Serrier/src/gaming/images/niveau2.tmx"
     ],
     "project": "sans titre.tiled-project",
     "property.type": "object",
     "recentFiles": [
-        "C:/Users/matth/Desktop/Travail/Atelier_Projet/NonoLERobot_Gromangin_Termine_Holder_Waltispurger_Serrier/src/gaming/images/niveau3.json",
         "C:/Users/matth/Desktop/Travail/Atelier_Projet/NonoLERobot_Gromangin_Termine_Holder_Waltispurger_Serrier/src/gaming/images/niveau1.json",
-        "C:/Users/matth/Desktop/Travail/Atelier_Projet/NonoLERobot_Gromangin_Termine_Holder_Waltispurger_Serrier/src/gaming/images/vaisseau.tsx"
+        "C:/Users/matth/Desktop/Travail/Atelier_Projet/NonoLERobot_Gromangin_Termine_Holder_Waltispurger_Serrier/src/gaming/images/vaisseau.tsx",
+        "C:/Users/matth/Desktop/Travail/Atelier_Projet/NonoLERobot_Gromangin_Termine_Holder_Waltispurger_Serrier/src/gaming/images/niveau2.tmx",
+        "C:/Users/matth/Desktop/Travail/Atelier_Projet/NonoLERobot_Gromangin_Termine_Holder_Waltispurger_Serrier/src/gaming/images/niveau3.json"
     ]
 }
