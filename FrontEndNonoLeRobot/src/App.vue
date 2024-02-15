@@ -89,7 +89,7 @@ export default {
   <accueil-robot/>
   <div class="flex justify-center items-center mb-2">
     <!-- Bouton à droite -->
-    <RouterLink to="/selectgame">
+    <RouterLink to="/simulation">
       <button class="text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-lg shadow-green-500/50 dark:shadow-lg dark:shadow-green-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105 mb-14 ">
         Lancer la simulation !
       </button>
@@ -97,8 +97,7 @@ export default {
   </div>
   <RouterView/>
 
-  <footer class="bg-zinc-900 text-zinc-500 text-center p-4 flex flex-row justify-between frelative bottom-0 w-full">
-    <p>Nono le robot - 2024</p>
+  <footer class="bg-zinc-900 text-zinc-500 text-center p-4 flex flex-row justify-between fixed bottom-0 w-full">    <p>Nono le robot - 2024</p>
     <p>Copyright IUT-Charlemagne</p>
   </footer>
 </template>

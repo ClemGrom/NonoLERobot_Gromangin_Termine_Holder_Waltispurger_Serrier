@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import AccueilRobot from "@/components/accueilRobot.vue";
 import HomeView from "@/views/HomeView.vue";
 import Page404 from "@/views/Page404.vue";
+import Programmation from "@/components/Programmation.vue";
+import Simulation from "@/components/Simulation.vue";
 
 
 const router = createRouter({
@@ -31,6 +33,18 @@ const router = createRouter({
       path: '/accueilRobot',
       name: 'accueilRobot',
       component: AccueilRobot
+    },
+
+    {
+      path: '/programmation',
+      name: 'programmation',
+      component: Programmation
+    },
+
+    {
+      path: '/simulation',
+      name: 'simulation',
+      component: Simulation
     },
 
     {
