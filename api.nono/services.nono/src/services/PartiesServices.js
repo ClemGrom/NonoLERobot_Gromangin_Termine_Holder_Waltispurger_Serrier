@@ -7,6 +7,16 @@ export const getParty = async (token) => {
     return db('parties').select('*').where('token', '=', token).first();
 }
 
+export const getUserParties = async (user_email, status) => {
+    let query = db('parties').select('*').where('user_email', '=', user_email);
+
+    if (status) {
+        query = query.where('status', '=', status);
+    }
+
+    return query;
+};
+
 export const updatePartyStatus = async (token, nouvelEtat) => {
     await db('parties').where('token', '=', token).update({status: nouvelEtat});
 }

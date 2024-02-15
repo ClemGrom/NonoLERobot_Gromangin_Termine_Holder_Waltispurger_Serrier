@@ -2,6 +2,7 @@ import express from 'express';
 import getEnvironnementsAction from "../actions/Envionnement/getEnvironnementsAction.js";
 import getEnvironnementByIdAction from "../actions/Envionnement/getEnvironnementsByIdAction.js";
 import getPartyActions from "../actions/Party/getPartyActions.js";
+import getUserPartiesAction from "../actions/Party/getUsersPartiesAction.js";
 
 const router = express.Router();
 
@@ -22,5 +23,12 @@ router
     .route("/party")
     .get(getPartyActions)
     .all((req, res, next) => next(405));
+
+//filtre dispo sur le status
+router
+    .route("/profile/parties")
+    .get(getUserPartiesAction)
+    .all((req, res, next) => next(405));
+
 
 export default router;
