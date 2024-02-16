@@ -95,6 +95,8 @@ export default {
       </button>
     </RouterLink>
   </div>
+
+  <!-- affiche les routes -->
   <RouterView/>
 
   <footer class="bg-zinc-900 text-zinc-500 text-center p-4 flex flex-row justify-between fixed bottom-0 w-full">    <p>Nono le robot - 2024</p>
