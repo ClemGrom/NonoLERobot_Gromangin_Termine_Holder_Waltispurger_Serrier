@@ -24,7 +24,7 @@ let isMoving = false;
 let lasers;
 let spaceKey;
 let healthBar;
-let health = 100;
+let health = 20;
 
 function preload() {
     this.load.image('robot', 'images/robot.png');
@@ -59,7 +59,7 @@ function create() {
 
     this.physics.add.overlap(this.robot, this.batterie, function () {
         this.batterie.destroy();
-        health += 20;
+        health = Math.min(health + 10, 20);
         updateHealthBar();
     }, null, this);
 }
@@ -67,7 +67,7 @@ function create() {
 function updateHealthBar() {
     healthBar.clear();
     healthBar.fillStyle(0x00ff00);
-    healthBar.fillRect(10, 10, health, 20);
+    healthBar.fillRect(10, 10, health * 5, 20);
 }
 
 function update() {
@@ -81,31 +81,30 @@ function update() {
             this.isMoving = true;
             this.robot.setVelocityX(-speed);
             setTimeout(() => { this.robot.setVelocityX(0); this.isMoving = false; }, moveTime);
+            health -= 1; // Diminution de la vie
+            updateHealthBar();
         }
         else if (Phaser.Input.Keyboard.JustDown(this.cursors.right)) {
             this.isMoving = true;
             this.robot.setVelocityX(speed);
             setTimeout(() => { this.robot.setVelocityX(0); this.isMoving = false; }, moveTime);
+            health -= 1; // Diminution de la vie
+            updateHealthBar();
         }
         else if (Phaser.Input.Keyboard.JustDown(this.cursors.up)) {
             this.isMoving = true;
             this.robot.setVelocityY(-speed);
             setTimeout(() => { this.robot.setVelocityY(0); this.isMoving = false; }, moveTime);
+            health -= 1; // Diminution de la vie
+            updateHealthBar();
         }
         else if (Phaser.Input.Keyboard.JustDown(this.cursors.down)) {
             this.isMoving = true;
             this.robot.setVelocityY(speed);
             setTimeout(() => { this.robot.setVelocityY(0); this.isMoving = false; }, moveTime);
+            health -= 1; // Diminution de la vie
+            updateHealthBar();
         }
-    }
-
-    if (this.robotLife <= 0) {
-        this.scene.start('GameOver');
-    }
-
-    // Passage au niveau suivant
-    if (this.robot.x > 800) {
-        this.scene.start('Level2');
     }
 
      // Si la touche espace est enfoncée, tire un laser
@@ -120,4 +119,13 @@ function update() {
             laser.destroy();
         }
     }, this);
+
+    if (health <= 0) {
+        this.scene.start('GameOver');
+    }
+
+    // Passage au niveau suivant
+    if (this.robot.x > 800) {
+        this.scene.start('Level2');
+    }
 }
