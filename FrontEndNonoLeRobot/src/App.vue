@@ -84,8 +84,8 @@ export default {
     </div>
   </header>
 
-  <AccueilRobot v-if="isHomeRoute" />
-
+  <div v-if="isHomeRoute" class="flex justify-center items-center h-screen">  <AccueilRobot v-if="isHomeRoute" />
+  </div>
 
   <!-- affiche les routes -->
   <RouterView/>
