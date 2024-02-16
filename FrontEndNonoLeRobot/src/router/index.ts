@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import AccueilRobot from "@/components/accueilRobot.vue";
+import AccueilRobot from "@/components/AccueilRobot.vue";
 import HomeView from "@/views/HomeView.vue";
 import Page404 from "@/views/Page404.vue";
 import Programmation from "@/components/Programmation.vue";

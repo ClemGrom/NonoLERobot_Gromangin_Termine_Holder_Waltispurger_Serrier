@@ -1,33 +1,31 @@
 <script>
 import {computed, reactive, watch} from 'vue';
 import {useRoute, RouterView, RouterLink} from 'vue-router';
-import AccueilRobot from "@/components/accueilRobot.vue";
-
-
+import AccueilRobot from "@/components/AccueilRobot.vue";
 
 export default {
-
+  name: 'App',
   components: {
-    AccueilRobot
-
+    AccueilRobot,
+    RouterLink,
+    RouterView
   },
   data() {
     return {
-      isHomeRoute: true,
       isConnected: false,
     }
   },
-
-
-
-
-
-
+  computed: {
+    isHomeRoute() {
+      console.log(this.$route.path);
+      return( this.$route.path === '/');
+    }
+  },
 };
 </script>
 
 <template>
-  <header class="">
+  <header  v-if="!isHomeRoute" class="">
     <div class="header flex flex-wrap p-1 m-2 lg:flex-row lg:justify-between max-lg:flex-col max-lg:items-center">
       <div class="headerLogoText flex flex-row flex-wrap max-lg:mb-8 max-lg:mr-20">
         <!-- Logo à gauche -->
@@ -86,20 +84,13 @@ export default {
     </div>
   </header>
 
-  <accueil-robot/>
-  <div class="flex justify-center items-center mb-2">
-    <!-- Bouton à droite -->
-    <RouterLink to="/simulation">
-      <button class="text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-lg shadow-green-500/50 dark:shadow-lg dark:shadow-green-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105 mb-14 ">
-        Lancer la simulation !
-      </button>
-    </RouterLink>
-  </div>
+  <AccueilRobot v-if="isHomeRoute" />
+
 
   <!-- affiche les routes -->
   <RouterView/>
 
-  <footer class="bg-zinc-900 text-zinc-500 text-center p-4 flex flex-row justify-between fixed bottom-0 w-full">    <p>Nono le robot - 2024</p>
+  <footer v-if="!isHomeRoute" class="bg-zinc-900 text-zinc-500 text-center p-4 flex flex-row justify-between fixed bottom-0 w-full">    <p>Nono le robot - 2024</p>
     <p>Copyright IUT-Charlemagne</p>
   </footer>
 </template>
