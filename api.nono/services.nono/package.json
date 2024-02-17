@@ -1,9 +1,9 @@
 {
-  "name": "api.services.geoquizz",
+  "name": "api.services.nono",
   "version": "1.0.0",
   "type": "module",
   "keywords": [],
-  "author": "SERRIER Mathéo & RIONDE Antoine",
+  "author": "SERRIER Mathéo",
   "license": "ISC",
   "scripts": {
     "start": "node server.js",
