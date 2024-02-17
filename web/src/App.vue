@@ -1,14 +1,15 @@
 <script>
-import {computed, reactive, watch} from 'vue';
-import {useRoute, RouterView, RouterLink} from 'vue-router';
+import {RouterView, RouterLink} from 'vue-router';
 import AccueilRobot from "@/components/AccueilRobot.vue";
 
+
 export default {
-  name: 'App',
+
   components: {
     AccueilRobot,
     RouterLink,
-    RouterView
+    RouterView,
+
   },
   data() {
     return {
@@ -17,15 +18,14 @@ export default {
   },
   computed: {
     isHomeRoute() {
-      console.log(this.$route.path);
-      return( this.$route.path === '/');
-    }
+      return this.$route.path === '/';
+    },
   },
 };
 </script>
 
 <template>
-  <header  v-if="!isHomeRoute" class="">
+  <header v-if="!isHomeRoute" class="">
     <div class="header flex flex-wrap p-1 m-2 lg:flex-row lg:justify-between max-lg:flex-col max-lg:items-center">
       <div class="headerLogoText flex flex-row flex-wrap max-lg:mb-8 max-lg:mr-20">
         <!-- Logo à gauche -->
@@ -84,15 +84,12 @@ export default {
     </div>
   </header>
 
-  <div v-if="isHomeRoute" class="flex justify-center items-center h-screen">  <AccueilRobot v-if="isHomeRoute" />
-  </div>
+  <AccueilRobot v-if="isHomeRoute"/>
 
   <!-- affiche les routes -->
   <RouterView/>
 
-  <footer v-if="!isHomeRoute" class="bg-zinc-900 text-zinc-500 text-center p-4 flex flex-row justify-between fixed bottom-0 w-full">    <p>Nono le robot - 2024</p>
+  <footer class="bg-zinc-900 text-zinc-500 text-center p-4 flex flex-row justify-between fixed bottom-0 w-full">    <p>Nono le robot - 2024</p>
     <p>Copyright IUT-Charlemagne</p>
   </footer>
 </template>
-
-

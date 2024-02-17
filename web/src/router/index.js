@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import AccueilRobot from "@/components/AccueilRobot.vue";
+import AccueilRobot from "../components/AccueilRobot.vue";
 import HomeView from "@/views/HomeView.vue";
 import Page404 from "@/views/Page404.vue";
-import Programmation from "@/components/Programmation.vue";
-import Simulation from "@/components/Simulation.vue";
+import Programmation from "../components/Programmation.vue";
+import Simulation from "../components/Simulation.vue";
 
 
 const router = createRouter({
@@ -17,7 +17,7 @@ const router = createRouter({
 
     {
       path: '/diagrams',
-        name: 'diagrams',
+      name: 'diagrams',
       component: () => import('../views/Diagrams.vue')
     },
     {
