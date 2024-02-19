@@ -217,8 +217,6 @@ function pushCaisse(robot, caisse) {
 function determinePosition(robot, entity) {
     let x = robot.x - entity.x;
     let y = robot.y - entity.y;
-    let distance = Math.sqrt(x * x + y * y);
-    //return up/down/left/right depending on the position of the entity
     if (Math.abs(x) > Math.abs(y)) {
         return x > 0 ? "left" : "right";
     } else {
