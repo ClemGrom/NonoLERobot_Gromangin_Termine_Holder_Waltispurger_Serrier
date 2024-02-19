@@ -1,8 +1,27 @@
-version: '3'
+version: '3.5'
+name: 'nono'
 networks:
   nono.net:
     driver: bridge
 services:
+
+  #############################
+  ### Gateway               ###
+  #############################
+
+  gateway:
+    image: 'canals/php:8.2'
+    env_file: ./auth.env
+    ports:
+      - '35200:80'
+    volumes:
+      - ../api.nono/gateway:/var/www/
+      - ../api.nono/gateway/public:/var/www/html
+    working_dir: /var/www
+    networks:
+      - nono.net
+    command: >
+      bash -c "composer install && composer update && apache2-foreground"
 
   #
   # service administration des bases sql
@@ -18,14 +37,14 @@ services:
   nono.services.db:
     image: 'mariadb:latest'
     command: '--default-authentication-plugin=mysql_native_password --character-set-server=utf8 --collation-server=utf8_general_ci'
-    env_file: services.env
+    env_file: ./services.env
     ports:
       - '3311:3306' ## 40509
     networks:
       - nono.net
     volumes:
-      - ../services.nono/sql:/var/sql
-      - ../services.nono/sql:/docker-entrypoint-initdb.d
+      - ../api.nono/services.nono/sql:/var/sql
+      - ../api.nono/services.nono/sql:/docker-entrypoint-initdb.d
 
   api.services.nono:
     image: node:alpine
@@ -33,13 +52,13 @@ services:
     command: sh -c "npm i && npm run dev" #for development only
     #command: sh -c "npm i && npm start" #for production only
     volumes:
-      - ../services.nono:/usr/app
+      - ../api.nono/services.nono:/usr/app
     ports:
       - '3333:3333'
     networks:
       - nono.net
     env_file:
-      - services.env
+      - ./services.env
     depends_on:
       - nono.services.db
 
@@ -49,20 +68,19 @@ services:
   ###  api api.auth : auth, check, refresh de token JWT
   ###  utilise sa propre base de données
   ######################################
-  api.nono-auth:
+  api.auth.nono:
     image: 'canals/php:8.2'
     env_file: ./auth.env
     ports:
       - '2082:80' ## 2082 45053
       - '1444:443' ## 1444 45054
     volumes:
-      - ../auth.nono/public:/var/www/html
-      - ../auth.nono:/var/www
+      - ../api.nono/auth.nono:/var/www/
+      - ../api.nono/auth.nono/public:/var/www/html
+      - ./auth.env:/config/.env
     working_dir: /var/www
     networks:
-      nono.net:
-        aliases:
-          - auth.nono.local
+      - nono.net
     depends_on:
       - nono.auth.db
     command: >
@@ -77,8 +95,8 @@ services:
     networks:
       - nono.net
     volumes:
-      - ../auth.nono/sql:/var/sql
-      - ../auth.nono/sql:/docker-entrypoint-initdb.d
+      - ../api.nono/auth.nono/sql:/var/sql
+      - ../api.nono/auth.nono/sql:/docker-entrypoint-initdb.d
 
   nono.environnement.db:
     image: postgis/postgis:13-master
@@ -87,7 +105,7 @@ services:
     networks:
       - nono.net
     volumes:
-      - ../environnement.nono/data/database:/var/lib/postgresql/data
+      - ../api.nono/environnement.nono/data/database:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: "directus"
       POSTGRES_PASSWORD: "directus"
@@ -103,7 +121,7 @@ services:
     ports:
       - '8055:8055'
     volumes:
-      - ../environnement.nono/uploads:/directus/uploads
+      - ../api.nono/environnement.nono/uploads:/directus/uploads
       # If you want to load extensions from the host
       # - ./extensions:/directus/extensions
     depends_on:

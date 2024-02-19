@@ -23,7 +23,7 @@ class SignInAction extends AbstractAction
         if (isset($headers['Authorization'])) {
             $auth = $headers['Authorization'][0];
 
-            list($scheme, $Credentials_encode) = explode(' ', $auth, 2);
+            list($Credentials_encode) = explode(' ', $auth, 2);
 
             $credentials = base64_decode($Credentials_encode);
 
@@ -44,7 +44,7 @@ class SignInAction extends AbstractAction
                 $responseMessage = array(
                     "message" => "401 Authentification failed",
                     "exception" => array(
-                        "type" => $e::class,
+                        "type" => get_class($e),
                         "code" => $e->getCode(),
                         "message" => $e->getMessage(),
                         "file" => $e->getFile(),
@@ -56,6 +56,6 @@ class SignInAction extends AbstractAction
             }
         }
 
-        return $response->withStatus(200)->withHeader('Content-Type', 'application/json');;
+        return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
     }
 }

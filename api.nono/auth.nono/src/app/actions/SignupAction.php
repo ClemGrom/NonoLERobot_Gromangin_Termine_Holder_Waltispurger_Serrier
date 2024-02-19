@@ -22,8 +22,11 @@ class SignUpAction extends AbstractAction {
         $data = $request->getParsedBody();
         if (isset($data['email']) && isset($data['mdp']) && isset($data['pseudo'])) {
             $email = $data['email'];
+            echo $email;
             $mdp = $data['mdp'];
+            echo $mdp;
             $pseudo = $data['pseudo'];
+            echo $pseudo;
 
             try {
                 $userDTO = $this->authService->signup(new CredentialsDTO($email, $mdp, $pseudo));
