@@ -4,6 +4,7 @@ import getEnvironnementByIdAction from "../actions/Envionnement/getEnvironnement
 import getPartyActions from "../actions/Party/getPartyActions.js";
 import getUserPartiesAction from "../actions/Party/getUsersPartiesAction.js";
 import updatePartyAction from "../actions/Party/updatePartyAction.js";
+import createPartyAction from "../actions/Party/createPartyAction.js";
 
 const router = express.Router();
 
@@ -23,6 +24,7 @@ router
 router
     .route("/party")
     .get(getPartyActions)
+    .post(createPartyAction)
     .patch(updatePartyAction)
     .all((req, res, next) => next(405));
 
