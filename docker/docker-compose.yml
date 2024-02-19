@@ -6,9 +6,24 @@ networks:
 services:
 
   #############################
-  ### Gateway               ###
+  ### Web with Apache ###
   #############################
 
+  web:
+    image: httpd:latest
+    ports:
+      - "38209:80"
+    environment:
+      - http_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
+      - https_proxy=http://www-cache-iutnc.univ-lorraine.fr:3128
+    volumes:
+      - ../FrontEndNonoLeRobot/dist:/usr/local/apache2/htdocs/geoquizz
+    networks:
+      - nono.net
+
+  #############################
+  ### Gateway               ###
+  #############################
   gateway:
     image: 'canals/php:8.2'
     env_file: ./auth.env
