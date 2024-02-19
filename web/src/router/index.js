@@ -4,6 +4,7 @@ import HomeView from "@/views/HomeView.vue";
 import Page404 from "@/views/Page404.vue";
 import Programmation from "../components/Programmation.vue";
 import Simulation from "../components/Simulation.vue";
+import InscriptionView from "@/views/InscriptionView.vue";
 
 
 const router = createRouter({
@@ -39,6 +40,12 @@ const router = createRouter({
       path: '/programmation',
       name: 'programmation',
       component: Programmation
+    },
+
+    {
+      path: '/inscription',
+      name: 'inscription',
+      component: InscriptionView
     },
 
     {
