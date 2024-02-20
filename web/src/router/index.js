@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AccueilRobot from "../components/AccueilRobot.vue";
 import HomeView from "@/views/HomeView.vue";
+import TutorielView from "@/views/TutorielView.vue";
 import Page404 from "@/views/Page404.vue";
 import Programmation from "../components/Programmation.vue";
 import Simulation from "../components/Simulation.vue";
@@ -13,10 +14,14 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
+      name: 'Accueil',
       component: HomeView
     },
-
+    {
+      path: '/tutoriel',
+      name: 'Tutoriel',
+      component: TutorielView
+    },
     {
       path: '/diagrams',
       name: 'diagrams',

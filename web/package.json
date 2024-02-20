@@ -13,9 +13,11 @@
     "gojs-vue": "^1.0.1",
     "pinia": "^2.1.7",
     "react-toastify": "^10.0.4",
+    "swiper": "^11.0.6",
     "vue": "^3.4.15",
     "vue-property-decorator": "^8.5.1",
     "vue-router": "^4.2.5",
+    "vue-ssr-carousel": "^2.4.1",
     "vue3-storage": "^0.1.11",
     "vue3-toastify": "^0.2.1"
   },
