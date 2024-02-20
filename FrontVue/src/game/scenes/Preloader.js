@@ -40,8 +40,9 @@ export class Preloader extends Scene
         this.load.image("tuilesJeu", "TileSet.png"); // Chargement des tuiles de jeu
         this.load.image('laser', 'laser.png');
         this.load.image('batterie', 'batterie.png');
-        this.load.image('asteroid', 'asteroid.png');
+        this.load.image('asteroide', 'asteroid.png');
         this.load.tilemapTiledJSON("niveau1", "niveau1.json"); // Chargement de la carte
+        this.load.tilemapTiledJSON("niveau2", "niveau2.json");
     }
 
     create ()

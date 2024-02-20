@@ -1,11 +1,11 @@
 import { EventBus } from '../EventBus';
 import { Scene } from 'phaser';
 
-export class Game extends Scene
+export class Niveau2 extends Scene
 {
     constructor ()
     {
-        super('Game');
+        super('Niveau2');
 
         // Initialisez les variables des capteurs à true pour les activer par défaut
         this.sensor1Active = true;
@@ -28,7 +28,7 @@ export class Game extends Scene
 
     create() {
 
-        this.carteDuNiveau = this.make.tilemap({ key: "niveau1" });
+        this.carteDuNiveau = this.make.tilemap({ key: "niveau2" });
         const tileset = this.carteDuNiveau.addTilesetImage("vaisseau", "tuilesJeu");
         this.calqueNiveau = this.carteDuNiveau.createLayer("Niveau", tileset);
         this.calqueNiveau.setCollisionByProperty({ estSolide: true });
@@ -37,31 +37,6 @@ export class Game extends Scene
         this.robot = this.physics.add.image(145, 176, 'robot');
         this.robot.body.collideWorldBounds = true;
         this.robot.setDepth(1);
-
-        // -- Généré plusieurs astéroïdes à des endroits aléatoires --
-        for (let i = 0; i < 5; i++) {
-            let newAsteroid = this.physics.add.image(
-                Phaser.Math.Between(250, 700), Phaser.Math.Between(100, 300), 'asteroide'
-            );
-            this.asteroid.push(newAsteroid);
-          }
-        
-      
-        // -- Généré plusieurs batteries à des endroits aléatoires --
-
-        this.batteries = this.physics.add.group(); // Créer un groupe pour les batteries
-
-        for (let i = 0; i < 5; i++) {
-            let batterie = this.physics.add.image(Phaser.Math.Between(250, 700), Phaser.Math.Between(100, 300), 'batterie');
-            this.batteries.add(batterie);
-            this.physics.add.collider(this.robot, this.calqueNiveau);
-        }
-
-        // Batteries qui disparaissent au contact du robot
-        this.physics.add.overlap(this.robot, this.batteries, function (robot, batterie) {
-            batterie.destroy();
-        }, null, this);
-        
 
         this.cursors = this.input.keyboard.createCursorKeys();
     
@@ -115,7 +90,7 @@ export class Game extends Scene
 
         // Change de niveau si le robot atteint la fin du niveau
         if (this.robot.x > 900) {
-            this.scene.start('Niveau2');
+            this.scene.start('GameOver');
         }
     }
 
