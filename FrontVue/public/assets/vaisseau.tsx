@@ -158,7 +158,7 @@
  </tile>
  <tile id="31">
   <properties>
-   <property name="estSolide" type="bool" value="true"/>
+   <property name="estSolide" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="32">

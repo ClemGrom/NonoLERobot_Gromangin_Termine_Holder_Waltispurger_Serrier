@@ -1,11 +1,11 @@
 import { EventBus } from '../EventBus';
 import { Scene } from 'phaser';
 
-export class Niveau2 extends Scene
+export class Niveau3 extends Scene
 {
     constructor ()
     {
-        super('Niveau2');
+        super('Niveau3');
 
         // Initialisez les variables des capteurs à true pour les activer par défaut
         this.sensor1Active = true;
@@ -28,7 +28,7 @@ export class Niveau2 extends Scene
 
     create() {
 
-        this.carteDuNiveau = this.make.tilemap({ key: "niveau2" });
+        this.carteDuNiveau = this.make.tilemap({ key: "niveau3" });
         const tileset = this.carteDuNiveau.addTilesetImage("vaisseau", "tuilesJeu");
         this.calqueNiveau = this.carteDuNiveau.createLayer("Niveau", tileset);
         this.calqueNiveau.setCollisionByProperty({ estSolide: true });
@@ -89,8 +89,8 @@ export class Niveau2 extends Scene
         this.updateRobotVelocity();
 
         // Change de niveau si le robot atteint la fin du niveau
-        if (this.robot.x > 640 && this.robot.x < 704 && this.robot.y > 160 && this.robot.y < 224) {
-            this.scene.start('Niveau3');
+        if (this.robot.x > 900) {
+            this.scene.start('GameOver');
         }
     }
 
@@ -109,10 +109,10 @@ export class Niveau2 extends Scene
         // Mise à jour des capteurs seulement si leur variable active est true
         if (this.sensor1Active) {
             // 200 à la fin est la longueur du capteur
-            Phaser.Geom.Line.SetToAngle(this.sensor1, this.robot.x, this.robot.y, angle1, 50);
+            Phaser.Geom.Line.SetToAngle(this.sensor1, this.robot.x, this.robot.y, angle1, 30);
         }
         if (this.sensor2Active) {
-            Phaser.Geom.Line.SetToAngle(this.sensor2, this.robot.x, this.robot.y, angle2, 50);
+            Phaser.Geom.Line.SetToAngle(this.sensor2, this.robot.x, this.robot.y, angle2, 30);
         }
         if (this.midSensorActive) {
             Phaser.Geom.Line.SetToAngle(this.midSensor, this.robot.x, this.robot.y, angleMid, 75);

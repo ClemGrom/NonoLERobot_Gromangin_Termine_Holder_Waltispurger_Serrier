@@ -43,6 +43,7 @@ export class Preloader extends Scene
         this.load.image('asteroide', 'asteroid.png');
         this.load.tilemapTiledJSON("niveau1", "niveau1.json"); // Chargement de la carte
         this.load.tilemapTiledJSON("niveau2", "niveau2.json");
+        this.load.tilemapTiledJSON("niveau3", "niveau3.json");
     }
 
     create ()
