@@ -147,19 +147,48 @@ export class Game extends Scene
 
     checkSensorIntersections() {
         this.stopRobot = false; // Réinitialisez le drapeau à chaque mise à jour
+
+        // Créez un tableau pour stocker les capteurs actifs
+        let activeSensors = [];
+        if (this.sensor1Active) activeSensors.push({ sensor: this.sensor1, angleChange: 45 });
+        if (this.sensor2Active) activeSensors.push({ sensor: this.sensor2, angleChange: -45 });
+        if (this.midSensorActive) activeSensors.push({ sensor: this.midSensor, angleChange: 180 });
+        if (this.rightsideSensorActive) activeSensors.push({ sensor: this.rightsideSensor, angleChange: -10 });
+        if (this.leftsideSensorActive) activeSensors.push({ sensor: this.leftsideSensor, angleChange: 10 });
+
+        // Vérifiez chaque capteur actif
+        for (let i = 0; i < activeSensors.length; i++) {
+            let sensor = activeSensors[i].sensor;
+            let angleChange = activeSensors[i].angleChange;
+
+            // Obtenez les tuiles à l'intérieur du capteur
+            let tiles = this.calqueNiveau.getTilesWithinShape(sensor);
+
+            // Vérifiez si l'une des tuiles a la propriété 'estSolide'
+            for (let j = 0; j < tiles.length; j++) {
+                if (tiles[j].properties.estSolide) {
+                    // Si oui, faites tourner le robot et arrêtez-le
+                    this.robot.angle += angleChange;
+                    this.targetRotation = this.robot.angle; // Mettez à jour la rotation cible
+                    this.stopRobot = true;
+                    break;
+                }
+            }
+
+            // Si le robot a été arrêté, sortez de la boucle
+            if (this.stopRobot) break;
+        }
+
         for (let i = 0; i < this.asteroid.length; i++) {
             if (this.sensor1Active && Phaser.Geom.Intersects.LineToRectangle(this.sensor1, this.asteroid[i].getBounds())){
                 // Si sensor1 intersecte un astéroïde, faites tourner le robot de 45 degrés vers la droite
-                this.robot.angle += 45;
-                this.targetRotation = this.robot.angle; // Update the target rotation
-                // Set the flag to stop the robot
+                this.targetRotation += 45;
+      
                 this.stopRobot = true;
             }
             if (this.sensor2Active && Phaser.Geom.Intersects.LineToRectangle(this.sensor2, this.asteroid[i].getBounds())) {
                 // Si sensor2 intersecte un astéroïde, faites tourner le robot de 45 degrés vers la gauche
-                this.robot.angle -= 45;
-                this.targetRotation = this.robot.angle; // Update the target rotation
-                // Set the flag to stop the robot
+                this.targetRotation -= 45;
                 this.stopRobot = true;
             }
           if (this.midSensorActive && Phaser.Geom.Intersects.LineToRectangle(this.midSensor, this.asteroid[i].getBounds())){
@@ -226,17 +255,26 @@ export class Game extends Scene
         let vy = 0;
         // Only set the robot's velocity if the stop flag is not set
         if (!this.stopRobot) {
-        // Calculate the velocity components based on the robot's angle
-        let angleInRadians = Phaser.Math.DegToRad(this.robot.angle);
-        vx = Math.cos(angleInRadians) * 100;
-        vy = Math.sin(angleInRadians) * 100;
-    
-        // Update the robot's velocity
-        this.robot.setVelocity(vx, vy);
+          // Calculate the velocity components based on the robot's angle
+          let angleInRadians = Phaser.Math.DegToRad(this.robot.angle);
+          vx = Math.cos(angleInRadians) * 100;
+          vy = Math.sin(angleInRadians) * 100;
+      
+          // Update the robot's velocity
+          this.robot.setVelocity(vx, vy);
         } else {
-            this.robot.setVelocity(0, 0);
+          // Tourner progressivement vers la direction cible
+          let currentAngle = Phaser.Math.DegToRad(this.robot.angle);
+          let targetAngle = Phaser.Math.DegToRad(this.robot.angle + this.targetRotation);
+          let newAngle = this.lerpAngle(currentAngle, targetAngle, 0.05);
+      
+          this.robot.angle = Phaser.Math.RadToDeg(newAngle);
+      
+          // Réinitialiser la direction cible après chaque rotation
+          this.targetRotation = 0;
+          this.robot.setVelocity(0, 0);
         }
-    }
+      }
     
     lineIntersectsTriangle(line, triangle) {
         let triangleLines = [
@@ -290,6 +328,14 @@ export class Game extends Scene
     
         return false;
     }
+    lerpAngle(a, b, t) {
+        let delta = Phaser.Math.Angle.Wrap(b - a);
+      
+        // If delta > 180, go the other way instead
+        if (delta > Math.PI) delta -= Math.PI * 2;
+      
+        return a + delta * t;
+      }
 
     changeScene(){
         this.scene.start('GameOver');
