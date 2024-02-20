@@ -250,6 +250,9 @@ export class Game extends Scene
 
     }
 
+    aqfuihsdg
+
+
     updateRobotVelocity() {
         let vx = 0;
         let vy = 0;
