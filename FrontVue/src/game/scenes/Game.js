@@ -146,71 +146,50 @@ export class Game extends Scene
     }
 
     checkSensorIntersections() {
-        this.stopRobot = false; // Réinitialisez le drapeau à chaque mise à jour
-
-        // Créez un tableau pour stocker les capteurs actifs
-        let activeSensors = [];
-        if (this.sensor1Active) activeSensors.push({ sensor: this.sensor1, angleChange: 45 });
-        if (this.sensor2Active) activeSensors.push({ sensor: this.sensor2, angleChange: -45 });
-        if (this.midSensorActive) activeSensors.push({ sensor: this.midSensor, angleChange: 180 });
-        if (this.rightsideSensorActive) activeSensors.push({ sensor: this.rightsideSensor, angleChange: -10 });
-        if (this.leftsideSensorActive) activeSensors.push({ sensor: this.leftsideSensor, angleChange: 10 });
-
-        // Vérifiez chaque capteur actif
+        this.stopRobot = false; // Reset the flag at each update
+    
+        // Create an array to store the active sensors
+        let activeSensors = [
+            { isActive: this.sensor1Active, sensor: this.sensor1, angleChange: 45 },
+            { isActive: this.sensor2Active, sensor: this.sensor2, angleChange: -45 },
+            { isActive: this.midSensorActive, sensor: this.midSensor, angleChange: 180 },
+            { isActive: this.rightsideSensorActive, sensor: this.rightsideSensor, angleChange: -10 },
+            { isActive: this.leftsideSensorActive, sensor: this.leftsideSensor, angleChange: 10 }
+        ];
+    
+        // Check each active sensor
         for (let i = 0; i < activeSensors.length; i++) {
-            let sensor = activeSensors[i].sensor;
-            let angleChange = activeSensors[i].angleChange;
-
-            // Obtenez les tuiles à l'intérieur du capteur
+            let sensorData = activeSensors[i];
+            if (!sensorData.isActive) continue;
+    
+            let sensor = sensorData.sensor;
+            let angleChange = sensorData.angleChange;
+    
+            // Check for intersection with tiles
             let tiles = this.calqueNiveau.getTilesWithinShape(sensor);
-
-            // Vérifiez si l'une des tuiles a la propriété 'estSolide'
             for (let j = 0; j < tiles.length; j++) {
                 if (tiles[j].properties.estSolide) {
-                    // Si oui, faites tourner le robot et arrêtez-le
-                    this.robot.angle += angleChange;
-                    this.targetRotation = this.robot.angle; // Mettez à jour la rotation cible
+                    this.targetRotation+= angleChange;
                     this.stopRobot = true;
                     break;
                 }
             }
-
-            // Si le robot a été arrêté, sortez de la boucle
+    
+            // Check for intersection with asteroids
+            for (let j = 0; j < this.asteroid.length; j++) {
+                let intersectionFunction = sensorData.shape === 'triangle' ? triangleIntersectsRectangle : Phaser.Geom.Intersects.LineToRectangle;
+                if (intersectionFunction(sensor, this.asteroid[j].getBounds())) {
+                    this.targetRotation  += angleChange;
+                  
+                    this.stopRobot = true;
+                    break;
+                }
+            }
+    
+            // If the robot has been stopped, break out of the loop
             if (this.stopRobot) break;
         }
-
-        for (let i = 0; i < this.asteroid.length; i++) {
-            if (this.sensor1Active && Phaser.Geom.Intersects.LineToRectangle(this.sensor1, this.asteroid[i].getBounds())){
-                // Si sensor1 intersecte un astéroïde, faites tourner le robot de 45 degrés vers la droite
-                this.targetRotation += 45;
-      
-                this.stopRobot = true;
-            }
-            if (this.sensor2Active && Phaser.Geom.Intersects.LineToRectangle(this.sensor2, this.asteroid[i].getBounds())) {
-                // Si sensor2 intersecte un astéroïde, faites tourner le robot de 45 degrés vers la gauche
-                this.targetRotation -= 45;
-                this.stopRobot = true;
-            }
-          if (this.midSensorActive && Phaser.Geom.Intersects.LineToRectangle(this.midSensor, this.asteroid[i].getBounds())){
-            // Si midSensor intersecte un astéroïde, arrêtez le robot
-            this.stopRobot = true;
-            this.robot.angle += 180;
-          }
-          if (this.rightsideSensorActive && triangleIntersectsRectangle(this.rightsideSensor, this.asteroid[i].getBounds())) {
-            // Si rightsideSensor intersecte un astéroïde, faites tourner le robot de 10 degrés vers la gauche
-            this.robot.angle -= 10;
-            // Set the flag to stop the robot
-            this.stopRobot = true;
-          }
-          if (this.leftsideSensorActive && triangleIntersectsRectangle(this.leftsideSensor, this.asteroid[i].getBounds())) {
-            // Si leftsideSensor intersecte un astéroïde, faites tourner le robot de 10 degrés vers la droite
-            this.robot.angle += 10;
-            // Set the flag to stop the robot
-            this.stopRobot = true;
-          }
-          
-        }
-      }
+    }
     
     drawSensors(graphics) {
         this.graphics.clear();
@@ -249,8 +228,6 @@ export class Game extends Scene
     
 
     }
-
-    aqfuihsdg
 
 
     updateRobotVelocity() {
