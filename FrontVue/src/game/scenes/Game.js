@@ -6,12 +6,23 @@ export class Game extends Scene
     constructor ()
     {
         super('Game');
+
+        // Initialisez les variables des capteurs à true pour les activer par défaut
+        this.sensor1Active = true;
+        this.sensor2Active = true;
+        this.midSensorActive = false;
+        this.rightsideSensorActive = false;
+        this.leftsideSensorActive = false;
+
+        // Initialisez le drapeau pour arrêter le robot à false
+        this.stopRobot = false;
+
+        // Initialisez la rotation cible du robot
+        this.targetRotation = 0;
+        
     }
 
     create() {
-
-        // Image de fond
-        this.add.image(700, 200, 'background').setAlpha(0.5);
 
         this.carteDuNiveau = this.make.tilemap({ key: "niveau1" });
         const tileset = this.carteDuNiveau.addTilesetImage("vaisseau", "tuilesJeu");
@@ -78,10 +89,13 @@ export class Game extends Scene
             }
         }, this);
 
+        // Définissez la position initiale des capteurs
+        this.updateSensors();
+
         // Déplacement du robot
         this.moveRobot(this.cursors);
 
-        // Vérifiez si les capteurs intersectent les astéroïdes 
+        // Vérifiez si les capteurs intersectent les astéroïdes
         this.checkSensorIntersections();
 
         // Met à jour la position des capteurs du robot
@@ -108,14 +122,14 @@ export class Game extends Scene
         
         // Mise à jour des capteurs seulement si leur variable active est true
         if (this.sensor1Active) {
-            //200 à la fin est la longueur du capteur
-            Phaser.Geom.Line.SetToAngle(this.sensor1, this.robot.x, this.robot.y, angle1, 150);
+            // 200 à la fin est la longueur du capteur
+            Phaser.Geom.Line.SetToAngle(this.sensor1, this.robot.x, this.robot.y, angle1, 50);
         }
         if (this.sensor2Active) {
-            Phaser.Geom.Line.SetToAngle(this.sensor2, this.robot.x, this.robot.y, angle2, 150);
+            Phaser.Geom.Line.SetToAngle(this.sensor2, this.robot.x, this.robot.y, angle2, 50);
         }
         if (this.midSensorActive) {
-            Phaser.Geom.Line.SetToAngle(this.midSensor, this.robot.x, this.robot.y, angleMid, 100);
+            Phaser.Geom.Line.SetToAngle(this.midSensor, this.robot.x, this.robot.y, angleMid, 75);
         }
         if (this.rightsideSensorActive) {
             this.rightsideSensor.setTo(this.robot.x, this.robot.y, this.robot.x + Math.cos(angleRight) * 100, this.robot.y + Math.sin(angleRight) * 100, this.robot.x + Math.cos(angleRight - Math.PI / 2) * 100, this.robot.y + Math.sin(angleRight - Math.PI / 2) * 100);
@@ -130,13 +144,13 @@ export class Game extends Scene
         this.asteroid.children.each(function(asteroid) {
             if (this.sensor1Active && Phaser.Geom.Intersects.LineToRectangle(this.sensor1, asteroid.getBounds())){
                 // Si sensor1 intersecte un astéroïde, faites tourner le robot de 45 degrés vers la droite
-                this.targetRotation += 45;
+                this.targetRotation += 15;
                 // Set the flag to stop the robot
                 this.stopRobot = true;
             }
             if (this.sensor2Active && Phaser.Geom.Intersects.LineToRectangle(this.sensor2, asteroid.getBounds())) {
                 // Si sensor2 intersecte un astéroïde, faites tourner le robot de 45 degrés vers la gauche
-                this.targetRotation -= 45;
+                this.targetRotation -= 15;
                 // Set the flag to stop the robot
                 this.stopRobot = true;
             }
@@ -213,10 +227,10 @@ export class Game extends Scene
         }
     
         if (cursors.left.isDown) {
-            this.robot.setAngularVelocity(-100);
+            this.robot.setVelocity(-100);
         }
         else if (cursors.right.isDown) {
-            this.robot.setAngularVelocity(100);
+            this.robot.setVelocity(100);
         }
     
         if (cursors.space.isDown) {
@@ -305,4 +319,18 @@ export class Game extends Scene
     changeScene(){
         this.scene.start('GameOver');
     }
+}
+
+
+class Level2 extends Phaser.Scene {
+    constructor() {
+        super({ key: 'Level2' });
+    }
+
+    create(data) {
+        // Utilisez le robot, les capteurs, etc. du niveau précédent
+        this.robot = data.robot;
+        this.sensors = data.sensors;
+    }
+
 }
