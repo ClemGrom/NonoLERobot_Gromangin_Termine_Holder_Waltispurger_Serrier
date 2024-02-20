@@ -32,12 +32,16 @@ export class Preloader extends Scene
         //  Load the assets for the game - Replace with your own assets
         this.load.setPath('assets');
 
+        // Image menu
         this.load.image('logo', 'logo.png');
-        this.load.image('star', 'star.png');
 
         // Image level 1
-        this.load.image("robot", "wall-e.png");
-        this.load.image("asteroide", "asteroid.png");
+        this.load.image('robot', 'robot.png');
+        this.load.image("tuilesJeu", "TileSet.png"); // Chargement des tuiles de jeu
+        this.load.image('laser', 'laser.png');
+        this.load.image('batterie', 'batterie.png');
+        this.load.image('asteroid', 'asteroid.png');
+        this.load.tilemapTiledJSON("niveau1", "niveau1.json"); // Chargement de la carte
     }
 
     create ()

@@ -7,8 +7,8 @@ import { Preloader } from './scenes/Preloader';
 
 const config = {
     type: Phaser.AUTO,
-    width: 1300,
-    height: 600,
+    width:960,
+    height:384,
     physics: {
         default: 'arcade',
         arcade: {

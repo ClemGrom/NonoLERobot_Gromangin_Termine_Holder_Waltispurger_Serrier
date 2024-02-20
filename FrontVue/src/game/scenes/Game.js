@@ -6,21 +6,6 @@ export class Game extends Scene
     constructor ()
     {
         super('Game');
-        this.robot = null;
-        this.asteroid = [];
-        this.sensor1 = null;
-        this.sensor2 = null;
-        this.midSensor = null;
-        this.rightsideSensor = new Phaser.Geom.Triangle();
-        this.leftsideSensor = new Phaser.Geom.Triangle();
-        this.graphics = null;
-        this.stopRobot = false;
-        this.sensor1Active = true;
-        this.sensor2Active = true;
-        this.midSensorActive = true;
-        this.rightsideSensorActive = false;
-        this.leftsideSensorActive = false;
-        this.cursors = null;
     }
 
     create() {
@@ -28,71 +13,83 @@ export class Game extends Scene
         // Image de fond
         this.add.image(700, 200, 'background').setAlpha(0.5);
 
-        // Créer le robot à une position aléatoire
-        let robotX = Phaser.Math.Between(50, this.physics.world.bounds.width - 50);
-        let robotY = Phaser.Math.Between(50, this.physics.world.bounds.height - 50);
-        this.robot = this.physics.add.image(robotX, robotY, "robot");
-        
-        // Robot ne peut pas sortir du monde
-        this.robot.setCollideWorldBounds(true);
+        this.carteDuNiveau = this.make.tilemap({ key: "niveau1" });
+        const tileset = this.carteDuNiveau.addTilesetImage("vaisseau", "tuilesJeu");
+        this.calqueNiveau = this.carteDuNiveau.createLayer("Niveau", tileset);
+        this.calqueNiveau.setCollisionByProperty({ estSolide: true });
+    
+        // Création du robot
+        this.robot = this.physics.add.image(145, 176, 'robot');
+        this.robot.body.collideWorldBounds = true;
 
-        // Comme un calque le robot est au dessus
-        this.robot.setDepth(1);
-
+        // Création des astéroides
+        this.asteroid = this.physics.add.group();
         for (let i = 0; i < 5; i++) {
-            // Créer les astéroïdes à des positions aléatoires, en évitant les 50 pixels près des bords
-            let asteroidX = Phaser.Math.Between(50, this.physics.world.bounds.width - 50);
-            let asteroidY = Phaser.Math.Between(50, this.physics.world.bounds.height - 50);
-            let newAsteroid = this.physics.add.image(asteroidX, asteroidY, "asteroide");
-            this.asteroid.push(newAsteroid);
+            this.asteroid.create(Phaser.Math.Between(250, 700), Phaser.Math.Between(100, 300), 'asteroid');
+        }
+        
+        // -- Généré plusieurs batteries à des endroits aléatoires --
+
+        this.batteries = this.physics.add.group(); // Créer un groupe pour les batteries
+
+        // Générer plusieurs batteries à des endroits aléatoires
+        for (let i = 0; i < 5; i++) {
+            let batterie = this.physics.add.image(Phaser.Math.Between(250, 700), Phaser.Math.Between(100, 300), 'batterie');
+            this.batteries.add(batterie);
+            this.physics.add.collider(this.robot, this.calqueNiveau);
         }
 
-        // Créez les capteurs comme des lignes
+        // Batteries qui disparaissent au contact du robot
+        this.physics.add.overlap(this.robot, this.batteries, function (robot, batterie) {
+            batterie.destroy();
+        }, null, this);
+        
+
+        this.cursors = this.input.keyboard.createCursorKeys();
+    
+        this.lasers = this.physics.add.group(); // Création du groupe de lasers
+    
+        this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE); // Ajout de la touche espace
+
+        // Création des capteurs
         this.sensor1 = new Phaser.Geom.Line();
         this.sensor2 = new Phaser.Geom.Line();
         this.midSensor = new Phaser.Geom.Line();
-        this.rightsideSensor = new Phaser.Geom.Triangle.BuildEquilateral(
-            this.robot.x,
-            this.robot.y,
-            100
-        );
-        this.leftsideSensor = new Phaser.Geom.Triangle.BuildEquilateral(
-            this.robot.x,
-            this.robot.y,
-            100
-        );
+        this.rightsideSensor = new Phaser.Geom.Triangle.BuildEquilateral(this.robot.x, this.robot.y, 100);
+        this.leftsideSensor = new Phaser.Geom.Triangle.BuildEquilateral(this.robot.x, this.robot.y, 100);
 
         // Créez l'objet graphics
         this.graphics = this.add.graphics({ lineStyle: { width: 2, color: 0x00ff00 } });
 
-        // Crée les entrées de clavier pour Q, Z, S, D
-        this.cursors = this.input.keyboard.addKeys({
-            up: Phaser.Input.Keyboard.KeyCodes.Z,
-            down: Phaser.Input.Keyboard.KeyCodes.S,
-            left: Phaser.Input.Keyboard.KeyCodes.Q,
-            right: Phaser.Input.Keyboard.KeyCodes.D,
-            k: Phaser.Input.Keyboard.KeyCodes.K,
-            l: Phaser.Input.Keyboard.KeyCodes.L,
-        });
-
-        this.robot.setVelocityX(100);
-
-        EventBus.emit('current-scene-ready', this); 
+        EventBus.emit('current-scene-ready', this);
     }
 
     update() {
-        // Déplace le robot en fonction des entrées de l'utilisateur
+        // Si la touche espace est enfoncée, tire un laser
+        if (Phaser.Input.Keyboard.JustDown(this.spaceKey)) {
+            const laser = this.lasers.create(this.robot.x, this.robot.y, 'laser');
+            laser.setVelocityX(300); // Vitesse du laser
+        }
+    
+        // Supprime les lasers qui sont sortis de l'écran
+        this.lasers.children.each(function(laser) {
+            if (laser.x > 960) {
+                laser.destroy();
+            }
+        }, this);
+
+        // Déplacement du robot
         this.moveRobot(this.cursors);
-    
-        // Vérifie si les capteurs du robot intersectent un obstacle
+
+        // Vérifiez si les capteurs intersectent les astéroïdes 
         this.checkSensorIntersections();
-    
+
         // Met à jour la position des capteurs du robot
         this.updateSensors();
-    
+
         // Dessine les capteurs du robot sur l'écran
         this.drawSensors(this.graphics);
-    
+
         // Met à jour la vitesse du robot en fonction de son orientation et de l'état du drapeau stopRobot
         this.updateRobotVelocity();
     }
@@ -100,7 +97,7 @@ export class Game extends Scene
     //########################
     //###### Fonctions #######
     //########################
-
+    
     updateSensors() {
         // Mettez à jour la position et l'angle des capteurs
         let angle1 = Phaser.Math.DegToRad(this.robot.angle - 30);
@@ -108,114 +105,133 @@ export class Game extends Scene
         let angleMid = Phaser.Math.DegToRad(this.robot.angle);
         let angleRight = Phaser.Math.DegToRad(this.robot.angle - 45);
         let angleLeft = Phaser.Math.DegToRad(this.robot.angle + 45);
-    
+        
         // Mise à jour des capteurs seulement si leur variable active est true
         if (this.sensor1Active) {
             //200 à la fin est la longueur du capteur
-            Phaser.Geom.Line.SetToAngle(this.sensor1, this.robot.x, this.robot.y, angle1, 200);
+            Phaser.Geom.Line.SetToAngle(this.sensor1, this.robot.x, this.robot.y, angle1, 150);
         }
         if (this.sensor2Active) {
-            Phaser.Geom.Line.SetToAngle(this.sensor2, this.robot.x, this.robot.y, angle2, 100);
+            Phaser.Geom.Line.SetToAngle(this.sensor2, this.robot.x, this.robot.y, angle2, 150);
         }
         if (this.midSensorActive) {
             Phaser.Geom.Line.SetToAngle(this.midSensor, this.robot.x, this.robot.y, angleMid, 100);
         }
         if (this.rightsideSensorActive) {
-                this.rightsideSensor.setTo(this.robot.x, this.robot.y, this.robot.x + Math.cos(angleRight) * 100, this.robot.y + Math.sin(angleRight) * 100, this.robot.x + Math.cos(angleRight - Math.PI / 2) * 100, this.robot.y + Math.sin(angleRight - Math.PI / 2) * 100);
+            this.rightsideSensor.setTo(this.robot.x, this.robot.y, this.robot.x + Math.cos(angleRight) * 100, this.robot.y + Math.sin(angleRight) * 100, this.robot.x + Math.cos(angleRight - Math.PI / 2) * 100, this.robot.y + Math.sin(angleRight - Math.PI / 2) * 100);
         }
         if (this.leftsideSensorActive) {
-                this.leftsideSensor.setTo(this.robot.x, this.robot.y, this.robot.x + Math.cos(angleLeft) * 100, this.robot.y + Math.sin(angleLeft) * 100, this.robot.x + Math.cos(angleLeft + Math.PI / 2) * 100, this.robot.y + Math.sin(angleLeft + Math.PI / 2) * 100);
+            this.leftsideSensor.setTo(this.robot.x, this.robot.y, this.robot.x + Math.cos(angleLeft) * 100, this.robot.y + Math.sin(angleLeft) * 100, this.robot.x + Math.cos(angleLeft + Math.PI / 2) * 100, this.robot.y + Math.sin(angleLeft + Math.PI / 2) * 100);
         }
     }
 
     checkSensorIntersections() {
         this.stopRobot = false; // Réinitialisez le drapeau à chaque mise à jour
-        for (let i = 0; i < this.asteroid.length; i++) {
-        if (
-            this.sensor1Active &&
-            Phaser.Geom.Intersects.LineToRectangle(this.sensor1, this.asteroid[i].getBounds())
-        ) {
-            // If sensor1 intersects the asteroid, rotate the robot 10 degrees to the right
-            this.robot.angle += 10;
-            // Set the flag to stop the robot
-            this.stopRobot = true;
-        }
-        if (
-            this.sensor2Active &&
-            Phaser.Geom.Intersects.LineToRectangle(this.sensor2, this.asteroid[i].getBounds())
-        ) {
-            // If sensor2 intersects the asteroid, rotate the robot 10 degrees to the left
-            this.robot.angle -= 10;
-            // Set the flag to stop the robot
-            this.stopRobot = true;
-        }
-        if (
-            this.midSensorActive &&
-            Phaser.Geom.Intersects.LineToRectangle(this.midSensor, this.asteroid[i].getBounds())
-        ) {
-            // Si midSensor intersecte un astéroïde, arrêtez le robot
-            this.stopRobot = true;
-            this.robot.angle += 180;
-        }
-        if (
-            this.rightsideSensorActive &&
-            triangleIntersectsRectangle(this.rightsideSensor, this.asteroid[i].getBounds())
-        ) {
-            // Si rightsideSensor intersecte un astéroïde, faites tourner le robot de 10 degrés vers la gauche
-            this.robot.angle -= 10;
-            // Set the flag to stop the robot
-            this.stopRobot = true;
-        }
-        if (
-            this.leftsideSensorActive &&
-            this.triangleIntersectsRectangle(this.leftsideSensor, this.asteroid[i].getBounds())
-        ) {
-            // Si leftsideSensor intersecte un astéroïde, faites tourner le robot de 10 degrés vers la droite
-            this.robot.angle += 10;
-            // Set the flag to stop the robot
-            this.stopRobot = true;
-        }
-        }
+        this.asteroid.children.each(function(asteroid) {
+            if (this.sensor1Active && Phaser.Geom.Intersects.LineToRectangle(this.sensor1, asteroid.getBounds())){
+                // Si sensor1 intersecte un astéroïde, faites tourner le robot de 45 degrés vers la droite
+                this.targetRotation += 45;
+                // Set the flag to stop the robot
+                this.stopRobot = true;
+            }
+            if (this.sensor2Active && Phaser.Geom.Intersects.LineToRectangle(this.sensor2, asteroid.getBounds())) {
+                // Si sensor2 intersecte un astéroïde, faites tourner le robot de 45 degrés vers la gauche
+                this.targetRotation -= 45;
+                // Set the flag to stop the robot
+                this.stopRobot = true;
+            }
+            if (this.midSensorActive && Phaser.Geom.Intersects.LineToRectangle(this.midSensor, asteroid.getBounds())){
+                // Si midSensor intersecte un astéroïde, arrêtez le robot
+                this.stopRobot = true;
+                this.robot.angle += 180;
+            }
+            if (this.rightsideSensorActive && this.triangleIntersectsRectangle(this.rightsideSensor, asteroid.getBounds())) {
+                // Si rightsideSensor intersecte un astéroïde, faites tourner le robot de 10 degrés vers la gauche
+                this.robot.angle -= 10;
+                // Set the flag to stop the robot
+                this.stopRobot = true;
+            }
+            if (this.leftsideSensorActive && this.triangleIntersectsRectangle(this.leftsideSensor, asteroid.getBounds())) {
+                // Si leftsideSensor intersecte un astéroïde, faites tourner le robot de 10 degrés vers la droite
+                this.robot.angle += 10;
+                // Set the flag to stop the robot
+                this.stopRobot = true;
+            }   
+        }, this);
     }
-    
+
     drawSensors(graphics) {
-        graphics.clear();
+        this.graphics.clear();
         // Dessin des capteurs seulement si leur variable active est true
         if (this.sensor1Active) {
-        graphics.strokeLineShape(this.sensor1);
+            this.graphics.strokeLineShape(this.sensor1);
         }
         if (this.sensor2Active) {
-        graphics.strokeLineShape(this.sensor2);
+            this.graphics.strokeLineShape(this.sensor2);
         }
         if (this.midSensorActive) {
-        graphics.strokeLineShape(this.midSensor);
+            this.graphics.strokeLineShape(this.midSensor);
         }
         if (this.rightsideSensorActive) {
-        graphics.strokeTriangleShape(this.rightsideSensor);
+            this.graphics.strokeTriangleShape(this.rightsideSensor);
         }
         if (this.leftsideSensorActive) {
-        graphics.strokeTriangleShape(this.leftsideSensor);
+            this.graphics.strokeTriangleShape(this.leftsideSensor);
         }
     }
     
     moveRobot(cursors) {
-        // Fait bouger le robot avec les touches Q, Z, S, D
         this.robot.setVelocity(0);
-        if (cursors.left.isDown) this.robot.setVelocityX(-500);
-        if (cursors.right.isDown) this.robot.setVelocityX(500);
-        if (cursors.up.isDown) this.robot.setVelocityY(-500);
-        if (cursors.down.isDown) this.robot.setVelocityY(500);
     
-        if (cursors.k.isDown) {
-        // Si la touche 'K' est enfoncée, faites tourner le robot vers la droite
-        this.robot.angle += 10;
+        // Rotation du robot
+        let keyK = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K);
+        let keyL = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L);
+    
+        if (keyK.isDown) {
+            // Si la touche 'K' est enfoncée, faites tourner le robot vers la droite
+            this.robot.angle += 10;
         }
-        if (cursors.l.isDown) {
-        // Si la touche 'L' est enfoncée, faites tourner le robot vers la gauche
-        this.robot.angle -= 10;
+        if (keyL.isDown) {
+            // Si la touche 'L' est enfoncée, faites tourner le robot vers la gauche
+            this.robot.angle -= 10;
+        }
+    
+        // Déplacement du robot
+        if (cursors.up.isDown) {
+            // Calculer la vitesse en fonction de l'angle du robot
+            let angleInRadians = Phaser.Math.DegToRad(this.robot.angle);
+            let vx = Math.cos(angleInRadians) * 100;
+            let vy = Math.sin(angleInRadians) * 100;
+            this.robot.setVelocity(vx, vy);
+        }
+        else if (cursors.down.isDown) {
+            // Calculer la vitesse en fonction de l'angle du robot
+            let angleInRadians = Phaser.Math.DegToRad(this.robot.angle);
+            let vx = Math.cos(angleInRadians) * -100;
+            let vy = Math.sin(angleInRadians) * -100;
+            this.robot.setVelocity(vx, vy);
+        }
+    
+        if (cursors.left.isDown) {
+            this.robot.setAngularVelocity(-100);
+        }
+        else if (cursors.right.isDown) {
+            this.robot.setAngularVelocity(100);
+        }
+    
+        if (cursors.space.isDown) {
+            this.robot.setVelocity(0);
+        }
+    
+        if (cursors.shift.isDown) {
+            this.robot.setAngularVelocity(0);
+        }
+    
+        if (cursors.shift.isDown) {
+            this.robot.setVelocity(0);
         }
     }
-    
+
     updateRobotVelocity() {
         let vx = 0;
         let vy = 0;
@@ -229,7 +245,7 @@ export class Game extends Scene
         // Update the robot's velocity
         this.robot.setVelocity(vx, vy);
         } else {
-        this.robot.setVelocity(0, 0);
+            this.robot.setVelocity(0, 0);
         }
     }
     
@@ -241,9 +257,9 @@ export class Game extends Scene
         ];
     
         for (let i = 0; i < triangleLines.length; i++) {
-        if (Phaser.Geom.Intersects.LineToLine(line, triangleLines[i])) {
-            return true;
-        }
+            if (Phaser.Geom.Intersects.LineToLine(line, triangleLines[i])) {
+                return true;
+            }
         }
     
         return false;
@@ -278,16 +294,15 @@ export class Game extends Scene
         ];
     
         for (let i = 0; i < rectangleLines.length; i++) {
-        if (this.lineIntersectsTriangle(rectangleLines[i], triangle)) {
-            return true;
-        }
+            if (this.lineIntersectsTriangle(rectangleLines[i], triangle)) {
+                return true;
+            }
         }
     
         return false;
     }
 
-    changeScene ()
-    {
+    changeScene(){
         this.scene.start('GameOver');
     }
 }
