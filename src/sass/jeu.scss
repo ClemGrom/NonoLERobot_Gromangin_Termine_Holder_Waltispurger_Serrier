@@ -95,4 +95,12 @@ body {
     background-color: #7a6b6b;
     grid-column: 11/13;
   }
+
+  .links-list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+  }
 }
