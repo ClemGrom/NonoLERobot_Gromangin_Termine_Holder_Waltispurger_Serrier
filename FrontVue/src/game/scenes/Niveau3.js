@@ -130,11 +130,11 @@ export class Niveau3 extends Scene
     
         // Create an array to store the active sensors
         let activeSensors = [
-            { isActive: this.sensor1Active, sensor: this.sensor1, angleChange: 45 },
-            { isActive: this.sensor2Active, sensor: this.sensor2, angleChange: -45 },
-            { isActive: this.midSensorActive, sensor: this.midSensor, angleChange: 180 },
-            { isActive: this.rightsideSensorActive, sensor: this.rightsideSensor, angleChange: -10 },
-            { isActive: this.leftsideSensorActive, sensor: this.leftsideSensor, angleChange: 10 }
+            { isActive: this.sensor1Active, sensor: this.sensor1, angleChange: 45, name: 'sensor1' },
+            { isActive: this.sensor2Active, sensor: this.sensor2, angleChange: -45, name: 'sensor2' },
+            { isActive: this.midSensorActive, sensor: this.midSensor, angleChange: 180, name: 'midSensor' },
+            { isActive: this.rightsideSensorActive, sensor: this.rightsideSensor, angleChange: -10, name: 'rightsideSensor' },
+            { isActive: this.leftsideSensorActive, sensor: this.leftsideSensor, angleChange: 10, name: 'leftsideSensor' }
         ];
     
         // Check each active sensor
@@ -144,13 +144,15 @@ export class Niveau3 extends Scene
     
             let sensor = sensorData.sensor;
             let angleChange = sensorData.angleChange;
+            let sensorName = sensorData.name;
     
             // Check for intersection with tiles
             let tiles = this.calqueNiveau.getTilesWithinShape(sensor);
             for (let j = 0; j < tiles.length; j++) {
                 if (tiles[j].properties.estSolide) {
-                    this.targetRotation+= angleChange;
+                    this.robot.angle += angleChange;
                     this.stopRobot = true;
+                    console.log(`${sensorName} is touching a tile at distance ${Phaser.Geom.Line.Length(sensor)}`);
                     break;
                 }
             }
@@ -159,9 +161,9 @@ export class Niveau3 extends Scene
             for (let j = 0; j < this.asteroid.length; j++) {
                 let intersectionFunction = sensorData.shape === 'triangle' ? triangleIntersectsRectangle : Phaser.Geom.Intersects.LineToRectangle;
                 if (intersectionFunction(sensor, this.asteroid[j].getBounds())) {
-                    this.targetRotation  += angleChange;
-                  
+                    this.targetRotation += angleChange;
                     this.stopRobot = true;
+                    console.log(`${sensorName} is touching an asteroid at distance ${Phaser.Geom.Line.Length(sensor)}`);
                     break;
                 }
             }

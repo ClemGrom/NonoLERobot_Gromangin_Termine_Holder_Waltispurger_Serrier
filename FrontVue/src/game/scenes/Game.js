@@ -7,12 +7,21 @@ export class Game extends Scene
     {
         super('Game');
 
+        this.frameCount = 0;
+
         // Initialisez les variables des capteurs à true pour les activer par défaut
         this.sensor1Active = true;
         this.sensor2Active = true;
         this.midSensorActive = false;
         this.rightsideSensorActive = false;
         this.leftsideSensorActive = false;
+        
+
+        //
+        this.maxlongueurSensor1 = 50;
+        this.maxlongueurSensor2 = 50;
+        this.longueurSensor1= 0;
+        this.longueurSensor2= 0;
 
         // Initialisez le drapeau pour arrêter le robot à false
         this.stopRobot = false;
@@ -37,6 +46,7 @@ export class Game extends Scene
         this.robot = this.physics.add.image(145, 176, 'robot');
         this.robot.body.collideWorldBounds = true;
         this.robot.setDepth(1);
+
 
         // -- Généré plusieurs astéroïdes à des endroits aléatoires --
         for (let i = 0; i < 5; i++) {
@@ -80,6 +90,9 @@ export class Game extends Scene
         this.graphics = this.add.graphics({ lineStyle: { width: 2, color: 0x00ff00 } });
         this.robot.setVelocityX(50);
 
+        this.longueurSensor1= this.maxlongueurSensor1;
+        this.longueurSensor2= this.maxlongueurSensor2;
+
         EventBus.emit('current-scene-ready', this);
     }
 
@@ -117,6 +130,20 @@ export class Game extends Scene
         if (this.robot.x > 900) {
             this.scene.start('Niveau2');
         }
+
+        this.frameCount++;
+
+        // Met à jour le joueur toutes les 60 frames
+        if (this.frameCount % 10 === 0) {
+            if (this.longueurSensor1 < this.maxlongueurSensor1){
+                this.longueurSensor1+=5;
+                console.log(this.longueurSensor1);
+            }
+            if (this.longueurSensor2 < this.maxlongueurSensor2){
+                this.longueurSensor2+=5;
+                console.log(this.longueurSensor2);
+            }
+        }
     }
 
     //########################
@@ -134,10 +161,10 @@ export class Game extends Scene
         // Mise à jour des capteurs seulement si leur variable active est true
         if (this.sensor1Active) {
             // 200 à la fin est la longueur du capteur
-            Phaser.Geom.Line.SetToAngle(this.sensor1, this.robot.x, this.robot.y, angle1, 50);
+            Phaser.Geom.Line.SetToAngle(this.sensor1, this.robot.x, this.robot.y, angle1, this.longueurSensor1);
         }
         if (this.sensor2Active) {
-            Phaser.Geom.Line.SetToAngle(this.sensor2, this.robot.x, this.robot.y, angle2, 50);
+            Phaser.Geom.Line.SetToAngle(this.sensor2, this.robot.x, this.robot.y, angle2, this.longueurSensor2);
         }
         if (this.midSensorActive) {
             Phaser.Geom.Line.SetToAngle(this.midSensor, this.robot.x, this.robot.y, angleMid, 75);
@@ -150,16 +177,27 @@ export class Game extends Scene
         }
     }
 
+    adjustSensorLength(sensorName) {
+        if (sensorName === 'sensor1' && this.longueurSensor1 > 0) {
+            this.longueurSensor1 -= 5;
+            console.log(this.longueurSensor1);
+        }
+        if (sensorName === 'sensor2' && this.longueurSensor2 > 0) {
+            this.longueurSensor2 -= 5;
+            console.log(this.longueurSensor2);
+        }
+    }
+    
     checkSensorIntersections() {
         this.stopRobot = false; // Reset the flag at each update
     
         // Create an array to store the active sensors
         let activeSensors = [
-            { isActive: this.sensor1Active, sensor: this.sensor1, angleChange: 45 },
-            { isActive: this.sensor2Active, sensor: this.sensor2, angleChange: -45 },
-            { isActive: this.midSensorActive, sensor: this.midSensor, angleChange: 180 },
-            { isActive: this.rightsideSensorActive, sensor: this.rightsideSensor, angleChange: -10 },
-            { isActive: this.leftsideSensorActive, sensor: this.leftsideSensor, angleChange: 10 }
+            { isActive: this.sensor1Active, sensor: this.sensor1, angleChange: 90, name: 'sensor1' },
+            { isActive: this.sensor2Active, sensor: this.sensor2, angleChange: -90, name: 'sensor2' },
+            { isActive: this.midSensorActive, sensor: this.midSensor, angleChange: 180, name: 'midSensor' },
+            { isActive: this.rightsideSensorActive, sensor: this.rightsideSensor, angleChange: -10, name: 'rightsideSensor' },
+            { isActive: this.leftsideSensorActive, sensor: this.leftsideSensor, angleChange: 10, name: 'leftsideSensor' }
         ];
     
         // Check each active sensor
@@ -169,32 +207,41 @@ export class Game extends Scene
     
             let sensor = sensorData.sensor;
             let angleChange = sensorData.angleChange;
+            let sensorName = sensorData.name;
     
             // Check for intersection with tiles
             let tiles = this.calqueNiveau.getTilesWithinShape(sensor);
-            for (let j = 0; j < tiles.length; j++) {
-                if (tiles[j].properties.estSolide) {
-                    this.targetRotation+= angleChange;
-                    this.stopRobot = true;
-                    break;
-                }
-            }
-    
-            // Check for intersection with asteroids
-            for (let j = 0; j < this.asteroid.length; j++) {
-                let intersectionFunction = sensorData.shape === 'triangle' ? triangleIntersectsRectangle : Phaser.Geom.Intersects.LineToRectangle;
-                if (intersectionFunction(sensor, this.asteroid[j].getBounds())) {
-                    this.targetRotation  += angleChange;
-                  
-                    this.stopRobot = true;
-                    break;
-                }
-            }
-    
-            // If the robot has been stopped, break out of the loop
-            if (this.stopRobot) break;
+            // Assume maxSensorLength is the maximum length of the sensor
+let maxSensorLength = Math.max(this.longueurSensor1, this.longueurSensor2);
+
+for (let j = 0; j < tiles.length; j++) {
+    if (tiles[j].properties.estSolide) {
+        let distance = Phaser.Geom.Line.Length(sensor);
+        let normalizedDistance = 1 - (distance / maxSensorLength);
+        this.robot.angle += angleChange * normalizedDistance; // Adjust the angle change based on the distance
+        this.stopRobot = true;
+        this.adjustSensorLength(sensorName);
+        console.log(`${sensorName} is touching a tile at distance ${distance}`);
+        break;
+    }
+}
+
+// Check for intersection with asteroids
+for (let j = 0; j < this.asteroid.length; j++) {
+    let intersectionFunction = sensorData.shape === 'triangle' ? triangleIntersectsRectangle : Phaser.Geom.Intersects.LineToRectangle;
+    if (intersectionFunction(sensor, this.asteroid[j].getBounds())) {
+        let distance = Phaser.Geom.Line.Length(sensor);
+        let normalizedDistance = 1 - (distance / maxSensorLength);
+        this.robot.angle += angleChange * normalizedDistance; // Adjust the angle change based on the distance
+        this.stopRobot = true;
+        this.adjustSensorLength(sensorName);
+        console.log(`${sensorName} is touching an asteroid at distance ${distance}`);
+        break;
+    }
+}
         }
     }
+    
     
     drawSensors() {
         this.graphics.clear();
@@ -248,15 +295,15 @@ export class Game extends Scene
           // Update the robot's velocity
           this.robot.setVelocity(vx, vy);
         } else {
-          // Tourner progressivement vers la direction cible
-          let currentAngle = Phaser.Math.DegToRad(this.robot.angle);
-          let targetAngle = Phaser.Math.DegToRad(this.robot.angle + this.targetRotation);
-          let newAngle = this.lerpAngle(currentAngle, targetAngle, 0.05);
+        //   // Tourner progressivement vers la direction cible
+        //   let currentAngle = Phaser.Math.DegToRad(this.robot.angle);
+        //   let targetAngle = Phaser.Math.DegToRad(this.robot.angle + this.targetRotation);
+        //   let newAngle = this.lerpAngle(currentAngle, targetAngle, 0.05);
       
-          this.robot.angle = Phaser.Math.RadToDeg(newAngle);
+        //   this.robot.angle = Phaser.Math.RadToDeg(newAngle);
       
-          // Réinitialiser la direction cible après chaque rotation
-          this.targetRotation = 0;
+        //   // Réinitialiser la direction cible après chaque rotation
+        //   this.targetRotation = 0;
           this.robot.setVelocity(0, 0);
         }
       }
