@@ -6,6 +6,7 @@ import Programmation from "../components/Programmation.vue";
 import Simulation from "../components/Simulation.vue";
 import InscriptionView from "@/views/InscriptionView.vue";
 import LoginView from "@/views/LoginView.vue";
+import ProgrammationTest from "@/components/ProgrammationTest.vue";
 
 
 const router = createRouter({
@@ -38,9 +39,9 @@ const router = createRouter({
     },
 
     {
-      path: '/programmation',
-      name: 'programmation',
-      component: Programmation
+      path: '/programmationTest',
+      name: 'programmationTest',
+      component: ProgrammationTest
     },
     {
       path: '/connexion',
