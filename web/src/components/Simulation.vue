@@ -1,5 +1,5 @@
 <script setup lang="ts">
-
+import PhaserGame from '../views/PhaserGame.vue';
 </script>
 
 <template>
@@ -10,6 +10,7 @@
     Programmation du robot
   </button>
   </router-link>
+  <PhaserGame />
 </div>
 
 </template>
