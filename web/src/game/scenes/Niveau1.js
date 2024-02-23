@@ -19,33 +19,33 @@ export class Niveau1 extends Scene
 
         // Initialisez la rotation cible du robot
         this.targetRotation = 0;
-        this.asteroid = [];
         this.sensor1 = null;
         this.sensor2 = null;
         this.midSensor = null;
-        
     }
 
     create() {
 
         this.carteDuNiveau = this.make.tilemap({ key: "niveau1" });
-        const tileset = this.carteDuNiveau.addTilesetImage("vaisseau", "tuilesJeu");
-        this.calqueNiveau = this.carteDuNiveau.createLayer("Niveau", tileset);
+
+        // Créer le tileset pour le calque "Niveau"
+        const tilesetVaisseau = this.carteDuNiveau.addTilesetImage("vaisseau", "tuilesJeu");
+
+        // Créer le tileset pour le calque "Props"
+        const tilesetProps = this.carteDuNiveau.addTilesetImage("Props", "tuilesProps");
+
+        // Créer les calques
+        this.calqueNiveau = this.carteDuNiveau.createLayer("Niveau", tilesetVaisseau);
+        this.calqueProps = this.carteDuNiveau.createLayer("Props", tilesetProps);
+
+        // Définir les collisions
         this.calqueNiveau.setCollisionByProperty({ estSolide: true });
+        this.calqueProps.setCollisionByProperty({ estSolide: true });
     
         // Création du robot
         this.robot = this.physics.add.image(145, 176, 'robot');
         this.robot.body.collideWorldBounds = true;
         this.robot.setDepth(1);
-
-        // -- Généré plusieurs astéroïdes à des endroits aléatoires --
-        for (let i = 0; i < 5; i++) {
-            let newAsteroid = this.physics.add.image(
-                Phaser.Math.Between(250, 700), Phaser.Math.Between(100, 300), 'asteroide'
-            );
-            this.asteroid.push(newAsteroid);
-          }
-        
       
         // -- Généré plusieurs batteries à des endroits aléatoires --
 
@@ -151,9 +151,9 @@ export class Niveau1 extends Scene
     }
 
     checkSensorIntersections() {
-        this.stopRobot = false; // Reset the flag at each update
-    
-        // Create an array to store the active sensors
+        this.stopRobot = false; // Réinitialisez le drapeau à chaque mise à jour
+
+        // Créez un tableau pour stocker les capteurs actifs
         let activeSensors = [
             { isActive: this.sensor1Active, sensor: this.sensor1, angleChange: 45 },
             { isActive: this.sensor2Active, sensor: this.sensor2, angleChange: -45 },
@@ -161,37 +161,29 @@ export class Niveau1 extends Scene
             { isActive: this.rightsideSensorActive, sensor: this.rightsideSensor, angleChange: -10 },
             { isActive: this.leftsideSensorActive, sensor: this.leftsideSensor, angleChange: 10 }
         ];
-    
-        // Check each active sensor
+
+        // Vérifiez chaque capteur actif
         for (let i = 0; i < activeSensors.length; i++) {
             let sensorData = activeSensors[i];
             if (!sensorData.isActive) continue;
-    
+
             let sensor = sensorData.sensor;
             let angleChange = sensorData.angleChange;
-    
-            // Check for intersection with tiles
-            let tiles = this.calqueNiveau.getTilesWithinShape(sensor);
+
+            // Vérifiez l'intersection avec les tuiles
+            let tilesNiveau = this.calqueNiveau.getTilesWithinShape(sensor);
+            let tilesProps = this.calqueProps.getTilesWithinShape(sensor);
+            let tiles = tilesNiveau.concat(tilesProps);
+
             for (let j = 0; j < tiles.length; j++) {
                 if (tiles[j].properties.estSolide) {
-                    this.targetRotation+= angleChange;
+                    this.targetRotation += angleChange;
                     this.stopRobot = true;
                     break;
                 }
             }
-    
-            // Check for intersection with asteroids
-            for (let j = 0; j < this.asteroid.length; j++) {
-                let intersectionFunction = sensorData.shape === 'triangle' ? triangleIntersectsRectangle : Phaser.Geom.Intersects.LineToRectangle;
-                if (intersectionFunction(sensor, this.asteroid[j].getBounds())) {
-                    this.targetRotation  += angleChange;
-                  
-                    this.stopRobot = true;
-                    break;
-                }
-            }
-    
-            // If the robot has been stopped, break out of the loop
+
+            // Si le robot a été arrêté, sortez de la boucle
             if (this.stopRobot) break;
         }
     }

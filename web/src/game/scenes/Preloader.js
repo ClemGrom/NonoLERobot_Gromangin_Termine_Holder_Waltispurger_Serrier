@@ -38,6 +38,7 @@ export class Preloader extends Scene
         // Image level 1
         this.load.image('robot', 'robot.png');
         this.load.image("tuilesJeu", "TileSet.png"); // Chargement des tuiles de jeu
+        this.load.image("tuilesProps", "Props.png");
         this.load.image('laser', 'laser.png');
         this.load.image('batterie', 'batterie.png');
         this.load.image('asteroide', 'asteroid.png');
