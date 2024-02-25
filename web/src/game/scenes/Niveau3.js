@@ -34,7 +34,7 @@ export class Niveau3 extends Scene
         this.calqueNiveau.setCollisionByProperty({ estSolide: true });
     
         // Création du robot
-        this.robot = this.physics.add.image(145, 176, 'robot');
+        this.robot = this.physics.add.image(70, 70, 'robot');
         this.robot.body.collideWorldBounds = true;
         this.robot.setDepth(1);
 
@@ -89,7 +89,7 @@ export class Niveau3 extends Scene
         this.updateRobotVelocity();
 
         // Change de niveau si le robot atteint la fin du niveau
-        if (this.robot.x > 900) {
+        if (this.robot.x > 640 && this.robot.x < 704 && this.robot.y > 160 && this.robot.y < 224) {
             this.scene.start('GameOver');
         }
     }

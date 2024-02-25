@@ -330,7 +330,7 @@
                         {
                          "name":"estSolide",
                          "type":"bool",
-                         "value":true
+                         "value":false
                         }]
                 }, 
                 {

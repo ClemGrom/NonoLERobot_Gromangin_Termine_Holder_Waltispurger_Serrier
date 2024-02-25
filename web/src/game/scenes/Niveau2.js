@@ -89,7 +89,7 @@ export class Niveau2 extends Scene
         this.updateRobotVelocity();
 
         // Change de niveau si le robot atteint la fin du niveau
-        if (this.robot.x > 640 && this.robot.x < 704 && this.robot.y > 160 && this.robot.y < 224) {
+        if (this.robot.x > 900) {
             this.scene.start('Niveau3');
         }
     }
