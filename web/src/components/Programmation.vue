@@ -1,7 +1,7 @@
 <script >
 
 import go from 'gojs';
-import {GuidedDraggingTool} from "gojs/extensionsJSM/GuidedDraggingTool.ts";
+// import {GuidedDraggingTool} from "gojs/extensionsJSM/GuidedDraggingTool.ts";
 
 
 
