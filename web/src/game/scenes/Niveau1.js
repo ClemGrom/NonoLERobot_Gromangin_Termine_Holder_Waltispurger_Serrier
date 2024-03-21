@@ -27,7 +27,6 @@ export class Niveau1 extends Scene {
 
     // Initialisez la rotation cible du robot
     this.targetRotation = 0;
-    this.asteroid = [];
     this.sensor1 = null;
     this.sensor2 = null;
     this.midSensor = null;
@@ -318,7 +317,7 @@ export class Niveau1 extends Scene {
         if (combined[j].properties.estSolide) {
           let distance = Phaser.Geom.Line.Length(sensor);
           let normalizedDistance = 1 - distance / maxSensorLength;
-          this.robot.angle += angleChange * normalizedDistance; // Adjust the angle change based on the distance
+          this.robot.angle += angleChange * normalizedDistance; 
           this.stopRobot = true;
           this.adjustSensorLength(sensorName);
           console.log(
@@ -447,4 +446,9 @@ export class Niveau1 extends Scene {
   changeScene() {
     this.scene.start("Niveau2");
   }
+  
 }
+
+
+
+
