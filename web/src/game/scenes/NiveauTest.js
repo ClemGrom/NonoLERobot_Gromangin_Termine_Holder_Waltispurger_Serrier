@@ -27,6 +27,7 @@ export class NiveauTest extends Scene {
 
     this.degresSensorGauche = localStorage.getItem("degresGauche") || 90;
     this.degresSensorDroit = localStorage.getItem("degresDroit") || -90;
+    this.vitesseRobot = 50;
     
   }
 
@@ -71,7 +72,7 @@ export class NiveauTest extends Scene {
     this.graphics = this.add.graphics({
       lineStyle: { width: 2, color: 0x00ff00 },
     });
-    this.robot.setVelocityX(50);
+    this.robot.setVelocityX(this.vitesseRobot);
 
     this.longueurSensor1 = this.maxlongueurSensor1;
     this.longueurSensor2 = this.maxlongueurSensor2;

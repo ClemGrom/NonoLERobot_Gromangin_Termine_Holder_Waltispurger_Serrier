@@ -32,10 +32,10 @@ let currentSceneIndex = 0;
 export default {
     data() {
         return {
-            numberValue1: 50,
-            numberValue2: 50,
-            rangeValue1: 50,
-            rangeValue2: -50
+            numberValue1: localStorage.getItem('tailleSensorGauche') || 50,
+            numberValue2: localStorage.getItem('tailleSensorDroit') || -50,
+            rangeValue1: localStorage.getItem('degresGauche') || 50,
+            rangeValue2: localStorage.getItem('degresDroit') || -50
         }
     },
     methods: {
@@ -50,6 +50,7 @@ export default {
             game.value.scene.start(scenes[currentSceneIndex]);
         },
         restart() {
+            
             game.value.scene.start(scenes[currentSceneIndex]);
         }
     },
