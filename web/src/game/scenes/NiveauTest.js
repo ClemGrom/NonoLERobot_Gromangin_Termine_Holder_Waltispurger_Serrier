@@ -1,9 +1,9 @@
 import { EventBus } from "../EventBus";
 import { Scene } from "phaser";
 
-export class Niveau2 extends Scene {
+export class NiveauTest extends Scene {
   constructor() {
-    super("Niveau2");
+    super("NiveauTest");
 
     this.frameCount = 0;
 
@@ -262,7 +262,7 @@ export class Niveau2 extends Scene {
   }
 
   changeScene() {
-    this.scene.start("Niveau3");
+    this.scene.start("NiveauTest");
   }
   
 }
