@@ -51,10 +51,13 @@ export class NiveauTest extends Scene {
     this.calqueNiveau.setCollisionByProperty({ estSolide: true });
 
 
-    // Création du robot
-    this.robot = this.physics.add.image(145, 176, "robot");
-    this.robot.body.collideWorldBounds = true;
-    this.robot.setDepth(1);
+     // Création du robot
+     this.robot = this.physics.add.image(145, 176, "robot");
+     this.robot.body.collideWorldBounds = true;
+     this.robot.setDepth(1);
+ 
+     // Ajoutez cette ligne pour définir la collision entre le robot et le calque de niveau
+     this.physics.add.collider(this.robot, this.calqueNiveau);
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
