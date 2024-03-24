@@ -2,9 +2,11 @@
     <div>
         <h1>Robot Moteur</h1>
         <input type="number" v-model="numberValue1" placeholder="Entrez un nombre ici">
-        <input type="number" v-model="numberValue2" placeholder="Entrez un autre nombre ici">
         <p>Value: {{ rangeValue1 }}</p>
         <input type="range" min="-180" max="180" v-model="rangeValue1">
+
+        <br>
+        <input type="number" v-model="numberValue2" placeholder="Entrez un autre nombre ici">
         <p>Value: {{ rangeValue2 }}</p>
         <input type="range" min="-180" max="180" v-model="rangeValue2">
 
