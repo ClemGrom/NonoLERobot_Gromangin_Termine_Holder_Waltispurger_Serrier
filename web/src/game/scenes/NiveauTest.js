@@ -56,7 +56,7 @@ export class NiveauTest extends Scene {
      this.robot.body.collideWorldBounds = true;
      this.robot.setDepth(1);
  
-     // Ajoutez cette ligne pour définir la collision entre le robot et le calque de niveau
+     // collision entre le robot et le calque de niveau
      this.physics.add.collider(this.robot, this.calqueNiveau);
 
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -81,6 +81,30 @@ export class NiveauTest extends Scene {
     this.longueurSensor2 = this.maxlongueurSensor2;
 
     EventBus.emit("current-scene-ready", this);
+
+
+    this.batteries = this.physics.add.group(); // Créer un groupe pour les batteries
+
+    for (let i = 0; i < 5; i++) {
+      let batterie = this.physics.add.image(
+        Phaser.Math.Between(250, 700),
+        Phaser.Math.Between(100, 300),
+        "batterie"
+      );
+      this.batteries.add(batterie);
+      this.physics.add.collider(this.robot, this.calqueNiveau);
+    }
+
+    // Batteries qui disparaissent au contact du robot
+    this.physics.add.overlap(
+      this.robot,
+      this.batteries,
+      function (robot, batterie) {
+        batterie.destroy();
+      },
+      null,
+      this
+    );
   }
 
   update() {

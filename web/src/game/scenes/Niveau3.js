@@ -37,6 +37,8 @@ export class Niveau3 extends Scene
         this.robot = this.physics.add.image(70, 70, 'robot');
         this.robot.body.collideWorldBounds = true;
         this.robot.setDepth(1);
+         // collision entre le robot et le calque de niveau
+     this.physics.add.collider(this.robot, this.calqueNiveau);
 
         this.cursors = this.input.keyboard.createCursorKeys();
     
