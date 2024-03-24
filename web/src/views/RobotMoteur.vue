@@ -4,9 +4,9 @@
         <input type="number" v-model="numberValue1" placeholder="Entrez un nombre ici">
         <input type="number" v-model="numberValue2" placeholder="Entrez un autre nombre ici">
         <p>Value: {{ rangeValue1 }}</p>
-        <input type="range" min="1" max="100" v-model="rangeValue1">
+        <input type="range" min="-180" max="180" v-model="rangeValue1">
         <p>Value: {{ rangeValue2 }}</p>
-        <input type="range" min="1" max="100" v-model="rangeValue2">
+        <input type="range" min="-180" max="180" v-model="rangeValue2">
 
         <button @click="saveValues">Envoyer</button>
     </div>
@@ -35,15 +35,15 @@ export default {
             numberValue1: 50,
             numberValue2: 50,
             rangeValue1: 50,
-            rangeValue2: 50
+            rangeValue2: -50
         }
     },
     methods: {
         saveValues() {
-            localStorage.setItem('numberValue1', this.numberValue1);
-            localStorage.setItem('numberValue2', this.numberValue2);
-            localStorage.setItem('rangeValue1', this.rangeValue1);
-            localStorage.setItem('rangeValue2', this.rangeValue2);
+            localStorage.setItem('tailleSensorGauche', this.numberValue1);
+            localStorage.setItem('tailleSensorDroit', this.numberValue2);
+            localStorage.setItem('degresGauche', this.rangeValue1);
+            localStorage.setItem('degresDroit', this.rangeValue2);
         },
         changeScene() {
             currentSceneIndex = (currentSceneIndex + 1) % scenes.length;

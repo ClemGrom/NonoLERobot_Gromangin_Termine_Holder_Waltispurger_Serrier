@@ -11,8 +11,8 @@ export class NiveauTest extends Scene {
     this.sensor1Active = true;
     this.sensor2Active = true;
     
-    this.maxlongueurSensor1 = 50;
-    this.maxlongueurSensor2 = 50;
+    this.maxlongueurSensor1 = localStorage.getItem("tailleSensorGauche") || 50;
+    this.maxlongueurSensor2 = localStorage.getItem("tailleSensorDroit") || 50;
     this.longueurSensor1 = 0;
     this.longueurSensor2 = 0;
    
@@ -24,6 +24,9 @@ export class NiveauTest extends Scene {
     this.targetRotation = 0;
     this.sensor1 = null;
     this.sensor2 = null;
+
+    this.degresSensorGauche = localStorage.getItem("degresGauche") || 90;
+    this.degresSensorDroit = localStorage.getItem("degresDroit") || -90;
     
   }
 
@@ -166,13 +169,13 @@ export class NiveauTest extends Scene {
       {
         isActive: this.sensor1Active,
         sensor: this.sensor1,
-        angleChange: 90,
+        angleChange: this.degresSensorGauche,
         name: "sensor1",
       },
       {
         isActive: this.sensor2Active,
         sensor: this.sensor2,
-        angleChange: -90,
+        angleChange: this.degresSensorDroit,
         name: "sensor2",
       },
       
