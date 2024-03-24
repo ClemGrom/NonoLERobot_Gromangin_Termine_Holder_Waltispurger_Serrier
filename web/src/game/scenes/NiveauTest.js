@@ -1,9 +1,9 @@
 import { EventBus } from "../EventBus";
 import { Scene } from "phaser";
 
-export class Niveau2 extends Scene {
+export class NiveauTest extends Scene {
   constructor() {
-    super("Niveau2");
+    super("NiveauTest");
 
     this.frameCount = 0;
 
@@ -11,8 +11,8 @@ export class Niveau2 extends Scene {
     this.sensor1Active = true;
     this.sensor2Active = true;
     
-    this.maxlongueurSensor1 = 50;
-    this.maxlongueurSensor2 = 50;
+    this.maxlongueurSensor1 = localStorage.getItem("tailleSensorGauche") || 50;
+    this.maxlongueurSensor2 = localStorage.getItem("tailleSensorDroit") || 50;
     this.longueurSensor1 = 0;
     this.longueurSensor2 = 0;
    
@@ -24,6 +24,10 @@ export class Niveau2 extends Scene {
     this.targetRotation = 0;
     this.sensor1 = null;
     this.sensor2 = null;
+
+    this.degresSensorGauche = localStorage.getItem("degresGauche") || 90;
+    this.degresSensorDroit = localStorage.getItem("degresDroit") || -90;
+    this.vitesseRobot = 50;
     
   }
 
@@ -47,11 +51,11 @@ export class Niveau2 extends Scene {
     this.calqueNiveau.setCollisionByProperty({ estSolide: true });
 
 
-    // Création du robot
-    this.robot = this.physics.add.image(145, 176, "robot");
-    this.robot.body.collideWorldBounds = true;
-    this.robot.setDepth(1);
-
+     // Création du robot
+     this.robot = this.physics.add.image(145, 176, "robot");
+     this.robot.body.collideWorldBounds = true;
+     this.robot.setDepth(1);
+ 
      // collision entre le robot et le calque de niveau
      this.physics.add.collider(this.robot, this.calqueNiveau);
 
@@ -71,12 +75,36 @@ export class Niveau2 extends Scene {
     this.graphics = this.add.graphics({
       lineStyle: { width: 2, color: 0x00ff00 },
     });
-    this.robot.setVelocityX(50);
+    this.robot.setVelocityX(this.vitesseRobot);
 
     this.longueurSensor1 = this.maxlongueurSensor1;
     this.longueurSensor2 = this.maxlongueurSensor2;
 
     EventBus.emit("current-scene-ready", this);
+
+
+    this.batteries = this.physics.add.group(); // Créer un groupe pour les batteries
+
+    for (let i = 0; i < 5; i++) {
+      let batterie = this.physics.add.image(
+        Phaser.Math.Between(250, 700),
+        Phaser.Math.Between(100, 300),
+        "batterie"
+      );
+      this.batteries.add(batterie);
+      this.physics.add.collider(this.robot, this.calqueNiveau);
+    }
+
+    // Batteries qui disparaissent au contact du robot
+    this.physics.add.overlap(
+      this.robot,
+      this.batteries,
+      function (robot, batterie) {
+        batterie.destroy();
+      },
+      null,
+      this
+    );
   }
 
   update() {
@@ -169,13 +197,13 @@ export class Niveau2 extends Scene {
       {
         isActive: this.sensor1Active,
         sensor: this.sensor1,
-        angleChange: 90,
+        angleChange: this.degresSensorGauche,
         name: "sensor1",
       },
       {
         isActive: this.sensor2Active,
         sensor: this.sensor2,
-        angleChange: -90,
+        angleChange: this.degresSensorDroit,
         name: "sensor2",
       },
       
@@ -265,7 +293,7 @@ export class Niveau2 extends Scene {
   }
 
   changeScene() {
-    this.scene.start("Niveau3");
+    this.scene.start("NiveauTest");
   }
   
 }

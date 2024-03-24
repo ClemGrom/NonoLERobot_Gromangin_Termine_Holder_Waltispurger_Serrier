@@ -63,7 +63,12 @@ export class Niveau1 extends Scene {
     this.robot.body.collideWorldBounds = true;
     this.robot.setDepth(1);
 
-    // -- Généré plusieurs batteries à des endroits aléatoires --
+     // collision entre le robot et le calque de niveau
+     this.physics.add.collider(this.robot, this.calqueNiveau);
+     // collision entre le robot et le calque de props
+     this.physics.add.collider(this.robot, this.calqueProps);
+
+    
 
     this.batteries = this.physics.add.group(); // Créer un groupe pour les batteries
 

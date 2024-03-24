@@ -6,7 +6,7 @@ import Programmation from "../components/Programmation.vue";
 import Simulation from "../components/Simulation.vue";
 import InscriptionView from "@/views/InscriptionView.vue";
 import LoginView from "@/views/LoginView.vue";
-
+import RobotMoteur from "../views/RobotMoteur.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -57,6 +57,11 @@ const router = createRouter({
       path: '/simulation',
       name: 'simulation',
       component: Simulation
+    },
+    {
+      path: '/robotMoteur',
+      name: 'robotMoteur',
+      component: RobotMoteur
     },
 
     {
