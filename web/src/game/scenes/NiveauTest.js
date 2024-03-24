@@ -28,11 +28,16 @@ export class NiveauTest extends Scene {
     this.degresSensorGauche = localStorage.getItem("degresGauche") || 90;
     this.degresSensorDroit = localStorage.getItem("degresDroit") || -90;
     this.vitesseRobot = 50;
+
+    this.health = 4;
+
+    this.energy = 100; 
+
     
   }
 
   create() {
-    this.carteDuNiveau = this.make.tilemap({ key: "niveau2" });
+    this.carteDuNiveau = this.make.tilemap({ key: "niveau3" });
 
     // Créer le tileset pour le calque "Niveau"
     const tilesetVaisseau = this.carteDuNiveau.addTilesetImage(
@@ -52,7 +57,7 @@ export class NiveauTest extends Scene {
 
 
      // Création du robot
-     this.robot = this.physics.add.image(145, 176, "robot");
+     this.robot = this.physics.add.image(50, 75, "robot");
      this.robot.body.collideWorldBounds = true;
      this.robot.setDepth(1);
  
@@ -85,26 +90,40 @@ export class NiveauTest extends Scene {
 
     this.batteries = this.physics.add.group(); // Créer un groupe pour les batteries
 
-    for (let i = 0; i < 5; i++) {
-      let batterie = this.physics.add.image(
-        Phaser.Math.Between(250, 700),
-        Phaser.Math.Between(100, 300),
-        "batterie"
-      );
-      this.batteries.add(batterie);
-      this.physics.add.collider(this.robot, this.calqueNiveau);
-    }
+    let batterie = this.physics.add.image(500, 75, "batterie");
+    let batterie2 = this.physics.add.image(800, 200, "batterie");
+    let batterie3 = this.physics.add.image(500, 300, "batterie");
+    let batterie4 = this.physics.add.image(100, 200, "batterie");
+    
 
-    // Batteries qui disparaissent au contact du robot
-    this.physics.add.overlap(
-      this.robot,
-      this.batteries,
-      function (robot, batterie) {
-        batterie.destroy();
-      },
-      null,
-      this
-    );
+   
+      this.batteries.add(batterie);
+      this.batteries.add(batterie2);
+      this.batteries.add(batterie3);
+      this.batteries.add(batterie4);
+    
+
+    
+      this.physics.add.overlap(
+        this.robot,
+        this.batteries,
+        function (robot, batterie) {
+          batterie.destroy();
+          this.energy += 20; // Augmenter l'énergie lorsque le robot ramasse une batterie
+        },
+        null,
+        this
+      );
+
+    // Créez l'objet graphics
+    this.vieGraphics = this.add.graphics({
+      lineStyle: { width: 2, color: 0x00ff00 },
+      fillStyle: { color: 0xff0000 }
+    });
+
+        // Dessinez la barre de santé initiale
+        this.drawHealthBar();
+
   }
 
   update() {
@@ -139,9 +158,12 @@ export class NiveauTest extends Scene {
       }
     }
 
-    if (this.robot.x > 900) {
+    if (this.robot.x > 640 && this.robot.x < 704 && this.robot.y > 160 && this.robot.y < 224) {
       this.changeScene();
-    }
+  }
+
+  this.consumeEnergy(); // Consommer de l'énergie à chaque mise à jour
+  this.drawHealthBar(); // Dessiner la barre de santé
   }
 
   //########################
@@ -281,8 +303,8 @@ export class NiveauTest extends Scene {
     if (!this.stopRobot) {
       // Calculate the velocity components based on the robot's angle
       let angleInRadians = Phaser.Math.DegToRad(this.robot.angle);
-      vx = Math.cos(angleInRadians) * 100;
-      vy = Math.sin(angleInRadians) * 100;
+      vx = Math.cos(angleInRadians) * this.vitesseRobot;
+      vy = Math.sin(angleInRadians) * this.vitesseRobot;
 
       // Update the robot's velocity
       this.robot.setVelocity(vx, vy);
@@ -292,6 +314,28 @@ export class NiveauTest extends Scene {
     }
   }
 
+  drawHealthBar() {
+    // Clear the previous health bar
+    this.vieGraphics.clear();
+
+    // Calculate the number of health bars to draw
+    let healthBars = Math.floor(this.energy / 20);
+
+    // Draw new health bar
+    for (let i = 0; i < healthBars; i++) {
+        this.vieGraphics.fillStyle(0xff0000); // Red color
+        this.vieGraphics.fillRect(800 - (i * 20), 20, 15, 15); // Draw a rectangle for each health point
+    }
+}
+
+  consumeEnergy() {
+    this.energy -= 0.1; // Consommer une certaine quantité d'énergie
+    console.log(this.energy);
+    if (this.energy <= 0) {
+      this.stopRobot = true; // Arrêter le robot lorsque l'énergie atteint 0
+      this.scene.start("GameOver");
+    }
+  }
   changeScene() {
     this.scene.start("NiveauTest");
   }
