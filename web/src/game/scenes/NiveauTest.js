@@ -61,6 +61,7 @@ export class NiveauTest extends Scene {
      this.robot = this.physics.add.image(50, 75, "robot");
      this.robot.body.collideWorldBounds = true;
      this.robot.setDepth(1);
+     this.robot.angle += 10; // Ajoutez cette ligne pour augmenter l'angle initial du robot de 10 degrés
  
      // collision entre le robot et le calque de niveau
      this.physics.add.collider(this.robot, this.calqueNiveau);
@@ -177,8 +178,8 @@ export class NiveauTest extends Scene {
 
   updateSensors() {
     // Mettez à jour la position et l'angle des capteurs
-    let angle1 = Phaser.Math.DegToRad(this.robot.angle - 30);
-    let angle2 = Phaser.Math.DegToRad(this.robot.angle + 30);
+    let angle1 = Phaser.Math.DegToRad(this.robot.angle - 45);
+    let angle2 = Phaser.Math.DegToRad(this.robot.angle + 45);
     
 
     // Mise à jour des capteurs seulement si leur variable active est true
@@ -218,7 +219,7 @@ export class NiveauTest extends Scene {
 
   checkSensorIntersections() {
     this.stopRobot = false; // Reset the flag at each update
-
+  
     // Create an array to store the active sensors
     let activeSensors = [
       {
@@ -233,31 +234,31 @@ export class NiveauTest extends Scene {
         angleChange: this.degresSensorDroit,
         name: "sensor2",
       },
-      
     ];
-
+  
+    let sensorsActivated = 0;
+  
     // Check each active sensor
     for (let i = 0; i < activeSensors.length; i++) {
       let sensorData = activeSensors[i];
       if (!sensorData.isActive) continue;
-
+  
       let sensor = sensorData.sensor;
       let angleChange = sensorData.angleChange;
       let sensorName = sensorData.name;
-
+  
       // Check for intersection with tiles
       let tiles = this.calqueNiveau.getTilesWithinShape(sensor);
-    //   let props = this.calqueProps.getTilesWithinShape(sensor);
-
+  
       // Combine tiles and props into a single array
       let combined = tiles;
-
+  
       // Assume maxSensorLength is the maximum length of the sensor
       let maxSensorLength = Math.max(
         this.longueurSensor1,
         this.longueurSensor2
       );
-
+  
       for (let j = 0; j < combined.length; j++) {
         if (combined[j].properties.estSolide) {
           let distance = Phaser.Geom.Line.Length(sensor);
@@ -265,12 +266,17 @@ export class NiveauTest extends Scene {
           this.robot.angle += angleChange * normalizedDistance; 
           this.stopRobot = true;
           this.adjustSensorLength(sensorName);
+          sensorsActivated++;
           console.log(
             `${sensorName} is touching a tile or prop at distance ${distance}`
           );
           break;
         }
       }
+    }
+  
+    if (sensorsActivated === 2) {
+      this.robot.angle += 50;
     }
   }
 
