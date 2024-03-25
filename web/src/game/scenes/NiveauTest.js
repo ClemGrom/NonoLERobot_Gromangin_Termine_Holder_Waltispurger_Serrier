@@ -27,11 +27,12 @@ export class NiveauTest extends Scene {
 
     this.degresSensorGauche = localStorage.getItem("degresGauche") || 90;
     this.degresSensorDroit = localStorage.getItem("degresDroit") || -90;
-    this.vitesseRobot = 50;
+    this.vitesseRobot = 100;
 
     this.health = 4;
 
     this.energy = 100; 
+    this.stopEnergy = false;
 
     
   }
@@ -95,8 +96,6 @@ export class NiveauTest extends Scene {
     let batterie3 = this.physics.add.image(500, 300, "batterie");
     let batterie4 = this.physics.add.image(100, 200, "batterie");
     
-
-   
       this.batteries.add(batterie);
       this.batteries.add(batterie2);
       this.batteries.add(batterie3);
@@ -123,6 +122,9 @@ export class NiveauTest extends Scene {
 
         // Dessinez la barre de santé initiale
         this.drawHealthBar();
+
+    this.energy = 100; 
+    this.stopEnergy = false;
 
   }
 
@@ -162,7 +164,10 @@ export class NiveauTest extends Scene {
       this.changeScene();
   }
 
-  this.consumeEnergy(); // Consommer de l'énergie à chaque mise à jour
+  if (!this.stopEnergy) {
+    this.consumeEnergy(); // Consommer de l'énergie à chaque mise à jour
+  }
+ 
   this.drawHealthBar(); // Dessiner la barre de santé
   }
 
@@ -332,11 +337,12 @@ export class NiveauTest extends Scene {
     this.energy -= 0.1; // Consommer une certaine quantité d'énergie
     console.log(this.energy);
     if (this.energy <= 0) {
-      this.stopRobot = true; // Arrêter le robot lorsque l'énergie atteint 0
+      this.stopEnergy = true; // Arrêter le robot lorsque l'énergie atteint 0
       this.scene.start("GameOver");
     }
   }
   changeScene() {
+    this.stopEnergy = true;
     this.scene.start("NiveauTest");
   }
   
