@@ -27,12 +27,18 @@ export class NiveauTest extends Scene {
 
     this.degresSensorGauche = localStorage.getItem("degresGauche") || 90;
     this.degresSensorDroit = localStorage.getItem("degresDroit") || -90;
-    this.vitesseRobot = 50;
+    this.vitesseRobot = 100;
+
+    this.health = 4;
+
+    this.energy = 100; 
+    this.stopEnergy = false;
+
     
   }
 
   create() {
-    this.carteDuNiveau = this.make.tilemap({ key: "niveau2" });
+    this.carteDuNiveau = this.make.tilemap({ key: "niveau3" });
 
     // Créer le tileset pour le calque "Niveau"
     const tilesetVaisseau = this.carteDuNiveau.addTilesetImage(
@@ -52,9 +58,10 @@ export class NiveauTest extends Scene {
 
 
      // Création du robot
-     this.robot = this.physics.add.image(145, 176, "robot");
+     this.robot = this.physics.add.image(50, 75, "robot");
      this.robot.body.collideWorldBounds = true;
      this.robot.setDepth(1);
+     this.robot.angle += 10; // Ajoutez cette ligne pour augmenter l'angle initial du robot de 10 degrés
  
      // collision entre le robot et le calque de niveau
      this.physics.add.collider(this.robot, this.calqueNiveau);
@@ -85,26 +92,41 @@ export class NiveauTest extends Scene {
 
     this.batteries = this.physics.add.group(); // Créer un groupe pour les batteries
 
-    for (let i = 0; i < 5; i++) {
-      let batterie = this.physics.add.image(
-        Phaser.Math.Between(250, 700),
-        Phaser.Math.Between(100, 300),
-        "batterie"
-      );
+    let batterie = this.physics.add.image(500, 75, "batterie");
+    let batterie2 = this.physics.add.image(800, 200, "batterie");
+    let batterie3 = this.physics.add.image(500, 300, "batterie");
+    let batterie4 = this.physics.add.image(100, 200, "batterie");
+    
       this.batteries.add(batterie);
-      this.physics.add.collider(this.robot, this.calqueNiveau);
-    }
+      this.batteries.add(batterie2);
+      this.batteries.add(batterie3);
+      this.batteries.add(batterie4);
+    
 
-    // Batteries qui disparaissent au contact du robot
-    this.physics.add.overlap(
-      this.robot,
-      this.batteries,
-      function (robot, batterie) {
-        batterie.destroy();
-      },
-      null,
-      this
-    );
+    
+      this.physics.add.overlap(
+        this.robot,
+        this.batteries,
+        function (robot, batterie) {
+          batterie.destroy();
+          this.energy += 20; // Augmenter l'énergie lorsque le robot ramasse une batterie
+        },
+        null,
+        this
+      );
+
+    // Créez l'objet graphics
+    this.vieGraphics = this.add.graphics({
+      lineStyle: { width: 2, color: 0x00ff00 },
+      fillStyle: { color: 0xff0000 }
+    });
+
+        // Dessinez la barre de santé initiale
+        this.drawHealthBar();
+
+    this.energy = 100; 
+    this.stopEnergy = false;
+
   }
 
   update() {
@@ -139,9 +161,15 @@ export class NiveauTest extends Scene {
       }
     }
 
-    if (this.robot.x > 900) {
+    if (this.robot.x > 640 && this.robot.x < 704 && this.robot.y > 160 && this.robot.y < 224) {
       this.changeScene();
-    }
+  }
+
+  if (!this.stopEnergy) {
+    this.consumeEnergy(); // Consommer de l'énergie à chaque mise à jour
+  }
+ 
+  this.drawHealthBar(); // Dessiner la barre de santé
   }
 
   //########################
@@ -150,8 +178,8 @@ export class NiveauTest extends Scene {
 
   updateSensors() {
     // Mettez à jour la position et l'angle des capteurs
-    let angle1 = Phaser.Math.DegToRad(this.robot.angle - 30);
-    let angle2 = Phaser.Math.DegToRad(this.robot.angle + 30);
+    let angle1 = Phaser.Math.DegToRad(this.robot.angle - 45);
+    let angle2 = Phaser.Math.DegToRad(this.robot.angle + 45);
     
 
     // Mise à jour des capteurs seulement si leur variable active est true
@@ -191,7 +219,7 @@ export class NiveauTest extends Scene {
 
   checkSensorIntersections() {
     this.stopRobot = false; // Reset the flag at each update
-
+  
     // Create an array to store the active sensors
     let activeSensors = [
       {
@@ -206,31 +234,31 @@ export class NiveauTest extends Scene {
         angleChange: this.degresSensorDroit,
         name: "sensor2",
       },
-      
     ];
-
+  
+    let sensorsActivated = 0;
+  
     // Check each active sensor
     for (let i = 0; i < activeSensors.length; i++) {
       let sensorData = activeSensors[i];
       if (!sensorData.isActive) continue;
-
+  
       let sensor = sensorData.sensor;
       let angleChange = sensorData.angleChange;
       let sensorName = sensorData.name;
-
+  
       // Check for intersection with tiles
       let tiles = this.calqueNiveau.getTilesWithinShape(sensor);
-    //   let props = this.calqueProps.getTilesWithinShape(sensor);
-
+  
       // Combine tiles and props into a single array
       let combined = tiles;
-
+  
       // Assume maxSensorLength is the maximum length of the sensor
       let maxSensorLength = Math.max(
         this.longueurSensor1,
         this.longueurSensor2
       );
-
+  
       for (let j = 0; j < combined.length; j++) {
         if (combined[j].properties.estSolide) {
           let distance = Phaser.Geom.Line.Length(sensor);
@@ -238,12 +266,17 @@ export class NiveauTest extends Scene {
           this.robot.angle += angleChange * normalizedDistance; 
           this.stopRobot = true;
           this.adjustSensorLength(sensorName);
+          sensorsActivated++;
           console.log(
             `${sensorName} is touching a tile or prop at distance ${distance}`
           );
           break;
         }
       }
+    }
+  
+    if (sensorsActivated === 2) {
+      this.robot.angle += 50;
     }
   }
 
@@ -281,8 +314,8 @@ export class NiveauTest extends Scene {
     if (!this.stopRobot) {
       // Calculate the velocity components based on the robot's angle
       let angleInRadians = Phaser.Math.DegToRad(this.robot.angle);
-      vx = Math.cos(angleInRadians) * 100;
-      vy = Math.sin(angleInRadians) * 100;
+      vx = Math.cos(angleInRadians) * this.vitesseRobot;
+      vy = Math.sin(angleInRadians) * this.vitesseRobot;
 
       // Update the robot's velocity
       this.robot.setVelocity(vx, vy);
@@ -292,7 +325,30 @@ export class NiveauTest extends Scene {
     }
   }
 
+  drawHealthBar() {
+    // Clear the previous health bar
+    this.vieGraphics.clear();
+
+    // Calculate the number of health bars to draw
+    let healthBars = Math.floor(this.energy / 20);
+
+    // Draw new health bar
+    for (let i = 0; i < healthBars; i++) {
+        this.vieGraphics.fillStyle(0xff0000); // Red color
+        this.vieGraphics.fillRect(800 - (i * 20), 20, 15, 15); // Draw a rectangle for each health point
+    }
+}
+
+  consumeEnergy() {
+    this.energy -= 0.1; // Consommer une certaine quantité d'énergie
+    console.log(this.energy);
+    if (this.energy <= 0) {
+      this.stopEnergy = true; // Arrêter le robot lorsque l'énergie atteint 0
+      this.scene.start("GameOver");
+    }
+  }
   changeScene() {
+    this.stopEnergy = true;
     this.scene.start("NiveauTest");
   }
   
