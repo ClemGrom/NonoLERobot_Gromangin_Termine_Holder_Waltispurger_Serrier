@@ -27,6 +27,7 @@ export class NiveauTest extends Scene {
 
     this.degresSensorGauche = localStorage.getItem("degresGauche") || 90;
     this.degresSensorDroit = localStorage.getItem("degresDroit") || -90;
+    this.degres2SensorsToucher = localStorage.getItem("degres2Touche") || 50;
     this.vitesseRobot = 100;
 
     this.health = 4;
@@ -34,6 +35,9 @@ export class NiveauTest extends Scene {
     this.energy = 100; 
     this.stopEnergy = false;
 
+    
+    this.defaultangleGauche = 45;
+    this.defaultangleDroit = 45;
     
   }
 
@@ -61,7 +65,7 @@ export class NiveauTest extends Scene {
      this.robot = this.physics.add.image(50, 75, "robot");
      this.robot.body.collideWorldBounds = true;
      this.robot.setDepth(1);
-     this.robot.angle += 10; // Ajoutez cette ligne pour augmenter l'angle initial du robot de 10 degrés
+    //  this.robot.angle += 10; 
  
      // collision entre le robot et le calque de niveau
      this.physics.add.collider(this.robot, this.calqueNiveau);
@@ -131,6 +135,7 @@ export class NiveauTest extends Scene {
 
   update() {
     
+
     // Définissez la position initiale des capteurs
     this.updateSensors();
 
@@ -178,8 +183,8 @@ export class NiveauTest extends Scene {
 
   updateSensors() {
     // Mettez à jour la position et l'angle des capteurs
-    let angle1 = Phaser.Math.DegToRad(this.robot.angle - 45);
-    let angle2 = Phaser.Math.DegToRad(this.robot.angle + 45);
+    let angle1 = Phaser.Math.DegToRad(this.robot.angle - this.defaultangleGauche);
+    let angle2 = Phaser.Math.DegToRad(this.robot.angle + this.defaultangleDroit);
     
 
     // Mise à jour des capteurs seulement si leur variable active est true
@@ -277,6 +282,7 @@ export class NiveauTest extends Scene {
   
     if (sensorsActivated === 2) {
       this.robot.angle += 50;
+      console
     }
   }
 
