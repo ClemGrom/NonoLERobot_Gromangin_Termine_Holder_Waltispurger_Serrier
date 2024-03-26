@@ -11,8 +11,8 @@ export class Niveau2 extends Scene {
     this.sensor1Active = true;
     this.sensor2Active = true;
     
-    this.maxlongueurSensor1 = 50;
-    this.maxlongueurSensor2 = 50;
+    this.maxlongueurSensor1 = localStorage.getItem("tailleSensorGauche") || 50;
+    this.maxlongueurSensor2 = localStorage.getItem("tailleSensorDroit") || 50;
     this.longueurSensor1 = 0;
     this.longueurSensor2 = 0;
    
@@ -25,6 +25,16 @@ export class Niveau2 extends Scene {
     this.sensor1 = null;
     this.sensor2 = null;
     
+
+    this.degresSensorGauche = localStorage.getItem("degresGauche") || 90;
+    this.degresSensorDroit = localStorage.getItem("degresDroit") || -90;
+    this.degres2SensorsToucher = localStorage.getItem("degres2SensorsToucher") || 50;
+    this.vitesseRobot = 100;
+
+
+
+    this.defaultangleGauche = 45;
+    this.defaultangleDroit = 45;
   }
 
   create() {
@@ -122,8 +132,8 @@ export class Niveau2 extends Scene {
 
   updateSensors() {
     // Mettez à jour la position et l'angle des capteurs
-    let angle1 = Phaser.Math.DegToRad(this.robot.angle - 30);
-    let angle2 = Phaser.Math.DegToRad(this.robot.angle + 30);
+    let angle1 = Phaser.Math.DegToRad(this.robot.angle - this.defaultangleGauche);
+    let angle2 = Phaser.Math.DegToRad(this.robot.angle + this.defaultangleDroit);
     
 
     // Mise à jour des capteurs seulement si leur variable active est true
@@ -163,46 +173,46 @@ export class Niveau2 extends Scene {
 
   checkSensorIntersections() {
     this.stopRobot = false; // Reset the flag at each update
-
+  
     // Create an array to store the active sensors
     let activeSensors = [
       {
         isActive: this.sensor1Active,
         sensor: this.sensor1,
-        angleChange: 90,
+        angleChange: this.degresSensorGauche,
         name: "sensor1",
       },
       {
         isActive: this.sensor2Active,
         sensor: this.sensor2,
-        angleChange: -90,
+        angleChange: this.degresSensorDroit,
         name: "sensor2",
       },
-      
     ];
-
+  
+    let sensorsActivated = 0;
+  
     // Check each active sensor
     for (let i = 0; i < activeSensors.length; i++) {
       let sensorData = activeSensors[i];
       if (!sensorData.isActive) continue;
-
+  
       let sensor = sensorData.sensor;
       let angleChange = sensorData.angleChange;
       let sensorName = sensorData.name;
-
+  
       // Check for intersection with tiles
       let tiles = this.calqueNiveau.getTilesWithinShape(sensor);
-    //   let props = this.calqueProps.getTilesWithinShape(sensor);
-
+  
       // Combine tiles and props into a single array
       let combined = tiles;
-
+  
       // Assume maxSensorLength is the maximum length of the sensor
       let maxSensorLength = Math.max(
         this.longueurSensor1,
         this.longueurSensor2
       );
-
+  
       for (let j = 0; j < combined.length; j++) {
         if (combined[j].properties.estSolide) {
           let distance = Phaser.Geom.Line.Length(sensor);
@@ -210,12 +220,17 @@ export class Niveau2 extends Scene {
           this.robot.angle += angleChange * normalizedDistance; 
           this.stopRobot = true;
           this.adjustSensorLength(sensorName);
+          sensorsActivated++;
           console.log(
             `${sensorName} is touching a tile or prop at distance ${distance}`
           );
           break;
         }
       }
+    }
+  
+    if (sensorsActivated === 2) {
+      this.robot.angle += this.degres2SensorsToucher;
     }
   }
 
@@ -253,8 +268,8 @@ export class Niveau2 extends Scene {
     if (!this.stopRobot) {
       // Calculate the velocity components based on the robot's angle
       let angleInRadians = Phaser.Math.DegToRad(this.robot.angle);
-      vx = Math.cos(angleInRadians) * 100;
-      vy = Math.sin(angleInRadians) * 100;
+      vx = Math.cos(angleInRadians) * this.vitesseRobot;
+      vy = Math.sin(angleInRadians) * this.vitesseRobot;
 
       // Update the robot's velocity
       this.robot.setVelocity(vx, vy);
