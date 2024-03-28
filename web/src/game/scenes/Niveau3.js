@@ -216,27 +216,25 @@ export class Niveau3 extends Scene {
   }
 
   checkSensorIntersections() {
-    this.stopRobot = false; // Reset the flag at each update
-  
-    // Create an array to store the active sensors
     let activeSensors = [
       {
         isActive: this.sensor1Active,
         sensor: this.sensor1,
         angleChange: this.degresSensorGauche,
         name: "sensor1",
+        maxLength: this.maxlongueurSensor1,
       },
       {
         isActive: this.sensor2Active,
         sensor: this.sensor2,
         angleChange: this.degresSensorDroit,
         name: "sensor2",
+        maxLength: this.maxlongueurSensor2,
       },
     ];
   
     let sensorsActivated = 0;
   
-    // Check each active sensor
     for (let i = 0; i < activeSensors.length; i++) {
       let sensorData = activeSensors[i];
       if (!sensorData.isActive) continue;
@@ -244,30 +242,19 @@ export class Niveau3 extends Scene {
       let sensor = sensorData.sensor;
       let angleChange = sensorData.angleChange;
       let sensorName = sensorData.name;
+      let maxSensorLength = sensorData.maxLength;
   
-      // Check for intersection with tiles
       let tiles = this.calqueNiveau.getTilesWithinShape(sensor);
-  
-      // Combine tiles and props into a single array
       let combined = tiles;
-  
-      // Assume maxSensorLength is the maximum length of the sensor
-      let maxSensorLength = Math.max(
-        this.longueurSensor1,
-        this.longueurSensor2
-      );
   
       for (let j = 0; j < combined.length; j++) {
         if (combined[j].properties.estSolide) {
           let distance = Phaser.Geom.Line.Length(sensor);
           let normalizedDistance = 1 - distance / maxSensorLength;
           this.robot.angle += angleChange * normalizedDistance; 
-          this.stopRobot = true;
           this.adjustSensorLength(sensorName);
           sensorsActivated++;
-          console.log(
-            `${sensorName} is touching a tile or prop at distance ${distance}`
-          );
+          console.log(`${sensorName} is touching a tile or prop at distance ${distance}`);
           break;
         }
       }
