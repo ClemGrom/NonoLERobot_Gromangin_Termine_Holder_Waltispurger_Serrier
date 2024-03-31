@@ -33,7 +33,7 @@ export class Niveau1 extends Scene {
 
     this.degresSensorGauche = localStorage.getItem("degresGauche") || 90;
     this.degresSensorDroit = localStorage.getItem("degresDroit") || -90;
-    this.degres2SensorsToucher = localStorage.getItem("degres2SensorsToucher") || 50;
+    this.degres2SensorsToucher = localStorage.getItem("degres2Touche") || 50;
     this.vitesseRobot = 100;
 
     this.health = 4;
@@ -420,7 +420,7 @@ export class Niveau1 extends Scene {
     // Draw new health bar
     for (let i = 0; i < healthBars; i++) {
         this.vieGraphics.fillStyle(0xff0000); // Red color
-        this.vieGraphics.fillRect(800 - (i * 20), 20, 15, 15); // Draw a rectangle for each health point
+        this.vieGraphics.fillRect(925 - (i * 20), 5, 15, 15); 
     }
 }
 
@@ -496,6 +496,7 @@ export class Niveau1 extends Scene {
 //   }
 
   changeScene() {
+    this.stopEnergy = true;
     this.scene.start("Niveau2");
   }
   

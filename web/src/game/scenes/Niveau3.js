@@ -320,7 +320,7 @@ export class Niveau3 extends Scene {
     // Draw new health bar
     for (let i = 0; i < healthBars; i++) {
         this.vieGraphics.fillStyle(0xff0000); // Red color
-        this.vieGraphics.fillRect(800 - (i * 20), 20, 15, 15); // Draw a rectangle for each health point
+        this.vieGraphics.fillRect(925 - (i * 20), 5, 15, 15); 
     }
 }
 

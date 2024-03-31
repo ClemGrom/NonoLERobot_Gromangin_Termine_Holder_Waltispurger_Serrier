@@ -95,7 +95,7 @@ export default {
   }
   saveValues();
   gameStarted.value = true;
-  game.value = StartGame('game-container'); // Remplacez 'Level1' par le nom de votre première scène
+  game.value = StartGame('game-container'); 
   
 
 };
