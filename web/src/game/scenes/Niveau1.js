@@ -15,8 +15,8 @@ export class Niveau1 extends Scene {
     this.leftsideSensorActive = false;
 
     //
-    this.maxlongueurSensor1 = 50;
-    this.maxlongueurSensor2 = 50;
+    this.maxlongueurSensor1 = localStorage.getItem("tailleSensorGauche") || 50;
+    this.maxlongueurSensor2 = localStorage.getItem("tailleSensorDroit") || 50;
     this.maxlongueurMidSensor = 100;
     this.longueurSensor1 = 0;
     this.longueurSensor2 = 0;
