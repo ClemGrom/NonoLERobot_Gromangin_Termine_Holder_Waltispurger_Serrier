@@ -353,22 +353,22 @@
  </tile>
  <tile id="70">
   <properties>
-   <property name="estSolide" type="bool" value="false"/>
+   <property name="estSolide" type="bool" value="true"/>
   </properties>
  </tile>
  <tile id="71">
   <properties>
-   <property name="estSolide" type="bool" value="false"/>
+   <property name="estSolide" type="bool" value="true"/>
   </properties>
  </tile>
  <tile id="72">
   <properties>
-   <property name="estSolide" type="bool" value="false"/>
+   <property name="estSolide" type="bool" value="true"/>
   </properties>
  </tile>
  <tile id="73">
   <properties>
-   <property name="estSolide" type="bool" value="false"/>
+   <property name="estSolide" type="bool" value="true"/>
   </properties>
  </tile>
  <tile id="74">
