@@ -1,51 +1,68 @@
 <template>
-    <div class="flex flex-col md:flex-row items-center justify-center min-h-screen bg-gray-50">
-        <div class="md:w-1/4 p-3">
-            <div class="flex flex-col mb-4">
-                <h1 class="text-4xl font-bold mb-4">Robot Moteur</h1>
-                <div class="flex flex-col mb-4">
-                    <p>Longueur du Capteur Gauche {{ numberValue1 }}</p>
-                    <input type="number" v-model="numberValue1" placeholder="Entrez un nombre ici"
-                        class="px-4 py-2 border border-gray-300 rounded-md">
-                    <p class="mt-2">Value: {{ rangeValue1 }}</p>
-                    <input type="range" min="-180" max="180" v-model="rangeValue1" class="mt-2">
-                </div>
+  <div class="flex flex-col md:flex-row items-center justify-center min-h-screen bg-gray-50 p-6">
+    <div class="md:w-1/4 p-6 bg-white shadow-lg rounded-lg">
+      <div class="flex flex-col mb-4 space-y-4">
 
-                <div class="flex flex-col mb-4">
-                    <p>Longueur du Capteur Droit {{ numberValue2 }}</p>
-                    <input type="number" v-model="numberValue2" placeholder="Entrez un autre nombre ici"
-                        class="px-4 py-2 border border-gray-300 rounded-md">
-                    <p class="mt-2">Value: {{ rangeValue2 }}</p>
-                    <input type="range" min="-180" max="180" v-model="rangeValue2" class="mt-2">
-                </div>
-
-                <div class="flex flex-col mb-4">
-                    <p class="mt-2">Degres si les deux capteurs touchent un objet : {{ rangeValue3 }}</p>
-                    <input type="range" min="-180" max="180" v-model="rangeValue3" class="mt-2">
-                </div>
-
-                <button @click="chargePartie"
-                    class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" >Envoyer</button>
-            </div>
+        <h2 class="text-2xl font-bold mb-4 text-center">Paramétrage des capteurs du Robot :</h2>
+        <div class="flex space-x-4 px-2">
+          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow">Mode Simple</button>
+          <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow">Mode Custom</button>
+          <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded shadow">Mode Gojs</button>
         </div>
-        <div class="md:w-3/4 p-4 flex items-center justify-center">
-      <div>
-        <div id="game-container" ></div>
-                <div>
-                    <button
-                        class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
-                        @click="restart">Démarrer</button>
-                    <button
-                        class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
-                        @click="restart">Redémarrer</button>
-                    <button
-                        class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
-                        @click="changeScene">Niveau Suivant</button>
-
-                </div>
-            </div>
+        <div class="flex flex-col mb-4">
+          <h3 class="text-xl font-bold mb-2">Capteur Gauche :</h3>
+          <p class="font-bold">Longueur :</p>
+          <input type="number" v-model="numberValue1" placeholder="Entrez un nombre ici"
+            class="px-4 py-2 border border-gray-300 rounded-md">
+          <div class="flex justify-between mt-2">
+            <p class="font-bold">Gauche</p>
+            <p class="font-bold">{{ rangeValue1}} degrés</p>
+            <p class="font-bold">Droite</p>
+          </div>
+          <input type="range" min="-180" max="180" v-model="rangeValue1" class="mt-2">
         </div>
+
+        <div class="flex flex-col mb-4">
+          <h3 class="text-xl font-bold mb-2">Capteur Droit :</h3>
+          <p class="font-bold">Longueur :</p>
+          <input type="number" v-model="numberValue2" placeholder="Entrez un autre nombre ici"
+            class="px-4 py-2 border border-gray-300 rounded-md">
+            <div class="flex justify-between mt-2">
+            <p class="font-bold">Gauche</p>
+            <p class="font-bold">{{ rangeValue2 }} degrés</p>
+            <p class="font-bold">Droite</p>
+          </div>
+          <input type="range" min="-180" max="180" v-model="rangeValue2" class="mt-2">
+        
+        </div>
+
+        <div class="flex flex-col mb-4">
+          <h3 class="text-xl font-bold mb-2">Si les 2 capteurs touchent un objet : {{ rangeValue3 }}</h3>
+          <input type="range" min="-180" max="180" v-model="rangeValue3" class="mt-2">
+        </div>
+
+        <button @click="chargePartie"
+          class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Envoyer</button>
+      </div>
     </div>
+    <div class="md:w-3/4 p-4 flex items-center justify-center">
+      <div>
+        <div id="game-container"></div>
+        <div>
+          <button
+            class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
+            @click="restart">Démarrer</button>
+          <button
+            class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
+            @click="restart">Redémarrer</button>
+          <button
+            class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
+            @click="changeScene">Niveau Suivant</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -89,17 +106,17 @@ export default {
       console.log('Values saved');
     };
     const chargePartie = () => {
-  if (game.value) {
-    game.value.destroy(true);
-    game.value = null;
-  }
-  saveValues();
-  gameStarted.value = true;
-  game.value = StartGame('game-container'); 
-  
+      if (game.value) {
+        game.value.destroy(true);
+        game.value = null;
+      }
+      saveValues();
+      gameStarted.value = true;
+      game.value = StartGame('game-container');
 
-};
- 
+
+    };
+
 
     return { game, gameStarted, chargePartie, numberValue1, numberValue2, rangeValue1, rangeValue2, rangeValue3, changeScene, restart };
   },
