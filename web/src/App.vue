@@ -28,14 +28,10 @@ export default {
   <header v-if="!isHomeRoute" class="">
     <div class="header flex flex-wrap p-1 m-2 lg:flex-row lg:justify-between max-lg:flex-col max-lg:items-center">
       <div class="headerLogoText flex flex-row flex-wrap max-lg:mb-8 max-lg:mr-20">
-        <!-- Logo à gauche -->
+      
 
         <router-link to="/" class="logo">
-          <img class="w-20" src="@/components/icons/logo.png" alt="logo">
-        </router-link>
-
-        <!-- Textes à gauche -->
-        <div class="flex-col ml-4 w-20">
+          <!-- <img class="w-20" src="@/components/icons/logo.png" alt="logo"> -->
           <div>
             <h1 class="text-7xl font-extrabold drop-shadow-[0_8px_4px_rgba(34,0,4,6)] text-red-500">
               NONO
@@ -46,6 +42,12 @@ export default {
               Le Robot
             </h1>
           </div>
+        </router-link>
+
+        <!-- Textes à gauche -->
+        <div class="flex-col ml-4 w-20">
+         
+          
         </div>
       </div>
       <div class="flex flex-row items-center">
