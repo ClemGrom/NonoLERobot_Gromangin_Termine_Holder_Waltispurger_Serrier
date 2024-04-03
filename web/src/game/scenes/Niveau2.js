@@ -28,7 +28,7 @@ export class Niveau2 extends Scene {
 
     this.degresSensorGauche = localStorage.getItem("degresGauche") || 90;
     this.degresSensorDroit = localStorage.getItem("degresDroit") || -90;
-    this.degres2SensorsToucher = localStorage.getItem("degres2SensorsToucher") || 50;
+    this.degres2SensorsTouche = localStorage.getItem("degres2Touche") || false;
     this.vitesseRobot = 100;
 
 
@@ -217,7 +217,14 @@ export class Niveau2 extends Scene {
     }
   
     if (sensorsActivated === 2) {
-      this.robot.angle += 50;
+      console.log(this.degres2SensorsTouche)
+      if (this.degres2SensorsTouche) {
+        this.robot.angle += 40;
+      }else{
+        this.robot.angle += -40;
+      }
+     
+     
     }
   }
 
