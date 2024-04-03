@@ -151,11 +151,11 @@ export class Niveau3 extends Scene {
     if (this.frameCount % 10 === 0) {
       if (this.longueurSensor1 < this.maxlongueurSensor1) {
         this.longueurSensor1 += 5;
-        console.log(this.longueurSensor1);
+        // console.log(this.longueurSensor1);
       }
       if (this.longueurSensor2 < this.maxlongueurSensor2) {
         this.longueurSensor2 += 5;
-        console.log(this.longueurSensor2);
+        // console.log(this.longueurSensor2);
       }
     }
 
@@ -206,11 +206,11 @@ export class Niveau3 extends Scene {
   adjustSensorLength(sensorName) {
     if (sensorName === "sensor1" && this.longueurSensor1 > 0) {
       this.longueurSensor1 -= 5;
-      console.log(this.longueurSensor1);
+      // console.log(this.longueurSensor1);
     }
     if (sensorName === "sensor2" && this.longueurSensor2 > 0) {
       this.longueurSensor2 -= 5;
-      console.log(this.longueurSensor2);
+      // console.log(this.longueurSensor2);
     }
     
   }
@@ -254,7 +254,7 @@ export class Niveau3 extends Scene {
           this.robot.angle += angleChange * normalizedDistance; 
           this.adjustSensorLength(sensorName);
           sensorsActivated++;
-          console.log(`${sensorName} is touching a tile or prop at distance ${distance}`);
+          // console.log(`${sensorName} is touching a tile or prop at distance ${distance}`);
           break;
         }
       }
@@ -326,7 +326,7 @@ export class Niveau3 extends Scene {
 
   consumeEnergy() {
     this.energy -= 0.1; // Consommer une certaine quantité d'énergie
-    console.log(this.energy);
+    // console.log(this.energy);
     if (this.energy <= 0) {
       this.stopEnergy = true; // Arrêter le robot lorsque l'énergie atteint 0
       this.scene.start("GameOver");
