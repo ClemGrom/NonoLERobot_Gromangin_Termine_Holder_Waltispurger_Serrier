@@ -33,7 +33,7 @@ export class Niveau1 extends Scene {
 
     this.degresSensorGauche = localStorage.getItem("degresGauche") || 90;
     this.degresSensorDroit = localStorage.getItem("degresDroit") || -90;
-    this.degres2SensorsToucher = localStorage.getItem("degres2Touche") || 50;
+    this.degres2SensorsToucher = localStorage.getItem("degres2Touche") ||false;
     this.vitesseRobot = 100;
 
     this.health = 4;
@@ -206,15 +206,15 @@ export class Niveau1 extends Scene {
     if (this.frameCount % 10 === 0) {
       if (this.longueurSensor1 < this.maxlongueurSensor1) {
         this.longueurSensor1 += 5;
-        console.log(this.longueurSensor1);
+        // console.log(this.longueurSensor1);
       }
       if (this.longueurSensor2 < this.maxlongueurSensor2) {
         this.longueurSensor2 += 5;
-        console.log(this.longueurSensor2);
+        // console.log(this.longueurSensor2);
       }
       if (this.longueurMidSensor < this.maxlongueurMidSensor) {
         this.longueurMidSensor += 5;
-        console.log(this.longueurMidSensor);
+        // console.log(this.longueurMidSensor);
       }
     }
 
@@ -291,15 +291,15 @@ export class Niveau1 extends Scene {
   adjustSensorLength(sensorName) {
     if (sensorName === "sensor1" && this.longueurSensor1 > 0) {
       this.longueurSensor1 -= 5;
-      console.log(this.longueurSensor1);
+      // console.log(this.longueurSensor1);
     }
     if (sensorName === "sensor2" && this.longueurSensor2 > 0) {
       this.longueurSensor2 -= 5;
-      console.log(this.longueurSensor2);
+      // console.log(this.longueurSensor2);
     }
     if (sensorName === "midSensor" && this.longueurMidSensor > 0) {
       this.longueurMidSensor -= 5;
-      console.log(this.longueurMidSensor);
+      // console.log(this.longueurMidSensor);
     }
   }
   
@@ -346,14 +346,21 @@ export class Niveau1 extends Scene {
           this.robot.angle += angleChange * normalizedDistance; 
           this.adjustSensorLength(sensorName);
           sensorsActivated++;
-          console.log(`${sensorName} is touching a tile or prop at distance ${distance}`);
+          // console.log(`${sensorName} is touching a tile or prop at distance ${distance}`);
           break;
         }
       }
     }
   
     if (sensorsActivated === 2) {
-      this.robot.angle += 50;
+      console.log(this.degres2SensorsTouche)
+      if (this.degres2SensorsTouche) {
+        this.robot.angle += 40;
+      }else{
+        this.robot.angle += -40;
+      }
+     
+     
     }
   }
   
@@ -426,7 +433,7 @@ export class Niveau1 extends Scene {
 
   consumeEnergy() {
     this.energy -= 0.1; // Consommer une certaine quantité d'énergie
-    console.log(this.energy);
+    // console.log(this.energy);
     if (this.energy <= 0) {
       this.stopEnergy = true; // Arrêter le robot lorsque l'énergie atteint 0
       this.scene.start("GameOver");
