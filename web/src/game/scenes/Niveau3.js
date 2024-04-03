@@ -7,49 +7,51 @@ export class Niveau3 extends Scene {
 
     this.frameCount = 0;
 
-    // Initialisez les variables des capteurs à true pour les activer par défaut
+    // Initialisation des capteurs actifs ou non
     this.sensor1Active = true;
     this.sensor2Active = true;
-    
+
+    // Initialisation des longueurs des capteurs
     this.maxlongueurSensor1 = localStorage.getItem("tailleSensorGauche") || 50;
     this.maxlongueurSensor2 = localStorage.getItem("tailleSensorDroit") || 50;
     this.longueurSensor1 = 0;
     this.longueurSensor2 = 0;
-   
 
-    // Initialisez le drapeau pour arrêter le robot à false
-    this.stopRobot = false;
-
-    // Initialisez la rotation cible du robot
-    this.targetRotation = 0;
+    //Capteurs
     this.sensor1 = null;
     this.sensor2 = null;
 
+    // Initialisation des angles des capteurs
     this.degresSensorGauche = localStorage.getItem("degresGauche") || 90;
     this.degresSensorDroit = localStorage.getItem("degresDroit") || -90;
     this.degres2SensorsTouche = localStorage.getItem("degres2Touche") || false;
+
+    // Initialisation de la vitesse du robot
     this.vitesseRobot = 100;
 
+    // Initialisation de la santé du robot
     this.health = 4;
 
-    this.energy = 100; 
-    this.stopEnergy = false;
-
+    // Initialisation des angles des capteurs par défaut
     this.defaultangleGauche = 45;
     this.defaultangleDroit = 45;
-
-    
   }
 
   create() {
     this.carteDuNiveau = this.make.tilemap({ key: "niveau3" });
+
+    // Création du robot
+    this.robot = this.physics.add.image(50, 75, "robot");
+    //comme un calque le robot est au dessus
+    this.robot.setDepth(1);
+    //Direction et vitese du robot
+    this.robot.setVelocityX(this.vitesseRobot);
 
     // Créer le tileset pour le calque "Niveau"
     const tilesetVaisseau = this.carteDuNiveau.addTilesetImage(
       "vaisseau",
       "tuilesJeu"
     );
-   
 
     // Créer les calques
     this.calqueNiveau = this.carteDuNiveau.createLayer(
@@ -59,116 +61,104 @@ export class Niveau3 extends Scene {
 
     // Définir les collisions
     this.calqueNiveau.setCollisionByProperty({ estSolide: true });
-
-
-     // Création du robot
-     this.robot = this.physics.add.image(50, 75, "robot");
-     this.robot.body.collideWorldBounds = true;
-     this.robot.setDepth(1);
-    //  this.robot.angle += 10; // Ajoutez cette ligne pour augmenter l'angle initial du robot de 10 degrés
- 
-     // collision entre le robot et le calque de niveau
-     this.physics.add.collider(this.robot, this.calqueNiveau);
-
-    this.cursors = this.input.keyboard.createCursorKeys();
+    // collision entre le robot et le calque de niveau
+    this.physics.add.collider(this.robot, this.calqueNiveau);
 
     // Création des capteurs
     this.sensor1 = new Phaser.Geom.Line();
     this.sensor2 = new Phaser.Geom.Line();
-   
 
-    // Créez l'objet graphics
+    // Initialisation des longueurs des capteurs
+    this.longueurSensor1 = this.maxlongueurSensor1;
+    this.longueurSensor2 = this.maxlongueurSensor2;
+    // Créez l'objet graphics pour les lignes du capteurs
     this.graphics = this.add.graphics({
       lineStyle: { width: 2, color: 0x00ff00 },
     });
-    this.robot.setVelocityX(this.vitesseRobot);
 
-    this.longueurSensor1 = this.maxlongueurSensor1;
-    this.longueurSensor2 = this.maxlongueurSensor2;
+    //Clavier
+    this.cursors = this.input.keyboard.createCursorKeys();
 
-    EventBus.emit("current-scene-ready", this);
-
-
+    //
+    // Batteries
+    //
     this.batteries = this.physics.add.group(); // Créer un groupe pour les batteries
 
     let batterie = this.physics.add.image(500, 75, "batterie");
     let batterie2 = this.physics.add.image(800, 200, "batterie");
     let batterie3 = this.physics.add.image(500, 300, "batterie");
     let batterie4 = this.physics.add.image(100, 200, "batterie");
-    
-      this.batteries.add(batterie);
-      this.batteries.add(batterie2);
-      this.batteries.add(batterie3);
-      this.batteries.add(batterie4);
-    
 
-    
-      this.physics.add.overlap(
-        this.robot,
-        this.batteries,
-        function (robot, batterie) {
-          batterie.destroy();
-          this.energy += 20; // Augmenter l'énergie lorsque le robot ramasse une batterie
-        },
-        null,
-        this
-      );
+    this.batteries.add(batterie);
+    this.batteries.add(batterie2);
+    this.batteries.add(batterie3);
+    this.batteries.add(batterie4);
 
-    // Créez l'objet graphics
+    this.physics.add.overlap(
+      this.robot,
+      this.batteries,
+      function (robot, batterie) {
+        batterie.destroy();
+        this.energy += 20; // Augmenter l'énergie lorsque le robot ramasse une batterie
+      },
+      null,
+      this
+    );
+
+    // Créez l'objet graphics  pour la vie
     this.vieGraphics = this.add.graphics({
       lineStyle: { width: 2, color: 0x00ff00 },
-      fillStyle: { color: 0xff0000 }
+      fillStyle: { color: 0xff0000 },
     });
 
-        // Dessinez la barre de santé initiale
-        this.drawHealthBar();
+    // Dessinez la barre de santé initiale
+    this.drawHealthBar();
 
-    this.energy = 100; 
-    this.stopEnergy = false;
-
+    EventBus.emit("current-scene-ready", this);
   }
 
   update() {
-    
-    // Définissez la position initiale des capteurs
+    this.frameCount++;
+    // Définis à chaque frame la position et l'angle des capteurs
     this.updateSensors();
 
     // Déplacement du robot
     this.moveRobot(this.cursors);
 
-    // Vérifiez si les capteurs intersectent les astéroïdes
+    // Vérifie si les capteurs du robot touchent un obstacle
     this.checkSensorIntersections();
 
     // Dessine les capteurs du robot sur l'écran
     this.drawSensors(this.graphics);
+    this.drawHealthBar();
 
-    // Met à jour la vitesse du robot en fonction de son orientation et de l'état du drapeau stopRobot
+    // Met à jour la vitesse du robot en fonction de son orientation
     this.updateRobotVelocity();
-
-    
-    this.frameCount++;
 
     // Met à jour le joueur toutes les 10 frames
     if (this.frameCount % 10 === 0) {
       if (this.longueurSensor1 < this.maxlongueurSensor1) {
         this.longueurSensor1 += 5;
-        // console.log(this.longueurSensor1);
       }
       if (this.longueurSensor2 < this.maxlongueurSensor2) {
         this.longueurSensor2 += 5;
-        // console.log(this.longueurSensor2);
+      }
+      if (this.longueurMidSensor < this.maxlongueurMidSensor) {
+        this.longueurMidSensor += 5;
+      }
+      if (!this.stopEnergy) {
+        this.consumeEnergy();
       }
     }
 
-    if (this.robot.x > 640 && this.robot.x < 704 && this.robot.y > 160 && this.robot.y < 224) {
+    if (
+      this.robot.x > 640 &&
+      this.robot.x < 704 &&
+      this.robot.y > 160 &&
+      this.robot.y < 224
+    ) {
       this.changeScene();
-  }
-
-  if (!this.stopEnergy) {
-    this.consumeEnergy(); // Consommer de l'énergie à chaque mise à jour
-  }
- 
-  this.drawHealthBar(); // Dessiner la barre de santé
+    }
   }
 
   //########################
@@ -176,14 +166,16 @@ export class Niveau3 extends Scene {
   //########################
 
   updateSensors() {
-    // Mettez à jour la position et l'angle des capteurs
-    let angle1 = Phaser.Math.DegToRad(this.robot.angle - this.defaultangleGauche);
-    let angle2 = Phaser.Math.DegToRad(this.robot.angle + this.defaultangleDroit);
-    
+    //Mets à jour la position et l'angle des capteurs
+    let angle1 = Phaser.Math.DegToRad(
+      this.robot.angle - this.defaultangleGauche
+    );
+    let angle2 = Phaser.Math.DegToRad(
+      this.robot.angle + this.defaultangleDroit
+    );
 
-    // Mise à jour des capteurs seulement si leur variable active est true
+    // Si le capteur est actif alors on le met à jour
     if (this.sensor1Active) {
-      // 200 à la fin est la longueur du capteur
       Phaser.Geom.Line.SetToAngle(
         this.sensor1,
         this.robot.x,
@@ -201,21 +193,18 @@ export class Niveau3 extends Scene {
         this.longueurSensor2
       );
     }
-    
   }
-
+  // Fonction pour ajuster la longueur des capteurs
   adjustSensorLength(sensorName) {
     if (sensorName === "sensor1" && this.longueurSensor1 > 0) {
       this.longueurSensor1 -= 5;
-      // console.log(this.longueurSensor1);
     }
     if (sensorName === "sensor2" && this.longueurSensor2 > 0) {
       this.longueurSensor2 -= 5;
-      // console.log(this.longueurSensor2);
     }
-    
   }
 
+  // Fonction pour vérifier si les capteurs touchent un obstacle
   checkSensorIntersections() {
     let activeSensors = [
       {
@@ -233,120 +222,117 @@ export class Niveau3 extends Scene {
         maxLength: this.maxlongueurSensor2,
       },
     ];
-  
+
+    // Compteur pour les capteurs activés
     let sensorsActivated = 0;
-  
+    // Pour chaque capteur actif, vérifie s'il touche un obstacle
     for (let i = 0; i < activeSensors.length; i++) {
       let sensorData = activeSensors[i];
       if (!sensorData.isActive) continue;
-  
+      // Récupère les données du capteur
       let sensor = sensorData.sensor;
       let angleChange = sensorData.angleChange;
       let sensorName = sensorData.name;
       let maxSensorLength = sensorData.maxLength;
-  
+
+      // Récupère les tuiles touchées par le capteur
       let tiles = this.calqueNiveau.getTilesWithinShape(sensor);
       let combined = tiles;
-  
+
+      // Pour chaque tuile touchée, ajuste l'angle du robot
       for (let j = 0; j < combined.length; j++) {
         if (combined[j].properties.estSolide) {
+          // Récupère la distance entre le robot et l'obstacle
           let distance = Phaser.Geom.Line.Length(sensor);
+          // Normalise la distance pour obtenir une valeur entre 0 et 1
           let normalizedDistance = 1 - distance / maxSensorLength;
-          this.robot.angle += angleChange * normalizedDistance; 
+          // Ajuste l'angle du robot en fonction de la distance
+          this.robot.angle += angleChange * normalizedDistance;
+          // Ajuste la longueur du capteur
           this.adjustSensorLength(sensorName);
           sensorsActivated++;
-          // console.log(`${sensorName} is touching a tile or prop at distance ${distance}`);
           break;
         }
       }
     }
-  
+    // Si les deux capteurs sont activés, ajuste l'angle du robot en fonction de leur état
     if (sensorsActivated === 2) {
-      console.log(this.degres2SensorsTouche)
+      console.log(this.degres2SensorsTouche);
       if (this.degres2SensorsTouche) {
         this.robot.angle += 40;
-      }else{
+      } else {
         this.robot.angle += -40;
       }
-     
-     
     }
   }
 
+  // Dessine les capteurs sur l'écran
   drawSensors() {
     this.graphics.clear();
-    // Dessin des capteurs seulement si leur variable active est true
+    // Dessine des capteurs seulement si leur variable active est true
     if (this.sensor1Active) {
       this.graphics.strokeLineShape(this.sensor1);
     }
     if (this.sensor2Active) {
       this.graphics.strokeLineShape(this.sensor2);
     }
-    
   }
 
+  // Déplace le robot en fonction des entrées claviers de l'utilisateur
   moveRobot() {
     // Rotation du robot
     let keyK = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K);
     let keyL = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L);
 
     if (keyK.isDown) {
-      // Si la touche 'K' est enfoncée, faites tourner le robot vers la gauche
       this.robot.angle -= 10;
     }
     if (keyL.isDown) {
-      // Si la touche 'L' est enfoncée, faites tourner le robot vers la droite
       this.robot.angle += 10;
     }
   }
 
+  // Met à jour la vitesse du robot en fonction de son orientation
   updateRobotVelocity() {
     let vx = 0;
     let vy = 0;
-    // Only set the robot's velocity if the stop flag is not set
-    if (!this.stopRobot) {
-      // Calculate the velocity components based on the robot's angle
-      let angleInRadians = Phaser.Math.DegToRad(this.robot.angle);
-      vx = Math.cos(angleInRadians) * this.vitesseRobot;
-      vy = Math.sin(angleInRadians) * this.vitesseRobot;
 
-      // Update the robot's velocity
-      this.robot.setVelocity(vx, vy);
-    } else {
- 
-      this.robot.setVelocity(0, 0);
+    //Met à jour la direction du robot
+    let angleInRadians = Phaser.Math.DegToRad(this.robot.angle);
+    vx = Math.cos(angleInRadians) * this.vitesseRobot;
+    vy = Math.sin(angleInRadians) * this.vitesseRobot;
+
+    // Met à jour la vitesse du robot
+    this.robot.setVelocity(vx, vy);
+  }
+
+  // Dessine la barre de santé du robot
+  drawHealthBar() {
+    // Efface la barre de santé précédente
+    this.vieGraphics.clear();
+
+    // Calcule le nombre de barres de santé à dessiner
+    let healthBars = Math.floor(this.energy / 20);
+
+    // Dessine la nouvelle barre de santé
+    for (let i = 0; i < healthBars; i++) {
+      this.vieGraphics.fillStyle(0xff0000); // Red color
+      this.vieGraphics.fillRect(925 - i * 20, 5, 15, 15);
     }
   }
 
-  drawHealthBar() {
-    // Clear the previous health bar
-    this.vieGraphics.clear();
-
-    // Calculate the number of health bars to draw
-    let healthBars = Math.floor(this.energy / 20);
-
-    // Draw new health bar
-    for (let i = 0; i < healthBars; i++) {
-        this.vieGraphics.fillStyle(0xff0000); // Red color
-        this.vieGraphics.fillRect(925 - (i * 20), 5, 15, 15); 
-    }
-}
-
-  consumeEnergy() {
-    this.energy -= 0.1; // Consommer une certaine quantité d'énergie
+   // Consomme de l'énergie à chaque frame
+   consumeEnergy() {
+    this.energy -= 1; 
     // console.log(this.energy);
+    // Si l'énergie est inférieure ou égale à 0, arrête le robot
     if (this.energy <= 0) {
-      this.stopEnergy = true; // Arrêter le robot lorsque l'énergie atteint 0
+      this.stopEnergy = true; 
       this.scene.start("GameOver");
     }
   }
   changeScene() {
     this.stopEnergy = true;
-    this.scene.start("Niveau3");
+    this.scene.start("Niveau4");
   }
-  
 }
-
-
-
-

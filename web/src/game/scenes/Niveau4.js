@@ -17,7 +17,7 @@ export class Niveau4 extends Scene {
     this.longueurSensor2 = 0;
 
     // Initialisez le drapeau pour arrêter le robot à false
-    this.stopRobot = false;
+    // this.stopRobot = false;
 
     // Initialisez la rotation cible du robot
     this.targetRotation = 90;
@@ -36,6 +36,7 @@ export class Niveau4 extends Scene {
 
     this.defaultangleGauche = 45;
     this.defaultangleDroit = 45;
+
   }
 
   create() {
@@ -57,11 +58,11 @@ export class Niveau4 extends Scene {
     this.calqueNiveau.setCollisionByProperty({ estSolide: true });
 
     // Création du robot
-    this.robot = this.physics.add.image(500, 100, "robot");
+    this.robot = this.physics.add.image(700, 100, "robot");
 
     //  this.robot.body.collideWorldBounds = true;
     this.robot.setDepth(1);
-    this.robot.angle += 180; // Ajoutez cette ligne pour augmenter l'angle initial du robot de 10 degrés
+    // this.robot.angle += 0; // Ajoutez cette ligne pour augmenter l'angle initial du robot de 10 degrés
 
    // Supposons que la largeur et la hauteur de votre niveau soient stockées dans les variables niveauLargeur et niveauHauteur
 let niveauLargeur = 1300; // Remplacez par la largeur réelle de votre niveau
@@ -121,6 +122,9 @@ this.physics.add.collider(this.robot, this.calqueNiveau);
 
     // this.energy = 100;
     // this.stopEnergy = false;
+
+    let timer = 0;
+let intervalId = null;
   }
 
   update() {
@@ -154,8 +158,8 @@ this.physics.add.collider(this.robot, this.calqueNiveau);
     }
 
     if (
-      this.robot.x > 700 &&
-      this.robot.x < 800 &&
+      this.robot.x > 500 &&
+      this.robot.x < 700 &&
       this.robot.y > 0 &&
       this.robot.y < 300
     ) {
@@ -301,8 +305,7 @@ this.physics.add.collider(this.robot, this.calqueNiveau);
   updateRobotVelocity() {
     let vx = 0;
     let vy = 0;
-    // Only set the robot's velocity if the stop flag is not set
-    if (!this.stopRobot) {
+    
       // Calculate the velocity components based on the robot's angle
       let angleInRadians = Phaser.Math.DegToRad(this.robot.angle);
       vx = Math.cos(angleInRadians) * this.vitesseRobot;
@@ -310,9 +313,7 @@ this.physics.add.collider(this.robot, this.calqueNiveau);
 
       // Update the robot's velocity
       this.robot.setVelocity(vx, vy);
-    } else {
-      this.robot.setVelocity(0, 0);
-    }
+   
   }
 
   // drawHealthBar() {
@@ -341,4 +342,6 @@ this.physics.add.collider(this.robot, this.calqueNiveau);
     this.stopEnergy = true;
     this.scene.start("Niveau4");
   }
+
+  
 }

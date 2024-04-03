@@ -17,8 +17,7 @@ export class Niveau2 extends Scene {
     this.longueurSensor2 = 0;
    
 
-    // Initialisez le drapeau pour arrêter le robot à false
-    this.stopRobot = false;
+    
 
     // Initialisez la rotation cible du robot
     this.targetRotation = 0;
@@ -258,8 +257,7 @@ export class Niveau2 extends Scene {
   updateRobotVelocity() {
     let vx = 0;
     let vy = 0;
-    // Only set the robot's velocity if the stop flag is not set
-    if (!this.stopRobot) {
+ 
       // Calculate the velocity components based on the robot's angle
       let angleInRadians = Phaser.Math.DegToRad(this.robot.angle);
       vx = Math.cos(angleInRadians) * this.vitesseRobot;
@@ -267,10 +265,7 @@ export class Niveau2 extends Scene {
 
       // Update the robot's velocity
       this.robot.setVelocity(vx, vy);
-    } else {
- 
-      this.robot.setVelocity(0, 0);
-    }
+   
   }
 
   changeScene() {
