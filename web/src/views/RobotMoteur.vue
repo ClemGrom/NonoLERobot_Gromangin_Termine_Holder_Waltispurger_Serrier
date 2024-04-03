@@ -86,7 +86,7 @@ export default {
     const numberValue1 = ref(localStorage.getItem('tailleSensorGauche') || 50);
     const numberValue2 = ref(localStorage.getItem('tailleSensorDroit') || -50);
     const rangeValue1 = ref(localStorage.getItem('degresGauche') || 50);
-    const rangeValue2 = ref(localStorage.getItem('degresDroit') || -50);
+    const rangeValue2 = ref(localStorage.getItem('degresDroit') || 50);
     const rangeValue3 = ref(localStorage.getItem('degres2Touche') || 60);
 
     onMounted(() => {
@@ -104,16 +104,33 @@ export default {
     };
 
     const changeScene = () => {
+        // Stop the current scene
+  game.value.scene.stop(scenes.value[currentSceneIndex.value]);
       currentSceneIndex.value = (currentSceneIndex.value + 1) % scenes.value.length;
       game.value.scene.start(scenes.value[currentSceneIndex.value]);
     };
     const startLevel = (levelIndex) => {
-      console.log('startLevel', levelIndex);
+  // Ensure the level index is valid
+  if (levelIndex < 0 || levelIndex >= scenes.value.length) {
+    console.error(`Invalid level index: ${levelIndex}`);
+    return;
+  }
+
+  // Stop the current scene
+  game.value.scene.stop(scenes.value[currentSceneIndex.value]);
+
+  // Reset the game state here
+  // This depends on how your game is designed
+  // For example, if you have game objects or scores to reset, do it here
+
+  // Start the new level
   currentSceneIndex.value = levelIndex;
   game.value.scene.start(scenes.value[currentSceneIndex.value]);
 };
 
     const restart = () => {
+        // Stop the current scene
+  game.value.scene.stop(scenes.value[currentSceneIndex.value]);
       game.value.scene.start(scenes.value[currentSceneIndex.value]);
     };
 
