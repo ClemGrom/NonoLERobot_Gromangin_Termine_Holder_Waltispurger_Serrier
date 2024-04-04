@@ -10,28 +10,32 @@ export class Niveau1 extends Scene {
 
     // Initialisation des capteurs actifs ou non
     this.sensor1Active = true;
-    this.sensor2Active = true;
-    this.midSensorActive = false;
-    this.rightsideSensorActive = false;
-    this.leftsideSensorActive = false;
+    this.sensor2Active = false;
+    this.sensor3Active = true;
+    this.sensor4Active = true;
 
     // Initialisation des longueurs des capteurs
     this.maxlongueurSensor1 = localStorage.getItem("tailleSensorGauche") || 50;
     this.maxlongueurSensor2 = localStorage.getItem("tailleSensorDroit") || 50;
-    this.maxlongueurMidSensor = 100;
+    this.maxlongueurSensor3 = 50;
+    this.maxlongueurSensor4= 50;
     this.longueurSensor1 = 0;
     this.longueurSensor2 = 0;
-    this.longueurMidSensor = 0;
+    this.longueurSensor3 = 0;
+    this.longueurSensor4 = 0;
 
     // Capteurs
     this.sensor1 = null;
     this.sensor2 = null;
-    this.midSensor = null;
+    this.sensor3 = null;
+    this.sensor4 = null;
 
     // Initialisation des angles des capteurs
     this.degresSensorGauche = localStorage.getItem("degresGauche") || 90;
     this.degresSensorDroit = localStorage.getItem("degresDroit") || -90;
     this.degres2SensorsToucher = localStorage.getItem("degres2Touche") || false;
+    this.degresSensor3 = 50;
+    this.degresSensor4 = -50;
 
     // Initialisation de la vitesse du robot
     this.vitesseRobot = 100;
@@ -42,6 +46,8 @@ export class Niveau1 extends Scene {
     // Initialisation des angles des capteurs par défaut
     this.defaultangleGauche = 45;
     this.defaultangleDroit = 45;
+    this.defaultangle3 = 135;
+    this.defaultangle4 = 135;
   }
 
   create() {
@@ -84,11 +90,7 @@ export class Niveau1 extends Scene {
       lineStyle: { width: 2, color: 0x00ff00 },
     });
 
-     // Initialisation des longueurs des capteurs
-     this.longueurSensor1 = this.maxlongueurSensor1;
-     this.longueurSensor2 = this.maxlongueurSensor2;
-     this.longueurMidSensor = this.maxlongueurMidSensor;
-    
+     
      //
     // Batteries
     //
@@ -136,22 +138,15 @@ export class Niveau1 extends Scene {
     // Création des capteurs
     this.sensor1 = new Phaser.Geom.Line();
     this.sensor2 = new Phaser.Geom.Line();
-    this.midSensor = new Phaser.Geom.Line();
-    this.rightsideSensor = new Phaser.Geom.Triangle.BuildEquilateral(
-      this.robot.x,
-      this.robot.y,
-      100
-    );
-    this.leftsideSensor = new Phaser.Geom.Triangle.BuildEquilateral(
-      this.robot.x,
-      this.robot.y,
-      100
-    );
-     // Initialisation des longueurs des capteurs
-     this.longueurSensor1 = this.maxlongueurSensor1;
-     this.longueurSensor2 = this.maxlongueurSensor2;
-     this.longueurMidSensor = this.maxlongueurMidSensor;
- 
+    this.sensor3 = new Phaser.Geom.Line();
+    this.sensor4 = new Phaser.Geom.Line();
+    
+    // Initialisation des longueurs des capteurs
+    this.longueurSensor1 = this.maxlongueurSensor1;
+    this.longueurSensor2 = this.maxlongueurSensor2;
+    this.longueurSensor3 = this.maxlongueurSensor3;
+   this.longueurSensor4 = this.maxlongueurSensor4;
+   
 
     // Créez l'objet graphics
     this.graphics = this.add.graphics({
@@ -202,8 +197,11 @@ export class Niveau1 extends Scene {
       if (this.longueurSensor2 < this.maxlongueurSensor2) {
         this.longueurSensor2 += 5;
       }
-      if (this.longueurMidSensor < this.maxlongueurMidSensor) {
-        this.longueurMidSensor += 5;
+      if (this.longueurSensor3 < this.maxlongueurSensor3) {
+        this.longueurSensor3+= 5;
+      }
+      if (this.longueurSensor4 < this.maxlongueurSensor4) {
+        this.longueurSensor4 += 5;
       }
       if (!this.stopEnergy) {
 
@@ -225,9 +223,9 @@ export class Niveau1 extends Scene {
     //Mets à jour la position et l'angle des capteurs
     let angle1 = Phaser.Math.DegToRad(this.robot.angle - this.defaultangleGauche);
     let angle2 = Phaser.Math.DegToRad(this.robot.angle + this.defaultangleDroit);
-    let angleMid = Phaser.Math.DegToRad(this.robot.angle);
-    let angleRight = Phaser.Math.DegToRad(this.robot.angle - 45);
-    let angleLeft = Phaser.Math.DegToRad(this.robot.angle + 45);
+    let angle3= Phaser.Math.DegToRad(this.robot.angle + this.defaultangle3);
+    let angle4 = Phaser.Math.DegToRad(this.robot.angle - this.defaultangle4);
+    
 
     // Si le capteur est actif alors on le met à jour
     if (this.sensor1Active) {
@@ -236,25 +234,11 @@ export class Niveau1 extends Scene {
     if (this.sensor2Active) {
       Phaser.Geom.Line.SetToAngle(this.sensor2,this.robot.x,this.robot.y,angle2,this.longueurSensor2);
     }
-    if (this.midSensorActive) {
-      Phaser.Geom.Line.SetToAngle(this.midSensor,this.robot.x,this.robot.y,angleMid,this.longueurMidSensor);
+    if (this.sensor3Active) {
+      Phaser.Geom.Line.SetToAngle(this.sensor3,this.robot.x,this.robot.y,angle3,this.longueurSensor3);
     }
-    if (this.rightsideSensorActive) {
-      this.rightsideSensor.setTo(this.robot.x,this.robot.y, this.robot.x + Math.cos(angleRight) * 100,
-        this.robot.y + Math.sin(angleRight) * 100,
-        this.robot.x + Math.cos(angleRight - Math.PI / 2) * 100,
-        this.robot.y + Math.sin(angleRight - Math.PI / 2) * 100
-      );
-    }
-    if (this.leftsideSensorActive) {
-      this.leftsideSensor.setTo(
-        this.robot.x,
-        this.robot.y,
-        this.robot.x + Math.cos(angleLeft) * 100,
-        this.robot.y + Math.sin(angleLeft) * 100,
-        this.robot.x + Math.cos(angleLeft + Math.PI / 2) * 100,
-        this.robot.y + Math.sin(angleLeft + Math.PI / 2) * 100
-      );
+    if (this.sensor4Active) {
+      Phaser.Geom.Line.SetToAngle(this.sensor4,this.robot.x,this.robot.y,angle4,this.longueurSensor4);
     }
   }
 
@@ -266,9 +250,11 @@ export class Niveau1 extends Scene {
     if (sensorName === "sensor2" && this.longueurSensor2 > 0) {
       this.longueurSensor2 -= 5;
     }
-    if (sensorName === "midSensor" && this.longueurMidSensor > 0) {
-      this.longueurMidSensor -= 5;
-
+    if (sensorName === "sensor3" && this.longueurSensor3 > 0) {
+      this.longueurSensor3 -= 5;
+    }
+    if (sensorName === "sensor4" && this.longueurSensor4 > 0) {
+      this.longueurSensor4 -= 5;
     }
   }
 
@@ -288,6 +274,20 @@ export class Niveau1 extends Scene {
         angleChange: this.degresSensorDroit,
         name: "sensor2",
         maxLength: this.maxlongueurSensor2,
+      },
+      {
+        isActive: this.sensor3Active,
+        sensor: this.sensor3,
+        angleChange: this.degresSensor3,
+        name: "sensor3",
+        maxLength: this.maxlongueurSensor3,
+      },
+      {
+        isActive: this.sensor4Active,
+        sensor: this.sensor4,
+        angleChange: this.degresSensor4,
+        name: "sensor4",
+        maxLength: this.maxlongueurSensor4,
       },
     ];
 
@@ -347,15 +347,13 @@ export class Niveau1 extends Scene {
     if (this.sensor2Active) {
       this.graphics.strokeLineShape(this.sensor2);
     }
-    if (this.midSensorActive) {
-      this.graphics.strokeLineShape(this.midSensor);
+    if (this.sensor3Active) {
+      this.graphics.strokeLineShape(this.sensor3);
     }
-    if (this.rightsideSensorActive) {
-      this.graphics.strokeTriangleShape(this.rightsideSensor);
+    if (this.sensor4Active) {
+      this.graphics.strokeLineShape(this.sensor4);
     }
-    if (this.leftsideSensorActive) {
-      this.graphics.strokeTriangleShape(this.leftsideSensor);
-    }
+   
   }
 
   // Déplace le robot en fonction des entrées claviers de l'utilisateur
@@ -408,68 +406,6 @@ export class Niveau1 extends Scene {
       this.scene.start("GameOver");
     }
   }
-
-  //   lineIntersectsTriangle(line, triangle) {
-  //     let triangleLines = [
-  //       new Phaser.Geom.Line(triangle.x1, triangle.y1, triangle.x2, triangle.y2),
-  //       new Phaser.Geom.Line(triangle.x2, triangle.y2, triangle.x3, triangle.y3),
-  //       new Phaser.Geom.Line(triangle.x3, triangle.y3, triangle.x1, triangle.y1),
-  //     ];
-
-  //     for (let i = 0; i < triangleLines.length; i++) {
-  //       if (Phaser.Geom.Intersects.LineToLine(line, triangleLines[i])) {
-  //         return true;
-  //       }
-  //     }
-
-  //     return false;
-  //   }
-
-  //   triangleIntersectsRectangle(triangle, rectangle) {
-  //     let rectangleLines = [
-  //       new Phaser.Geom.Line(
-  //         rectangle.x,
-  //         rectangle.y,
-  //         rectangle.x + rectangle.width,
-  //         rectangle.y
-  //       ),
-  //       new Phaser.Geom.Line(
-  //         rectangle.x,
-  //         rectangle.y,
-  //         rectangle.x,
-  //         rectangle.y + rectangle.height
-  //       ),
-  //       new Phaser.Geom.Line(
-  //         rectangle.x + rectangle.width,
-  //         rectangle.y,
-  //         rectangle.x + rectangle.width,
-  //         rectangle.y + rectangle.height
-  //       ),
-  //       new Phaser.Geom.Line(
-  //         rectangle.x,
-  //         rectangle.y + rectangle.height,
-  //         rectangle.x + rectangle.width,
-  //         rectangle.y + rectangle.height
-  //       ),
-  //     ];
-
-  //     for (let i = 0; i < rectangleLines.length; i++) {
-  //       if (this.lineIntersectsTriangle(rectangleLines[i], triangle)) {
-  //         return true;
-  //       }
-  //     }
-
-  //     return false;
-  //   }
-  //   lerpAngle(a, b, t) {
-  //     let delta = Phaser.Math.Angle.Wrap(b - a);
-
-  //     // If delta > 180, go the other way instead
-  //     if (delta > Math.PI) delta -= Math.PI * 2;
-
-  //     return a + delta * t;
-  //   }
-
   
   changeScene() {
     this.stopEnergy = true;
