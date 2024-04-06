@@ -45,6 +45,8 @@ export class Preloader extends Scene
         this.load.tilemapTiledJSON("niveau1", "niveau1.json"); // Chargement de la carte
         this.load.tilemapTiledJSON("niveau2", "niveau2.json");
         this.load.tilemapTiledJSON("niveau3", "niveau3.json");
+        this.load.tilemapTiledJSON("niveau4", "niveau4.json");
+        this.load.tilemapTiledJSON("niveau5", "niveau5.json");
     }
 
     create ()

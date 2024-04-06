@@ -6,6 +6,8 @@ import Phaser from 'phaser';
 import { Preloader } from './scenes/Preloader';
 import { Niveau2 } from './scenes/Niveau2.js';
 import { Niveau3 } from './scenes/Niveau3.js';
+import { Niveau4 } from './scenes/Niveau4.js';
+import { NiveauTest } from './scenes/NiveauTest.js';
 
 const config = {
     type: Phaser.AUTO,
@@ -26,7 +28,10 @@ const config = {
         Niveau1,
         Niveau2,
         Niveau3,
+        Niveau4,
+        // Niveau5,
         GameOver,
+        NiveauTest
     ]
 };
 
