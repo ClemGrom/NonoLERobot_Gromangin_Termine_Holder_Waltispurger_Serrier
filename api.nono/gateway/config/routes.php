@@ -20,7 +20,6 @@ return function(\Slim\App $app):void {
     //PARTIES
 
 
-
     //CORS
     $app->options('/{routes:.+}', function ($request, $response, $args) {
         return $response; // Renvoie une réponse HTTP vide
