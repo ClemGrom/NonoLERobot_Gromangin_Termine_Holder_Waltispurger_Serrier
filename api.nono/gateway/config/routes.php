@@ -17,6 +17,10 @@ return function(\Slim\App $app):void {
     $app->get('/users/validate', MethodAuthentificationAction::class)
         ->setName('validateTokenJWT');
 
+    //PARTIES
+
+
+
     //CORS
     $app->options('/{routes:.+}', function ($request, $response, $args) {
         return $response; // Renvoie une réponse HTTP vide
