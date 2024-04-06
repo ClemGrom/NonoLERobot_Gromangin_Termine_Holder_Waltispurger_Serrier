@@ -1,4 +1,4 @@
-import { updatePartyStatus } from "../../services/PartiesServices.js";
+import { updatePartyStatus } from "../services/PartiesServices.js";
 
 export default async (req, res, next) => {
     try {

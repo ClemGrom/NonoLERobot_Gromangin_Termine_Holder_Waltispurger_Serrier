@@ -1,4 +1,4 @@
-import { createParty } from "../../services/PartiesServices.js";
+import { createParty } from "../services/PartiesServices.js";
 
 export default async (req, res, next) => {
     try {

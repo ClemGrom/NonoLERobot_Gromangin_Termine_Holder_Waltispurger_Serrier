@@ -1,4 +1,4 @@
-import { getUserParties } from "../../services/PartiesServices.js";
+import { getUserParties } from "../services/PartiesServices.js";
 
 export default async (req, res, next) => {
     try {
