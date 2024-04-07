@@ -1,7 +1,7 @@
 <?php
 
 use nono\gate\app\actions\authentification\MethodAuthentificationAction;
-use nono\gate\app\actions\authentification\MethodPartiesAction;
+use nono\gate\app\actions\parties\MethodPartiesAction;
 use Psr\Container\ContainerInterface;
 
 return[

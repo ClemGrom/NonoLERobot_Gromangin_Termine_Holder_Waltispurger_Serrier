@@ -1,6 +1,6 @@
 <?php
 
-namespace nono\gate\app\actions\authentification;
+namespace nono\gate\app\actions\parties;
 
 use nono\gate\app\actions\AbstractAction;
 use GuzzleHttp\Client;

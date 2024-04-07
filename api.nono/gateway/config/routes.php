@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use nono\gate\app\actions\authentification\MethodAuthentificationAction;
+use nono\gate\app\actions\parties\MethodPartiesAction;
 
 return function(\Slim\App $app):void {
 
@@ -17,9 +18,21 @@ return function(\Slim\App $app):void {
     $app->get('/users/validate', MethodAuthentificationAction::class)
         ->setName('validateTokenJWT');
 
-    //PARTIES //TODO add parties routes
+    //PARTIES
 
-    //PROFILE //TODO add profile routes
+    $app->get("/parties/{id_party}[/]", MethodPartiesAction::class)
+        ->setName('partyById');
+
+    $app->post("/parties[/]", MethodPartiesAction::class)
+        ->setName('createParty');
+
+    $app->patch("/parties[/]", MethodPartiesAction::class)
+        ->setName('updateParty');
+
+    //PROFILE
+
+    $app->get("/profile/parties[/]", MethodPartiesAction::class)
+        ->setName('getUsersParties');
 
     //CORS
     $app->options('/{routes:.+}', function ($request, $response, $args) {
