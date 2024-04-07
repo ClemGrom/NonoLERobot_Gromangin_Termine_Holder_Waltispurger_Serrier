@@ -17,8 +17,9 @@ return function(\Slim\App $app):void {
     $app->get('/users/validate', MethodAuthentificationAction::class)
         ->setName('validateTokenJWT');
 
-    //PARTIES
+    //PARTIES //TODO add parties routes
 
+    //PROFILE //TODO add profile routes
 
     //CORS
     $app->options('/{routes:.+}', function ($request, $response, $args) {

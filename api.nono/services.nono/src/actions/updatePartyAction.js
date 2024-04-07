@@ -1,22 +1,16 @@
-import { updatePartyStatus } from "../services/PartiesServices.js";
+import { updateParty } from "../services/PartiesServices.js";
 
 export default async (req, res, next) => {
     try {
-        const token = req.body.token;
-        const status = req.body.status;
+        const { id, status, temps, score } = req.body;
 
-        console.log(token, status);
-
-        if (!token) {
+        if (!id) {
             next(400);
-        } else {
-            await updatePartyStatus(token, status);
-            if (!token) {
-                next(404);
-            } else {
-                res.json("Partie mise à jour avec succès");
-            }
         }
+
+        const updatedParty = await updateParty(id, { status, temps, score });
+        res.json({ message: "Partie mise à jour avec succès", updatedParty });
+
     } catch (error) {
         console.log(error);
         next(500);

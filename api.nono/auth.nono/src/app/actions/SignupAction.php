@@ -22,11 +22,11 @@ class SignUpAction extends AbstractAction {
         $data = $request->getParsedBody();
         if (isset($data['email']) && isset($data['mdp']) && isset($data['pseudo'])) {
             $email = $data['email'];
-            echo $email;
+            echo $email . PHP_EOL;
             $mdp = $data['mdp'];
-            echo $mdp;
+            echo $mdp . PHP_EOL;
             $pseudo = $data['pseudo'];
-            echo $pseudo;
+            echo $pseudo . PHP_EOL;
 
             try {
                 $userDTO = $this->authService->signup(new CredentialsDTO($email, $mdp, $pseudo));
