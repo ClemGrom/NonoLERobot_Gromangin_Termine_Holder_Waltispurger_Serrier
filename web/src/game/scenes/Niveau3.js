@@ -84,6 +84,9 @@ export class Niveau3 extends Scene {
     //
     this.batteries = this.physics.add.group(); // Créer un groupe pour les batteries
 
+    this.energy = 100;
+    this.stopEnergy = false;
+    
     let batterie = this.physics.add.image(500, 75, "batterie");
     let batterie2 = this.physics.add.image(800, 200, "batterie");
     let batterie3 = this.physics.add.image(500, 300, "batterie");

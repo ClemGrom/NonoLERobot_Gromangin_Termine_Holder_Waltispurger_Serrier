@@ -10,6 +10,7 @@ export class GameOver extends Scene
 
     create ()
     {
+        this.frame = 0;
         this.cameras.main.setBackgroundColor(0xff0000);
 
         this.add.image(700, 200, 'background').setAlpha(0.5);
@@ -24,6 +25,13 @@ export class GameOver extends Scene
         gameOverText.on('pointerdown', () => this.changeSceneInGameOver());
 
         EventBus.emit('current-scene-ready', this);
+    }
+
+    update() {
+        this.frame++;
+        if (this.frame === 200) {
+            this.scene.start('MainMenu');
+        }
     }
 
     changeSceneInGameOver ()

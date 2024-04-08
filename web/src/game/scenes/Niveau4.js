@@ -27,7 +27,8 @@ export class Niveau4 extends Scene {
     this.degresSensorGauche = localStorage.getItem("degresGauche") || 90;
     this.degresSensorDroit = localStorage.getItem("degresDroit") || -90;
     this.degres2SensorsTouche = localStorage.getItem("degres2Touche") || false;
-    this.vitesseRobot = 100;
+    this.vitesseRobot = 130;
+    this.vitesseRobotFantome = 120;
 
     this.health = 4;
 
@@ -58,19 +59,26 @@ export class Niveau4 extends Scene {
     this.calqueNiveau.setCollisionByProperty({ estSolide: true });
 
     // Création du robot
-    this.robot = this.physics.add.image(700, 100, "robot");
+    this.robot = this.physics.add.image(720, 140, "robot");
 
-    //  this.robot.body.collideWorldBounds = true;
+    // Création du robot fantôme
+    this.robotFantome = this.physics.add.image(720, 80, "robotFantome");
+
+    // Définir l'opacité du robot à 50%
+    this.robotFantome.setAlpha(0.7);
+
+    //  this.robot.body.collideWorldBounds = true; <- fait lag
+
     this.robot.setDepth(1);
     // this.robot.angle += 0; // Ajoutez cette ligne pour augmenter l'angle initial du robot de 10 degrés
 
-   // Supposons que la largeur et la hauteur de votre niveau soient stockées dans les variables niveauLargeur et niveauHauteur
-let niveauLargeur = 1300; // Remplacez par la largeur réelle de votre niveau
-let niveauHauteur = 750; // Remplacez par la hauteur réelle de votre niveau
+    // Définir les limites du monde
+    let niveauLargeur = 1300; // Remplacez par la largeur réelle du niveau
+    let niveauHauteur = 750; // Remplacez par la hauteur réelle du niveau
 
-this.cameras.main.startFollow(this.robot);
-this.cameras.main.setBounds(0, 0, niveauLargeur, niveauHauteur); // Définir les limites de la caméra
-this.physics.add.collider(this.robot, this.calqueNiveau);
+    this.cameras.main.startFollow(this.robot);
+    this.cameras.main.setBounds(0, 0, niveauLargeur, niveauHauteur); // Définir les limites de la caméra
+    this.physics.add.collider(this.robot, this.calqueNiveau);
     this.cursors = this.input.keyboard.createCursorKeys();
 
     // Création des capteurs
@@ -81,12 +89,29 @@ this.physics.add.collider(this.robot, this.calqueNiveau);
     this.graphics = this.add.graphics({
       lineStyle: { width: 2, color: 0x00ff00 },
     });
-    this.robot.setVelocityX(this.vitesseRobot);
+
+    // Je crois ça sert à rien mais pas sur
+    // this.robot.setVelocityX(this.vitesseRobot);
 
     this.longueurSensor1 = this.maxlongueurSensor1;
     this.longueurSensor2 = this.maxlongueurSensor2;
 
     EventBus.emit("current-scene-ready", this);
+
+    // Crée le chemin du Fantome
+    this.cheminFantome = [
+      { x: 1100, y: 110 },
+      { x: 1200, y: 500 },
+      { x: 1000, y: 650 },
+      { x: 900, y: 620},
+      { x: 200, y: 650},
+      { x: 150, y: 300},
+      { x: 200, y: 150},
+      { x: 350, y: 100},
+      { x: 550, y: 100}
+    ];
+    
+    this.indexCheminFantome = 0;
 
     // this.batteries = this.physics.add.group(); // Créer un groupe pour les batteries
 
@@ -123,8 +148,8 @@ this.physics.add.collider(this.robot, this.calqueNiveau);
     // this.energy = 100;
     // this.stopEnergy = false;
 
-    let timer = 0;
-let intervalId = null;
+    // let timer = 0;
+    // let intervalId = null;
   }
 
   update() {
@@ -143,6 +168,9 @@ let intervalId = null;
     // Met à jour la vitesse du robot en fonction de son orientation et de l'état du drapeau stopRobot
     this.updateRobotVelocity();
 
+    // Déplacement du robot fantôme
+    this.RobotFantomeCourse();
+
     this.frameCount++;
 
     // Met à jour le joueur toutes les 10 frames
@@ -157,6 +185,7 @@ let intervalId = null;
       }
     }
 
+    // Vérifiez si le robot a atteint la fin du niveau
     if (
       this.robot.x > 500 &&
       this.robot.x < 700 &&
@@ -164,6 +193,16 @@ let intervalId = null;
       this.robot.y < 300
     ) {
       this.changeScene();
+    }
+
+    // Vérifiez si le robot Fantome a atteint la fin du niveau
+    if (
+      this.robotFantome.x > 500 &&
+      this.robotFantome.x < 700 &&
+      this.robotFantome.y > 0 &&
+      this.robotFantome.y < 300
+    ) {
+      this.scene.start('GameOver');
     }
 
     // if (!this.stopEnergy) {
@@ -268,7 +307,7 @@ let intervalId = null;
       console.log(this.degres2SensorsTouche)
       if (this.degres2SensorsTouche) {
         this.robot.angle += 40;
-      }else{
+      } else{
         this.robot.angle += -40;
       }
      
@@ -316,6 +355,31 @@ let intervalId = null;
    
   }
 
+  // Fonction pour déplacer le robot fantôme
+  RobotFantomeCourse() {
+    if (this.indexCheminFantome < this.cheminFantome.length) {
+      let prochainePosition = this.cheminFantome[this.indexCheminFantome];
+      let distance = Phaser.Math.Distance.Between(
+        this.robotFantome.x,
+        this.robotFantome.y,
+        prochainePosition.x,
+        prochainePosition.y
+      );
+    
+      if (distance < 1) {
+        this.indexCheminFantome++;
+      } else {
+        let angle = Phaser.Math.Angle.BetweenPoints(this.robotFantome, prochainePosition);
+        this.robotFantome.setVelocity(
+          Math.cos(angle) * this.vitesseRobotFantome,
+          Math.sin(angle) * this.vitesseRobotFantome
+        );
+      }
+    } else {
+      this.robotFantome.setVelocity(0, 0);
+    }
+  }
+
   // drawHealthBar() {
   //   // Clear the previous health bar
   //   this.vieGraphics.clear();
@@ -343,5 +407,5 @@ let intervalId = null;
     this.scene.start("Niveau4");
   }
 
-  
+
 }
