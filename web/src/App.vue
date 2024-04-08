@@ -13,7 +13,7 @@ export default {
   },
   data() {
     return {
-      isConnected: false,
+      isConnected: true,
       showMenu: false,
     }
   },
@@ -79,9 +79,14 @@ export default {
 
     <div v-if="showMenu" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
       <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+        <div v-if="!isConnected">
         <RouterLink to="/inscription" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Inscription</RouterLink>
         <RouterLink to="/connexion" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Connexion</RouterLink>
-        <button class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Déconnexion</button>
+        </div>
+        <div v-else>
+          <RouterLink to="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Mes parties</RouterLink>
+          <button class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Déconnexion</button>
+        </div>
       </div>
     </div>
   </div>
@@ -95,11 +100,11 @@ export default {
 
   <!-- affiche les routes -->
   <RouterView/>
-
+  <!--
   <footer v-if="!isHomeRoute"  class="bg-zinc-900 text-zinc-500 text-center p-4 flex flex-row justify-between frelative bottom-0 w-full">
     <p>Nono le robot - 2024</p>
     <p>Copyright IUT-Charlemagne</p>
-  </footer>
+  </footer>-->
 </template>
 
 <style scoped>
