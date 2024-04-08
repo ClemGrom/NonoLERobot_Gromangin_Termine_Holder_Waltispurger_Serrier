@@ -133,6 +133,8 @@ export class Niveau3 extends Scene {
 
     // Dessine les capteurs du robot sur l'écran
     this.drawSensors(this.graphics);
+
+    // Dessine la barre de santé du robot
     this.drawHealthBar();
 
     // Met à jour la vitesse du robot en fonction de son orientation

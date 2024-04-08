@@ -32,6 +32,9 @@ export class Niveau2 extends Scene {
 
     this.defaultangleGauche = 45;
     this.defaultangleDroit = 45;
+
+    // Initialisation de la santé du robot
+    this.health = 2;
   }
 
   create() {
@@ -83,10 +86,48 @@ export class Niveau2 extends Scene {
     this.longueurSensor1 = this.maxlongueurSensor1;
     this.longueurSensor2 = this.maxlongueurSensor2;
 
+    //
+    // Batteries
+    //
+    this.batteries = this.physics.add.group(); // Créer un groupe pour les batteries
+
+    this.energy = 100;
+    this.stopEnergy = false;
+    
+    let batterie = this.physics.add.image(250, 100, "batterie");
+    let batterie2 = this.physics.add.image(500, 280, "batterie");
+    let batterie3 = this.physics.add.image(800, 150, "batterie");
+
+    this.batteries.add(batterie);
+    this.batteries.add(batterie2);
+    this.batteries.add(batterie3);
+
+    this.physics.add.overlap(
+      this.robot,
+      this.batteries,
+      function (robot, batterie) {
+        batterie.destroy();
+        this.energy += 20; // Augmenter l'énergie lorsque le robot ramasse une batterie
+      },
+      null,
+      this
+    );
+
+    // Créez l'objet graphics  pour la vie
+    this.vieGraphics = this.add.graphics({
+      lineStyle: { width: 2, color: 0x00ff00 },
+      fillStyle: { color: 0xff0000 },
+    });
+
+    // Dessinez la barre de santé initiale
+    this.drawHealthBar();
+
     EventBus.emit("current-scene-ready", this);
   }
 
   update() {
+
+    this.frameCount++;
     
     // Définissez la position initiale des capteurs
     this.updateSensors();
@@ -100,21 +141,25 @@ export class Niveau2 extends Scene {
     // Dessine les capteurs du robot sur l'écran
     this.drawSensors(this.graphics);
 
+    // Dessine la barre de santé du robot
+    this.drawHealthBar();
+
     // Met à jour la vitesse du robot en fonction de son orientation et de l'état du drapeau stopRobot
     this.updateRobotVelocity();
-
-    
-    this.frameCount++;
 
     // Met à jour le joueur toutes les 10 frames
     if (this.frameCount % 10 === 0) {
       if (this.longueurSensor1 < this.maxlongueurSensor1) {
         this.longueurSensor1 += 5;
-        // console.log(this.longueurSensor1);
       }
       if (this.longueurSensor2 < this.maxlongueurSensor2) {
         this.longueurSensor2 += 5;
-        // console.log(this.longueurSensor2);
+      }
+      if (this.longueurMidSensor < this.maxlongueurMidSensor) {
+        this.longueurMidSensor += 5;
+      }
+      if (!this.stopEnergy) {
+        this.consumeEnergy();
       }
     }
 
@@ -264,6 +309,32 @@ export class Niveau2 extends Scene {
       // Update the robot's velocity
       this.robot.setVelocity(vx, vy);
    
+  }
+
+  // Dessine la barre de santé du robot
+  drawHealthBar() {
+    // Efface la barre de santé précédente
+    this.vieGraphics.clear();
+
+    // Calcule le nombre de barres de santé à dessiner
+    let healthBars = Math.floor(this.energy / 20);
+
+    // Dessine la nouvelle barre de santé
+    for (let i = 0; i < healthBars; i++) {
+      this.vieGraphics.fillStyle(0xff0000); // Red color
+      this.vieGraphics.fillRect(925 - i * 20, 5, 15, 15);
+    }
+  }
+
+  // Consomme de l'énergie à chaque frame
+  consumeEnergy() {
+    this.energy -= 1; 
+    // console.log(this.energy);
+    // Si l'énergie est inférieure ou égale à 0, arrête le robot
+    if (this.energy <= 0) {
+      this.stopEnergy = true; 
+      this.scene.start("GameOver");
+    }
   }
 
   changeScene() {
