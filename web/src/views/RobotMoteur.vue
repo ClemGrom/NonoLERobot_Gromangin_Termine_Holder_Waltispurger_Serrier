@@ -146,7 +146,7 @@ export default {
     const currentSceneIndex = ref(0);
     const scenes = ref(['Niveau1', 'Niveau2', 'Niveau3', 'Niveau4']);
     const numberValue1 = ref(localStorage.getItem('tailleSensorGauche') || 50);
-    const numberValue2 = ref(localStorage.getItem('tailleSensorDroit') || -50);
+    const numberValue2 = ref(localStorage.getItem('tailleSensorDroit') || 50);
     const rangeValue1 = ref(localStorage.getItem('degresGauche') || 50);
     const rangeValue2 = ref(localStorage.getItem('degresDroit') || 50);
     const rangeValue3 = ref(localStorage.getItem('degres2Touche'));
