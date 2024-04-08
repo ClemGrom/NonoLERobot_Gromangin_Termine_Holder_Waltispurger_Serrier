@@ -31,7 +31,7 @@ return function(\Slim\App $app):void {
 
     //PROFILE
 
-    $app->get("/api/profile/parties[/]", MethodPartiesAction::class)
+    $app->post("/api/profile/parties[/]", MethodPartiesAction::class)
         ->setName('getUsersParties');
 
     //CORS

@@ -1,12 +1,13 @@
 <script>
 import {RouterView, RouterLink} from 'vue-router';
-import AccueilRobot from "@/components/AccueilRobot.vue";
+//import AccueilRobot from "@/components/AccueilRobot.vue";
+import HomeView from "@/views/HomeView.vue";
 
 
 export default {
 
   components: {
-    AccueilRobot,
+    HomeView,
     RouterLink,
     RouterView,
 
@@ -26,7 +27,7 @@ export default {
 </script>
 
 <template>
-    <header v-if="!isHomeRoute" class="">
+    <header class="">
     <div class="header flex flex-wrap p-1 m-2 lg:flex-row lg:justify-center max-lg:flex-col max-lg:items-center">
       <div class="headerLogoText flex flex-row flex-wrap max-lg:mb-8 max-lg:mr-20">
       

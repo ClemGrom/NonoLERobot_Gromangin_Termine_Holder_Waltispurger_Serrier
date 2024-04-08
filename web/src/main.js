@@ -11,7 +11,7 @@ import ApiPlugins from './plugins/api.js'
 const app = createApp(App)
 
 app.use(ApiPlugins, {
-    baseURL: 'http://localhost:3333/'
+    baseURL: 'http://localhost:3320/'
 })
 
 app.use(toast)
