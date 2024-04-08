@@ -2,6 +2,8 @@
 import { defineComponent } from 'vue'
 import { Carousel, Navigation, Pagination, Slide } from 'vue3-carousel'
 
+import SlideContent from "@/components/homeComponent.vue";
+
 import 'vue3-carousel/dist/carousel.css'
 
 export default defineComponent({
@@ -11,15 +13,42 @@ export default defineComponent({
     Slide,
     Pagination,
     Navigation,
+    SlideContent,
   },
+  data() {
+    return {
+      slidesData: [
+        {
+          title: "NONO LE ROBOT",
+          description: "Nono, le robot à programmer!",
+          link: "/"
+        },
+        {
+          title: "A propos",
+          description: "Qu'est-ce que Nono le robot?",
+          link: "/"
+        },
+        {
+          title: "Tutoriel",
+          description: "Apprends comment programmer nono!",
+          link: "/"
+        },
+        {
+          title: "Jouer",
+          description: "Il est temps de commencer à jouer!",
+          link: "/robotMoteur"
+        },
+      ]
+    }
+  }
 })
 </script>
 
 <template>
   <main>
     <Carousel>
-      <Slide v-for="slide in 10" :key="slide">
-        <div class="carousel__item">{{ slide }}</div>
+      <Slide v-for="(slide, index) in slidesData" :key="index">
+        <SlideContent :title="slide.title" :description="slide.description" :link="index === 0 ? '' : slide.link" />
       </Slide>
 
       <template #addons>
@@ -43,7 +72,7 @@ export default defineComponent({
   min-height: 800px;
   width: 100%;
   background-color: transparent;
-  color: var(--vc-clr-white);
+  color:white;
   font-size: 20px;
   border-radius: 8px;
   display: flex;

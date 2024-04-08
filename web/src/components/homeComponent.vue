@@ -2,7 +2,7 @@
   <div class="slide-content">
     <h2>{{ title }}</h2>
     <p>{{ description }}</p>
-    <router-link :to="link">Voir plus</router-link>
+    <router-link v-if="link" :to="link">Voir plus</router-link>
   </div>
 </template>
 
