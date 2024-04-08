@@ -18,24 +18,33 @@ export const getUserParties = async (user_email, status) => {
 };
 
 export const updateParty = async (id, newData) => {
-    const { status, temps, score } = newData;
-    console.log(status, temps, score)
+    const { status, temps, score, capteurGlongeur, capteurGangle, capteurDlongeur, capteurDangle } = newData;
     await db('parties').where('id', '=', id).update({
         status: status,
         temps: temps,
-        score: score
+        score: score,
+        capteurGlongeur: capteurGlongeur,
+        capteurGangle: capteurGangle,
+        capteurDlongeur: capteurDlongeur,
+        capteurDangle: capteurDangle
     });
 
     return db('parties').where('id', '=', id).first();
 }
 
 
+
 export const createParty = async (niveau, user_email) => {
-    let token = crypto.randomUUID().toString();
+    const defaultCapteurLengthValue = 100;
+    const defaultCapteurAngleValue = 90;
     const insertedPartie = await db('parties').insert({
         user_email: user_email,
         niveau: niveau,
         status: "CREATED",
+        capteurGlongeur: defaultCapteurLengthValue,
+        capteurGangle: defaultCapteurAngleValue,
+        capteurDlongeur: defaultCapteurLengthValue,
+        capteurDangle: defaultCapteurAngleValue
     });
 
     return db('parties').where('id', insertedPartie[0]).first();

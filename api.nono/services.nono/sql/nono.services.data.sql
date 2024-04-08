@@ -13,5 +13,9 @@ CREATE TABLE `parties`
     `status`            VARCHAR(25),
     `temps`             TIME,
     `score`             FLOAT,
+    `capteurGlongeur`   INT,
+    `capteurGangle`     INT,
+    `capteurDlongeur`   INT,
+    `capteurDangle`     INT,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
