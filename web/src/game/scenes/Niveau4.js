@@ -28,7 +28,7 @@ export class Niveau4 extends Scene {
     this.degresSensorDroit = localStorage.getItem("degresDroit") || -90;
     this.degres2SensorsTouche = localStorage.getItem("degres2Touche") || false;
     this.vitesseRobot = 130;
-    this.vitesseRobotFantome = 120;
+    this.vitesseRobotFantome = 110;
 
     this.health = 4;
 
@@ -404,7 +404,7 @@ export class Niveau4 extends Scene {
   // }
   changeScene() {
     this.stopEnergy = true;
-    this.scene.start("Niveau4");
+    this.scene.start("Niveau5");
   }
 
 

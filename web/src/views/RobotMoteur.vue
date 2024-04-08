@@ -144,7 +144,7 @@ export default {
     const game = ref(null);
     const gameStarted = ref(false);
     const currentSceneIndex = ref(0);
-    const scenes = ref(['Niveau1', 'Niveau2', 'Niveau3', 'Niveau4']);
+    const scenes = ref(['Niveau1', 'Niveau2', 'Niveau3', 'Niveau4', 'Niveau5']);
     const numberValue1 = ref(localStorage.getItem('tailleSensorGauche') || 50);
     const numberValue2 = ref(localStorage.getItem('tailleSensorDroit') || -50);
     const rangeValue1 = ref(localStorage.getItem('degresGauche') || 50);
