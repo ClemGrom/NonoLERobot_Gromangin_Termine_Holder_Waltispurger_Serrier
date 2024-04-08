@@ -1,9 +1,9 @@
-import { getUserParties } from "../../services/PartiesServices.js";
+import { getUserParties } from "../services/PartiesServices.js";
 
 export default async (req, res, next) => {
     try {
         const user_email = req.body.user_email;
-        const status = req.query.status; // Récupérer le statut depuis les paramètres de requête
+        const status = req.body.status; //filtrer optionnel sur le status
 
         console.log(user_email, status);
 

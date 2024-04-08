@@ -17,7 +17,7 @@ services:
       - http_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
       - https_proxy=http://www-cache-iutnc.univ-lorraine.fr:3128
     volumes:
-      - ../FrontEndNonoLeRobot/dist:/usr/local/apache2/htdocs/geoquizz
+      - ../FrontEndNonoLeRobot/dist:/usr/local/apache2/htdocs/nono
     networks:
       - nono.net
 
@@ -28,15 +28,13 @@ services:
     image: 'canals/php:8.2'
     env_file: ./auth.env
     ports:
-      - '35200:80'
+      - '3320:80'
     volumes:
       - ../api.nono/gateway:/var/www/
       - ../api.nono/gateway/public:/var/www/html
     working_dir: /var/www
     networks:
       - nono.net
-    command: >
-      bash -c "composer install && composer update && apache2-foreground"
 
   #
   # service administration des bases sql
@@ -112,52 +110,3 @@ services:
     volumes:
       - ../api.nono/auth.nono/sql:/var/sql
       - ../api.nono/auth.nono/sql:/docker-entrypoint-initdb.d
-
-  nono.environnement.db:
-    image: postgis/postgis:13-master
-    # Required when running on platform other than amd64, like Apple M1/M2:
-    # platform: linux/amd64
-    networks:
-      - nono.net
-    volumes:
-      - ../api.nono/environnement.nono/data/database:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: "directus"
-      POSTGRES_PASSWORD: "directus"
-      POSTGRES_DB: "directus"
-
-  cache:
-    image: redis:6
-    networks:
-      - nono.net
-
-  directus:
-    image: directus/directus:10.9.0
-    ports:
-      - '8055:8055'
-    volumes:
-      - ../api.nono/environnement.nono/uploads:/directus/uploads
-      # If you want to load extensions from the host
-      # - ./extensions:/directus/extensions
-    depends_on:
-      - cache
-      - nono.environnement.db
-    networks:
-      - nono.net
-    environment:
-      KEY: "255d861b-5ea1-5996-9aa3-922530ec40b1"
-      SECRET: "6116487b-cda1-52c2-b5b5-c8022c45e263"
-
-      DB_CLIENT: "pg"
-      DB_HOST: "nono.environnement.db"
-      DB_PORT: "5432"
-      DB_DATABASE: "directus"
-      DB_USER: "directus"
-      DB_PASSWORD: "directus"
-
-      CACHE_ENABLED: "false"
-      CACHE_STORE: "redis"
-      REDIS: "redis://cache:6379"
-
-      ADMIN_EMAIL: "admin@example.com"
-      ADMIN_PASSWORD: "d1r3ctu5"

@@ -21,9 +21,9 @@ app.get('/api/', (req, res) => {
     res.json({'message': 'ok ça roule'});
 })
 
-//app.use(verifyToken)
 app.use(catch404errors);
 app.use(catchAllErrors);
+//app.use(verifyToken);
 
 export default app;
 

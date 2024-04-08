@@ -7,11 +7,15 @@ DROP TABLE IF EXISTS `parties`;
 
 CREATE TABLE `parties`
 (
-    `id`         int(11) NOT NULL AUTO_INCREMENT,
-    `environnement_id`   varchar(128) NOT NULL,
-    `user_email` varchar(128) NOT NULL,
-    `status`     varchar(25),
-    `token`      varchar(128),
+    `id`                INT(11) NOT NULL AUTO_INCREMENT,
+    `niveau`            INT NOT NULL,
+    `user_email`        VARCHAR(128) NOT NULL,
+    `status`            VARCHAR(25),
+    `temps`             TIME,
+    `score`             FLOAT,
+    `capteurGlongeur`   INT,
+    `capteurGangle`     INT,
+    `capteurDlongeur`   INT,
+    `capteurDangle`     INT,
     PRIMARY KEY (`id`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
