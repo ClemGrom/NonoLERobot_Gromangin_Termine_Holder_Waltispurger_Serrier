@@ -48,16 +48,16 @@ export default defineComponent({
   <main>
     <Carousel>
       <Slide v-for="(slide, index) in slidesData" :key="index">
-        <SlideContent :title="slide.title" :description="slide.description" :link="index === 0 ? '' : slide.link" />
+        <SlideContent class="carousel__item" :title="slide.title" :description="slide.description" :link="index === 0 ? '' : slide.link" />
       </Slide>
 
       <template #addons>
         <navigation>
           <template #next>
-            <span> >> </span>
+            <span class="text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105 mb-14 "> >> </span>
           </template>
           <template #prev>
-            <span> << </span>
+            <span class="text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105 mb-14 "> << </span>
           </template>
         </navigation>
         <pagination />
@@ -69,7 +69,7 @@ export default defineComponent({
 
 <style scoped>
 .carousel__item {
-  min-height: 800px;
+  min-height: 78vh;
   width: 100%;
   background-color: transparent;
   color:white;
@@ -100,9 +100,4 @@ export default defineComponent({
   --carousel-color-primary: red;
 }
 
-span {
-  border: 5px solid white;
-  background-color: red;
-  border-radius: 25px;
-}
 </style>
