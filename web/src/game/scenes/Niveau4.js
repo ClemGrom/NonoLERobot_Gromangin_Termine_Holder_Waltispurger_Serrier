@@ -187,7 +187,7 @@ export class Niveau4 extends Scene {
 
     // Vérifiez si le robot a atteint la fin du niveau
     if (
-      this.robot.x > 500 &&
+      this.robot.x > 450 &&
       this.robot.x < 700 &&
       this.robot.y > 0 &&
       this.robot.y < 300
@@ -197,7 +197,7 @@ export class Niveau4 extends Scene {
 
     // Vérifiez si le robot Fantome a atteint la fin du niveau
     if (
-      this.robotFantome.x > 500 &&
+      this.robotFantome.x > 450 &&
       this.robotFantome.x < 700 &&
       this.robotFantome.y > 0 &&
       this.robotFantome.y < 300
