@@ -17,8 +17,6 @@ export class Niveau2 extends Scene {
     this.longueurSensor2 = 0;
    
 
-    
-
     // Initialisez la rotation cible du robot
     this.targetRotation = 0;
     this.sensor1 = null;

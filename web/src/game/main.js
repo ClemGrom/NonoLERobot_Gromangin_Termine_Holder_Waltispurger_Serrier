@@ -29,6 +29,7 @@ const config = {
         Niveau2,
         Niveau3,
         Niveau4,
+        // Niveau5,
         GameOver,
         NiveauTest
     ]
