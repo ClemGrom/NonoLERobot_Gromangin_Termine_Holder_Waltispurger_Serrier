@@ -13,6 +13,6 @@ return [
 
     'services.client' => function (ContainerInterface $c) {
         $nono = gethostbyname('api.services.nono');
-        return new Client(['base_uri' => 'http://'.$nono]);
+        return new Client(['base_uri' => 'http://'.$nono .':3333']);
     },
 ];
