@@ -10,9 +10,9 @@ export class Niveau1 extends Scene {
 
     // Initialisation des capteurs actifs ou non
     this.sensor1Active = true;
-    this.sensor2Active = false;
-    this.sensor3Active = true;
-    this.sensor4Active = true;
+    this.sensor2Active = true;
+    this.sensor3Active = false;
+    this.sensor4Active = false;
 
     // Initialisation des longueurs des capteurs
     this.maxlongueurSensor1 = localStorage.getItem("tailleSensorGauche") || 50;
