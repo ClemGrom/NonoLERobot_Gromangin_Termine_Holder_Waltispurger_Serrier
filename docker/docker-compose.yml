@@ -28,7 +28,7 @@ services:
     image: 'canals/php:8.2'
     env_file: ./auth.env
     ports:
-      - '35200:80'
+      - '3320:80'
     volumes:
       - ../api.nono/gateway:/var/www/
       - ../api.nono/gateway/public:/var/www/html

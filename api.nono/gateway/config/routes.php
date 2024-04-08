@@ -20,18 +20,18 @@ return function(\Slim\App $app):void {
 
     //PARTIES
 
-    $app->get("/parties/{id_party}[/]", MethodPartiesAction::class)
+    $app->get("/api/parties/{id_party}[/]", MethodPartiesAction::class)
         ->setName('partyById');
 
-    $app->post("/parties[/]", MethodPartiesAction::class)
+    $app->post("/api/parties[/]", MethodPartiesAction::class)
         ->setName('createParty');
 
-    $app->patch("/parties[/]", MethodPartiesAction::class)
+    $app->patch("/api/parties[/]", MethodPartiesAction::class)
         ->setName('updateParty');
 
     //PROFILE
 
-    $app->get("/profile/parties[/]", MethodPartiesAction::class)
+    $app->get("/api/profile/parties[/]", MethodPartiesAction::class)
         ->setName('getUsersParties');
 
     //CORS
