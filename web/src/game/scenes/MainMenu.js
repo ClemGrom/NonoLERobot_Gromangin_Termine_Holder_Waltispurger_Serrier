@@ -26,7 +26,7 @@ export class MainMenu extends Scene
             this.logoTween.stop();
             this.logoTween = null;
         }
-
+        
         this.scene.start('Game');
     }
 }
