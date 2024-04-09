@@ -21,22 +21,26 @@ export default defineComponent({
         {
           title: "NONO LE ROBOT",
           description: "Nono, le robot à programmer!",
-          link: "/"
+          link: "/",
+          index: 0
         },
         {
           title: "A propos",
           description: "Qu'est-ce que Nono le robot?",
-          link: "/"
+          link: "/",
+          index: 1
         },
         {
           title: "Tutoriel",
           description: "Apprends comment programmer nono!",
-          link: "/"
+          link: "/",
+          index: 2
         },
         {
           title: "Jouer",
           description: "Il est temps de commencer à jouer!",
-          link: "/robotMoteur"
+          link: "/robotMoteur",
+          index: 3
         },
       ]
     }
@@ -48,7 +52,7 @@ export default defineComponent({
   <main>
     <Carousel>
       <Slide v-for="(slide, index) in slidesData" :key="index">
-        <SlideContent class="carousel__item" :title="slide.title" :description="slide.description" :link="index === 0 ? '' : slide.link" />
+        <SlideContent class="carousel__item" :title="slide.title" :description="slide.description" :link="index === 0 ? '' : slide.link" :index="slide.index" />
       </Slide>
 
       <template #addons>

@@ -108,6 +108,8 @@ export default {
   </footer>-->
 </template>
 
-<style scoped>
-
+<style >
+.logo {
+  padding-right: 20px;
+}
 </style>
