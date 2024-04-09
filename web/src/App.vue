@@ -1,7 +1,9 @@
 <script>
 import {RouterView, RouterLink} from 'vue-router';
-//import AccueilRobot from "@/components/AccueilRobot.vue";
 import HomeView from "@/views/HomeView.vue";
+import {useAuthStore} from "@/store/authStore.js";
+import router from "@/router/index.js";
+
 
 
 export default {
@@ -14,15 +16,23 @@ export default {
   },
   data() {
     return {
-      isConnected: true,
       showMenu: false,
+      //isConnected: true,
     }
+
   },
   computed: {
-    isHomeRoute() {
-      return this.$route.path === '/';
-    },
+    isConnected() {
+      return useAuthStore().isConnected;
+    }
   },
+  methods: {
+    disconnect() {
+      const authstore = useAuthStore();
+      authstore.disconnect();
+      this.$router.push('/');
+    },
+  }
 };
 </script>
 
@@ -86,7 +96,7 @@ export default {
         </div>
         <div v-else>
           <RouterLink to="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Mes parties</RouterLink>
-          <button class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Déconnexion</button>
+          <button @click="disconnect" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Déconnexion</button>
         </div>
       </div>
     </div>
@@ -96,8 +106,6 @@ export default {
       </div>
     </div>
   </header>
-
-  <AccueilRobot v-if="isHomeRoute"/>
 
   <!-- affiche les routes -->
   <RouterView/>
