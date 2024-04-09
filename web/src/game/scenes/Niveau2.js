@@ -35,6 +35,9 @@ export class Niveau2 extends Scene {
 
     // Initialisation de la santé du robot
     this.health = 2;
+
+    // Initialisation du score
+    this.score = 0;
   }
 
   create() {
@@ -108,6 +111,7 @@ export class Niveau2 extends Scene {
       function (robot, batterie) {
         batterie.destroy();
         this.energy += 20; // Augmenter l'énergie lorsque le robot ramasse une batterie
+        this.score += 100; // Augmenter le score de 100 points
       },
       null,
       this
@@ -121,6 +125,14 @@ export class Niveau2 extends Scene {
 
     // Dessinez la barre de santé initiale
     this.drawHealthBar();
+
+    // Crée le texte du score
+    this.scoreText = this.add.text(600, 2, "Score : 0", {
+      fontSize: "26px",
+      fill: "#ffffff",
+      stroke: "#000000",
+      strokeThickness: 2,
+    });
 
     EventBus.emit("current-scene-ready", this);
   }
@@ -162,6 +174,9 @@ export class Niveau2 extends Scene {
         this.consumeEnergy();
       }
     }
+
+    // Mettez à jour le texte chaque fois que le score change
+    this.scoreText.setText('Score: ' + this.score);
 
     if (this.robot.x > 900) {
       this.changeScene();
@@ -338,7 +353,12 @@ export class Niveau2 extends Scene {
   }
 
   changeScene() {
-    this.scene.start("Niveau3");
+    this.stopEnergy = true;
+    let scoreTotal=this.score+this.energy;
+    localStorage.setItem("score", scoreTotal);
+    localStorage.setItem("currentSceneIndex", 1);
+    this.scene.stop("Niveau2");
+    this.scene.start("LevelFinish");
   }
   
 }

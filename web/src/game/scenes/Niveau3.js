@@ -35,6 +35,9 @@ export class Niveau3 extends Scene {
     // Initialisation des angles des capteurs par défaut
     this.defaultangleGauche = 45;
     this.defaultangleDroit = 45;
+
+    // Score
+    this.score = 0;
   }
 
   create() {
@@ -103,6 +106,7 @@ export class Niveau3 extends Scene {
       function (robot, batterie) {
         batterie.destroy();
         this.energy += 20; // Augmenter l'énergie lorsque le robot ramasse une batterie
+        this.score += 100; // Augmenter le score lorsque le robot ramasse une batterie
       },
       null,
       this
@@ -111,11 +115,18 @@ export class Niveau3 extends Scene {
     // Créez l'objet graphics  pour la vie
     this.vieGraphics = this.add.graphics({
       lineStyle: { width: 2, color: 0x00ff00 },
-      fillStyle: { color: 0xff0000 },
     });
 
     // Dessinez la barre de santé initiale
     this.drawHealthBar();
+
+    // Crée le texte du score
+    this.scoreText = this.add.text(600, 2, "Score : 0", {
+      fontSize: "26px",
+      fill: "#ffffff",
+      stroke: "#000000",
+      strokeThickness: 2,
+    });
 
     EventBus.emit("current-scene-ready", this);
   }
@@ -155,6 +166,9 @@ export class Niveau3 extends Scene {
         this.consumeEnergy();
       }
     }
+
+    // Mettez à jour le texte chaque fois que le score change
+    this.scoreText.setText('Score: ' + this.score);
 
     if (
       this.robot.x > 640 &&
@@ -326,9 +340,9 @@ export class Niveau3 extends Scene {
     }
   }
 
-   // Consomme de l'énergie à chaque frame
+   // Consomme de l'énergie
    consumeEnergy() {
-    this.energy -= 1; 
+    this.energy -= 1;
     // console.log(this.energy);
     // Si l'énergie est inférieure ou égale à 0, arrête le robot
     if (this.energy <= 0) {
@@ -338,6 +352,10 @@ export class Niveau3 extends Scene {
   }
   changeScene() {
     this.stopEnergy = true;
-    this.scene.start("Niveau4");
+    let scoreTotal=this.score+this.energy;
+    localStorage.setItem("score", scoreTotal);
+    localStorage.setItem("currentSceneIndex", 2);
+    this.scene.stop("Niveau3");
+    this.scene.start("LevelFinish");
   }
 }
