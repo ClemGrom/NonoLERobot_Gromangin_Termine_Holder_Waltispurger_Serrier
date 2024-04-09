@@ -3,7 +3,7 @@ import AccueilRobot from "../components/AccueilRobot.vue";
 import HomeView from "@/views/HomeView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import Page404 from "@/views/Page404.vue";
-import Programmation from "../components/Programmation.vue";
+import ProgrammationRobotView from "../views/ProgrammationRobotView.vue";
 import Simulation from "../components/Simulation.vue";
 import InscriptionView from "@/views/InscriptionView.vue";
 import LoginView from "@/views/LoginView.vue";
@@ -45,9 +45,9 @@ const router = createRouter({
     },
 
     {
-      path: '/programmation',
-      name: 'programmation',
-      component: Programmation
+      path: '/programmationRobot',
+      name: 'programmationRobot',
+      component: ProgrammationRobotView
     },
     {
       path: '/connexion',
