@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use nono\gate\app\actions\authentification\MethodAuthentificationAction;
+use nono\gate\app\actions\parties\MethodPartiesAction;
 
 return function(\Slim\App $app):void {
 
@@ -19,7 +20,19 @@ return function(\Slim\App $app):void {
 
     //PARTIES
 
+    $app->get("/api/parties/{id_party}[/]", MethodPartiesAction::class)
+        ->setName('partyById');
 
+    $app->post("/api/parties[/]", MethodPartiesAction::class)
+        ->setName('createParty');
+
+    $app->patch("/api/parties[/]", MethodPartiesAction::class)
+        ->setName('updateParty');
+
+    //PROFILE
+
+    $app->post("/api/profile/parties[/]", MethodPartiesAction::class)
+        ->setName('getUsersParties');
 
     //CORS
     $app->options('/{routes:.+}', function ($request, $response, $args) {

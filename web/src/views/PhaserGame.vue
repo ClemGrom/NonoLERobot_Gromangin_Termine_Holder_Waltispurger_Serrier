@@ -3,7 +3,7 @@ import { onMounted, onUnmounted, ref, toRaw } from 'vue';
 import StartGame from '../game/main';
 
 const game = ref();
-const scenes = ['MainMenu', 'Niveau1', 'Niveau2', 'Niveau3', 'GameOver'];
+const scenes = ['MainMenu', 'Niveau1', 'Niveau2', 'Niveau3', 'Niveau4', 'Niveau5'];
 let currentSceneIndex = 0;
 
 onMounted(() => {

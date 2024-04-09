@@ -53,6 +53,7 @@ class SignInAction extends AbstractAction
                 );
                 $response = $response->withStatus(401)->withHeader('Content-Type', 'application/json');
                 $response->getBody()->write(json_encode($responseMessage));
+                echo $response;
             }
         }
 

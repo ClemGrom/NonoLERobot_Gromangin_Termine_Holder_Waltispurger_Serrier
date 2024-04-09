@@ -118,9 +118,6 @@ class AuthProvider
     public function register(string $email, string $mdp, string $pseudo): void {
         if (Users::where('email', $email)->exists()) {
             throw new RegisterExistException();
-        }
-        if ($email == '' || $mdp == '' || $pseudo == '') {
-            throw new RegisterValueException();
         } else {
             $now = new DateTime('now', new DateTimeZone('Europe/Paris'));
             $refreshTokenExpDate = $now->modify('+1 hour');

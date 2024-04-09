@@ -1,0 +1,229 @@
+<template>
+  <div class="flex flex-col md:flex-row items-stretch justify-center min-h-screen p-6">
+    <div class="md:w-1/4 p-6 bg-white shadow-lg rounded-lg flex-grow">
+      <div class="flex flex-col mb-4 space-y-4">
+
+        <h2 class="text-2xl font-bold mb-4 text-center">Paramétrage des capteurs du Robot :</h2>
+        <div class="flex space-x-4 px-2">
+
+          <button @click="mode = 'default'"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow">Mode Simple</button>
+          <button @click="mode = 'custom'"
+            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow">Mode Custom</button>
+          <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded shadow">Mode Gojs</button>
+        </div>
+        <div v-if="mode === 'default'">
+          <div class="flex flex-col mb-4">
+            <h3 class="text-xl font-bold mb-2">Capteur Gauche :</h3>
+            <p class="font-bold">Longueur :</p>
+            <input type="number" v-model="numberValue1" placeholder="Entrez un nombre ici"
+              class="px-4 py-2 border border-gray-300 rounded-md">
+            <div class="flex justify-between mt-2">
+              <p class="font-bold">Gauche</p>
+              <p class="font-bold">{{ rangeValue1 }} degrés</p>
+              <p class="font-bold">Droite</p>
+            </div>
+            <input type="range" min="-180" max="180" v-model="rangeValue1" class="mt-2">
+          </div>
+
+          <div class="flex flex-col mb-4">
+            <h3 class="text-xl font-bold mb-2">Capteur Droit :</h3>
+            <p class="font-bold">Longueur :</p>
+            <input type="number" v-model="numberValue2" placeholder="Entrez un autre nombre ici"
+              class="px-4 py-2 border border-gray-300 rounded-md">
+            <div class="flex justify-between mt-2">
+              <p class="font-bold">Gauche</p>
+              <p class="font-bold">{{ rangeValue2 }} degrés</p>
+              <p class="font-bold">Droite</p>
+            </div>
+            <input type="range" min="-180" max="180" v-model="rangeValue2" class="mt-2">
+
+          </div>
+
+          <div class="flex">
+            <p class="font-bold">Capteur 2 Touche : {{ rangeValue3 }}</p>
+            <button @click="sensor2touche(0)"
+              :class="`px-4 py-2 rounded-md ${activeButton === 0 ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-500 hover:bg-gray-600'} text-white`">
+              Gauche
+            </button>
+            <button @click="sensor2touche(1)"
+              :class="`px-4 py-2 rounded-md ${activeButton === 1 ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-500 hover:bg-gray-600'} text-white`">
+              Droite
+            </button>
+          </div>
+
+
+
+        </div>
+        <div v-if="mode === 'custom'" class="bg-gray-100 p-6 rounded-lg shadow-md">
+          <div class="space-y-4">
+            <div class="flex space-x-2">
+              <button v-for="sensor in sensors" @click="selectedSensor = sensor" :key="sensor.id"
+                class="px-1 py-1 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">
+                Capteur {{ sensor.id }}
+              </button>
+            </div>
+
+            <div v-if="selectedSensor" class="bg-white p-4 rounded-lg shadow-md">
+              <h1 class="text-xl font-bold mb-2">Capteur {{ selectedSensor.id }}</h1>
+              <p class="font-bold">Longueur :</p>
+              <input type="number" v-model="selectedSensor.numberValue" placeholder="Entrez un nombre ici"
+                class="px-4 py-2 border border-gray-300 rounded-md">
+              <div class="flex justify-between mt-2">
+                <p class="font-bold">Gauche</p>
+                <p class="font-bold">{{ selectedSensor.rangeValue }} degrés</p>
+                <p class="font-bold">Droite</p>
+              </div>
+              <input type="range" min="-180" max="180" v-model="selectedSensor.rangeValue" class="mt-2">
+            </div>
+          </div>
+
+        </div>
+        <button @click="chargePartie"
+          class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Envoyer</button>
+      </div>
+    </div>
+
+    <div class="md:w-3/4 p-4 flex items-center justify-center bg-white shadow-lg rounded-lg flex-grow mx-4">
+
+      <div>
+        <div id="game-container"></div>
+        <div class="">
+          <div class="flex flex-line items-center justify-center">
+            <button
+              class="mb-4 max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
+              @click="restart">Démarrer</button>
+            <!-- <button
+    class="mb-4 max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
+    @click="restart">Redémarrer</button> -->
+            <button
+              class="mb-4 max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
+              @click="changeScene">Niveau Suivant</button>
+          </div>
+          <h1 class="text-2xl font-bold mb-4 text-center">Choisissez un niveau :</h1>
+          <div class="flex flex-line items-center justify-center">
+
+            <button
+              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
+              @click="startLevel(0)">Niveau 1</button>
+            <button
+              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-lg shadow-green-500/50 dark:shadow-lg dark:shadow-green-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
+              @click="startLevel(1)">Niveau 2</button>
+            <button
+              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:focus:ring-yellow-800 shadow-lg shadow-yellow-500/50 dark:shadow-lg dark:shadow-yellow-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
+              @click="startLevel(2)">Niveau 3</button>
+            <button
+              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-purple-400 via-purple-500 to-purple-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 shadow-lg shadow-purple-500/50 dark:shadow-lg dark:shadow-purple-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
+              @click="startLevel(3)">Niveau 4</button>
+            <button
+              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
+              @click="startLevel(4)">Niveau 5</button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { onMounted, onUnmounted, ref } from 'vue';
+import StartGame from '../game/main';
+
+export default {
+  data() {
+    return {
+      mode: 'default',
+      sensors: [
+        { id: 1, numberValue: 0, rangeValue: 0 },
+        { id: 2, numberValue: 0, rangeValue: 0 },
+        { id: 3, numberValue: 0, rangeValue: 0 },
+        { id: 4, numberValue: 0, rangeValue: 0 },
+      ],
+      selectedSensor: null,
+
+    };
+  },
+  setup() {
+    const game = ref(null);
+    const gameStarted = ref(false);
+    const currentSceneIndex = ref(0);
+    const scenes = ref(['Niveau1', 'Niveau2', 'Niveau3', 'Niveau4', 'Niveau5']);
+    const numberValue1 = ref(localStorage.getItem('tailleSensorGauche') || 50);
+    const numberValue2 = ref(localStorage.getItem('tailleSensorDroit') || 50);
+    const rangeValue1 = ref(localStorage.getItem('degresGauche') || 50);
+    const rangeValue2 = ref(localStorage.getItem('degresDroit') || 50);
+    const rangeValue3 = ref(localStorage.getItem('degres2Touche'));
+
+    onMounted(() => {
+      chargePartie();
+    });
+
+    const activeButton = ref(null);
+
+    const sensor2touche = (index) => {
+      if (index === 1) {
+        rangeValue3.value = true
+      } else {
+        rangeValue3.value = false
+      }
+
+    };
+
+    const chargePartie = () => {
+      if (game.value) {
+        game.value.destroy(true);
+        game.value = null;
+      }
+      saveValues();
+      gameStarted.value = true;
+      game.value = StartGame('game-container');
+    };
+
+    const changeScene = () => {
+      // Stop the current scene
+      game.value.scene.stop(scenes.value[currentSceneIndex.value]);
+      currentSceneIndex.value = (currentSceneIndex.value + 1) % scenes.value.length;
+      game.value.scene.start(scenes.value[currentSceneIndex.value]);
+    };
+    const startLevel = (levelIndex) => {
+      // Ensure the level index is valid
+      if (levelIndex < 0 || levelIndex >= scenes.value.length) {
+        console.error(`Invalid level index: ${levelIndex}`);
+        return;
+      }
+
+      // Stop the current scene
+      game.value.scene.stop(scenes.value[currentSceneIndex.value]);
+
+      // Reset the game state here
+      // This depends on how your game is designed
+      // For example, if you have game objects or scores to reset, do it here
+
+      // Start the new level
+      currentSceneIndex.value = levelIndex;
+      game.value.scene.start(scenes.value[currentSceneIndex.value]);
+    };
+
+    const restart = () => {
+      // Stop the current scene
+      game.value.scene.stop(scenes.value[currentSceneIndex.value]);
+      game.value.scene.start(scenes.value[currentSceneIndex.value]);
+    };
+
+    const saveValues = () => {
+      localStorage.setItem('tailleSensorGauche', numberValue1.value);
+      localStorage.setItem('tailleSensorDroit', numberValue2.value);
+      localStorage.setItem('degresGauche', rangeValue1.value);
+      localStorage.setItem('degresDroit', rangeValue2.value);
+      localStorage.setItem('degres2Touche', rangeValue3.value);
+      console.log('Values saved');
+    };
+
+
+
+
+    return { game, gameStarted, chargePartie, numberValue1, numberValue2, rangeValue1, rangeValue2, rangeValue3, changeScene, restart, startLevel, sensor2touche };
+  },
+};
+</script>
