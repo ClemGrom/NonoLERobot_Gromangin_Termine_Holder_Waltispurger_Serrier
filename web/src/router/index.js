@@ -3,11 +3,12 @@ import AccueilRobot from "../components/AccueilRobot.vue";
 import HomeView from "@/views/HomeView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import Page404 from "@/views/Page404.vue";
-import Programmation from "../components/Programmation.vue";
+import ProgrammationRobotView from "../views/ProgrammationRobotView.vue";
 import Simulation from "../components/Simulation.vue";
 import InscriptionView from "@/views/InscriptionView.vue";
 import LoginView from "@/views/LoginView.vue";
 import RobotMoteur from "../views/RobotMoteur.vue";
+import PreviousLevels from "@/views/PreviousLevels.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,9 +46,9 @@ const router = createRouter({
     },
 
     {
-      path: '/programmation',
-      name: 'programmation',
-      component: Programmation
+      path: '/programmationRobot',
+      name: 'programmationRobot',
+      component: ProgrammationRobotView
     },
     {
       path: '/connexion',
@@ -69,6 +70,11 @@ const router = createRouter({
       path: '/robotMoteur',
       name: 'robotMoteur',
       component: RobotMoteur
+    },
+    {
+      path: '/previous-levels',
+        name: 'previous-levels',
+        component: PreviousLevels
     },
 
     {

@@ -1,15 +1,60 @@
 <script>
-export default {
+import { useAuthStore } from "@/store/authStore.js";
+import { mapActions } from "pinia";
+import router from "@/router/index.js";
 
+import {SIGNIN} from "@/apiLiens.js";
+
+export default {
+  data() {
+    return {
+      isLoggedIn: '',
+      email: '',
+      password: '',
+      isMail: true,
+      isFill: true,
+      emailTouched: false
+    }
+  },
+  methods: {
+    ...mapActions(useAuthStore, ["setconnected"]),
+    async submitForm() {
+      try {
+        const email = this.email;
+        const password = this.password;
+
+        if (email.trim() === '' || password.trim() === '') {
+          console.error('Veuillez entrer votre email et votre mot de passe');
+          this.isFill = false;
+          return;
+        }
+        const config = {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Basic ' + btoa(`${email}:${password}`),
+          },
+        };
+        const response = await this.$api.post(SIGNIN, config);
+
+        if (response.status === 200) {
+          this.setconnected(email);
+          await router.push("/");
+          this.$toast.success('Connexion réussie');
+        }
+      } catch (error) {
+        this.$toast.error('Identifiant invalide');
+      }
+    }
+  }
 }
 </script>
 
 <template>
   <div id="Container">
-    <form class="form">
+    <form @submit.prevent="submitForm" class="form">
       <div id="login-lable">Login</div>
-      <input class="form-content" type="text" placeholder="UserName" />
-      <input class="form-content" type="password" placeholder="PassWord" />
+      <input class="form-content" type="text" placeholder="UserName" v-model="email" required/>
+      <input class="form-content" type="password" placeholder="PassWord" v-model="password" required/>
       <button>Continue</button>
     </form>
 

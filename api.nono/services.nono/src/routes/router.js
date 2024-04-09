@@ -21,7 +21,7 @@ router
 //filtre dispo sur le status
 router
     .route("/profile/parties")
-    .get(getUserPartiesAction) //permet de lister les parties créer par le joueur
+    .post(getUserPartiesAction) //permet de lister les parties créer par le joueur
     .all((req, res, next) => next(405));
 
 export default router;
