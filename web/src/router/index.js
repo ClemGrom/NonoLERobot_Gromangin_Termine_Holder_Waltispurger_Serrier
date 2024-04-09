@@ -8,6 +8,7 @@ import Simulation from "../components/Simulation.vue";
 import InscriptionView from "@/views/InscriptionView.vue";
 import LoginView from "@/views/LoginView.vue";
 import RobotMoteur from "../views/RobotMoteur.vue";
+import PreviousLevels from "@/views/PreviousLevels.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -69,6 +70,11 @@ const router = createRouter({
       path: '/robotMoteur',
       name: 'robotMoteur',
       component: RobotMoteur
+    },
+    {
+      path: '/previous-levels',
+        name: 'previous-levels',
+        component: PreviousLevels
     },
 
     {
