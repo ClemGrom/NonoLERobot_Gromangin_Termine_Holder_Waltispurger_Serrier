@@ -20,7 +20,7 @@ export const useAuthStore = defineStore('auth', {
     persist: {
         enabled: true,
         strategies: [
-            {storage: localStorage, paths:['isConnected', 'user_email']}
+            {storage: localStorage, paths:['user_email']}
         ]
     }
 })

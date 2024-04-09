@@ -1,15 +1,21 @@
 <script>
+import { useAuthStore } from "@/store/authStore.js";
+
 export default {
   data() {
     return {
       parties: [] // Les données seront chargées depuis l'API et assignées à cette propriété
     };
   },
+  computed: {
+    userEmail() {
+      return useAuthStore().user_email;
+    }
+  },
   methods: {
     async fetchProfileInfo() {
       try {
-        const userEmail = 'RobJohn@gmail.com';
-        const response = await this.$api.post("api/profile/parties", { user_email: userEmail });
+        const response = await this.$api.post("api/profile/parties", { user_email: this.userEmail });
         this.parties = response.data;
       } catch (error) {
         console.error("Erreur lors de la récupération des informations du profil:", error);
