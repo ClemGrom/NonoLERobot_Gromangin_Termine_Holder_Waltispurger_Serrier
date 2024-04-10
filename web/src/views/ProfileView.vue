@@ -1,6 +1,9 @@
 <script>
 import { useAuthStore } from "@/store/authStore.js";
 
+import {PROFILEPARTIES} from "@/apiLiens.js";
+
+
 export default {
   data() {
     return {
@@ -15,7 +18,7 @@ export default {
   methods: {
     async fetchProfileInfo() {
       try {
-        const response = await this.$api.post("api/profile/parties", { user_email: this.userEmail });
+        const response = await this.$api.post(PROFILEPARTIES, { user_email: this.userEmail });
         this.parties = response.data;
       } catch (error) {
         console.error("Erreur lors de la récupération des informations du profil:", error);
