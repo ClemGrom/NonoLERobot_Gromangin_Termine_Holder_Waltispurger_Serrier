@@ -35,15 +35,16 @@ export class Niveau2 extends Scene {
 
     // Initialisation de la santé du robot
     this.health = 2;
-    
+  }
+
+  create() {
+
     // Initialisation du timer
     this.timer = 0;
 
     // Initialisation du score
     this.score = 0;
-  }
 
-  create() {
     this.carteDuNiveau = this.make.tilemap({ key: "niveau2" });
 
     // Créer le tileset pour le calque "Niveau"
@@ -205,7 +206,7 @@ export class Niveau2 extends Scene {
     }
 
     // Mettez à jour le texte chaque fois que le score change
-    this.scoreText.setText('Score: ' + this.score);
+    this.scoreText.setText('Score : ' + this.score);
 
     // Met à jour le timer
     this.timer += 1 / 60;
@@ -388,7 +389,7 @@ export class Niveau2 extends Scene {
   changeScene() {
     this.stopEnergy = true;
     let scoreTotal=this.score+this.energy;
-    localStorage.setItem("score", scoreTotal);
+    localStorage.setItem("scoreTotal", scoreTotal);
     localStorage.setItem("timer", this.timer);
     localStorage.setItem("currentSceneIndex", 1);
     this.scene.start("LevelFinish");

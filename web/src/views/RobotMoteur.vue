@@ -185,12 +185,14 @@ export default {
 
     const changeScene = () => {
       // Stop the current scene
+      localStorage.clear();
       game.value.scene.stop(scenes.value[currentSceneIndex.value]);
       currentSceneIndex.value = (currentSceneIndex.value + 1) % scenes.value.length;
       game.value.scene.start(scenes.value[currentSceneIndex.value]);
     };
 
     const startLevel = (levelIndex) => {
+      localStorage.clear();
       // Ensure the level index is valid
       if (levelIndex < 0 || levelIndex >= scenes.value.length) {
         console.error(`Invalid level index: ${levelIndex}`);
@@ -208,8 +210,9 @@ export default {
       currentSceneIndex.value = levelIndex;
       game.value.scene.start(scenes.value[currentSceneIndex.value]);
     };
-    
+
     const restart = () => {
+      localStorage.clear();
       // Stop the current scene
       game.value.scene.stop(scenes.value[currentSceneIndex.value]);
       game.value.scene.start(scenes.value[currentSceneIndex.value]);

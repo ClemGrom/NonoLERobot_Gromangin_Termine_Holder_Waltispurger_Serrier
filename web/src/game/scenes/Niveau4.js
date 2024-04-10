@@ -37,12 +37,13 @@ export class Niveau4 extends Scene {
 
     this.defaultangleGauche = 45;
     this.defaultangleDroit = 45;
-
-    // Timer
-    this.timer = 0;
   }
 
   create() {
+    
+    // Initialiser le timer
+    this.timer = 0;
+
     this.carteDuNiveau = this.make.tilemap({ key: "niveau4" });
 
     // Créer le tileset pour le calque "Niveau"
@@ -172,7 +173,7 @@ export class Niveau4 extends Scene {
     // Vérifiez si le robot a atteint la fin du niveau
     if (
       this.robot.x > 450 &&
-      this.robot.x < 700 &&
+      this.robot.x < 600 &&
       this.robot.y > 0 &&
       this.robot.y < 300
     ) {
@@ -363,7 +364,7 @@ export class Niveau4 extends Scene {
   }
   
   changeScene() {
-    localStorage.setItem("score", 100 - this.timer);
+    localStorage.setItem("scoreTotal", 100 - this.timer);
     localStorage.setItem("timer", this.timer);
     localStorage.setItem("currentSceneIndex", 3);
     this.scene.start("LevelFinish");

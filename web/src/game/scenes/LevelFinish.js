@@ -9,7 +9,7 @@ export class LevelFinish extends Scene
     }
 
     create() {
-        this.scoreFinal = parseInt(localStorage.getItem('score'));
+        this.scoreFinal = parseInt(localStorage.getItem('scoreTotal'));
         this.timerFinal = parseInt(localStorage.getItem('timer'));
 
         this.frame = 0;
@@ -17,19 +17,19 @@ export class LevelFinish extends Scene
 
         this.add.image(700, 200, 'background').setAlpha(0.5);
 
-        this.add.text(450, 110, 'Victoire', {
+        this.add.text(450, 80, 'Victoire', {
             fontFamily: 'Arial Black', fontSize: 64, color: '#ffffff',
             stroke: '#000000', strokeThickness: 8,
             align: 'center'
         }).setOrigin(0.5).setDepth(100);
 
-        this.add.text(480, 230, 'Finis en : ' + this.timerFinal + ' secondes', {
+        this.add.text(480, 200, 'Finis en : ' + this.timerFinal + ' secondes', {
             fontFamily: 'Arial Black', fontSize: 48, color: '#ffffff',
             stroke: '#000000', strokeThickness: 8,
             align: 'center'
         }).setOrigin(0.5).setDepth(100);
 
-        this.add.text(450, 330, 'Score : ' + this.scoreFinal, {
+        this.add.text(450, 300, 'Score : ' + this.scoreFinal, {
             fontFamily: 'Arial Black', fontSize: 48, color: '#ffffff',
             stroke: '#000000', strokeThickness: 8,
             align: 'center'

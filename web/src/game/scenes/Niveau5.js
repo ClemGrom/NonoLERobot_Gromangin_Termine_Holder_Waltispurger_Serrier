@@ -32,12 +32,12 @@ export class Niveau5 extends Scene {
     // Initialisation des angles des capteurs par défaut
     this.defaultangleGauche = 45;
     this.defaultangleDroit = 45;
-
-    // Timer
-    this.timer = 0;
   }
 
   create() {
+
+    // Timer
+    this.timer = 0;
 
     let niveauLargeur = 1600;
     let niveauHauteur = 960;
