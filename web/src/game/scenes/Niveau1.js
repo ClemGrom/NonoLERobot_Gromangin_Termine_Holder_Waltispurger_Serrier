@@ -35,15 +35,16 @@ export class Niveau1 extends Scene {
     // Initialisation des angles des capteurs par défaut
     this.defaultangleGauche = 45;
     this.defaultangleDroit = 45;
+  }
+
+  create() {
 
     // Score
     this.score = 0;
 
     // Timer
     this.timer = 0;
-  }
 
-  create() {
     this.carteDuNiveau = this.make.tilemap({ key: "niveau1" });
 
     // Création du robot
@@ -197,7 +198,7 @@ export class Niveau1 extends Scene {
     }
 
     // Mettez à jour le texte chaque fois que le score change
-    this.scoreText.setText('Score: ' + this.score);
+    this.scoreText.setText('Score : ' + this.score);
 
     // Met à jour le timer
     this.timer += 1 / 60;
@@ -385,8 +386,8 @@ export class Niveau1 extends Scene {
   }
   changeScene() {
     this.stopEnergy = true;
-    let scoreTotal=this.score+this.energy;
-    localStorage.setItem("score", scoreTotal);
+    let scoreTotal= this.score + this.energy;
+    localStorage.setItem("scoreTotal", scoreTotal);
     localStorage.setItem("timer", this.timer);
     localStorage.setItem("currentSceneIndex", 0);
     this.scene.start("LevelFinish");
