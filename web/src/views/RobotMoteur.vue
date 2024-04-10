@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col md:flex-row items-stretch justify-center min-h-screen p-6">
+  <div class=" contenerJeu flex flex-col md:flex-row items-stretch justify-center min-h-screen p-6">
     <div class="md:w-1/4 p-6 bg-white shadow-lg rounded-lg flex-grow">
       <div class="flex flex-col mb-4 space-y-4">
 
@@ -231,3 +231,10 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.contenerJeu {
+  z-index: 2;
+}
+</style>
+```
