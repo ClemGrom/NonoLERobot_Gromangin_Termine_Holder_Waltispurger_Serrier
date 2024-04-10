@@ -26,6 +26,9 @@ class MethodPartiesAction extends AbstractAction {
         if ($method == 'POST'){
             $data = $this->client->post($uri,["headers"=>$headers,"body"=>$body]);
         }
+        if ($method == 'PATCH'){
+            $data = $this->client->patch($uri,["headers"=>$headers,"body"=>$body]);
+        }
         $json = json_decode($data->getBody()->getContents(),true);
         $response->getBody()->write(json_encode($json,JSON_PRETTY_PRINT));
 

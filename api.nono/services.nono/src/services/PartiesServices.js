@@ -17,9 +17,8 @@ export const getUserParties = async (user_email, status) => {
     return query;
 };
 
-export const updateParty = async (id, newData) => {
-    const { status, temps, score, capteurGlongeur, capteurGangle, capteurDlongeur, capteurDangle } = newData;
-    await db('parties').where('id', '=', id).update({
+export const updateParty = async (user_email, niveau, status, temps, score, capteurGlongeur, capteurGangle, capteurDlongeur, capteurDangle) => {
+    await db('parties').where({ 'user_email': user_email, 'niveau': niveau }).update({
         status: status,
         temps: temps,
         score: score,
@@ -29,8 +28,9 @@ export const updateParty = async (id, newData) => {
         capteurDangle: capteurDangle
     });
 
-    return db('parties').where('id', '=', id).first();
+    return db('parties').where({ 'user_email': user_email, 'niveau': niveau }).first();
 }
+
 
 
 
