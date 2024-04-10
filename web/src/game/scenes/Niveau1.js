@@ -158,11 +158,20 @@ export class Niveau1 extends Scene {
     });
 
     // Crée le texte du score
-    this.scoreText = this.add.text(600, 2, "Score : 0", {
-      fontSize: "26px",
+    this.scoreText = this.add.text(650, 0, "Score : 0", {
+      fontSize: "28px",
+      fontFamily: "Arial",
       fill: "#ffffff",
       stroke: "#000000",
-      strokeThickness: 2,
+      strokeThickness: 4,
+      shadow: {
+        offsetX: 2,
+        offsetY: 2,
+        color: '#000',
+        blur: 2,
+        stroke: true,
+        fill: true
+      }
     });
     
     EventBus.emit("current-scene-ready", this);
