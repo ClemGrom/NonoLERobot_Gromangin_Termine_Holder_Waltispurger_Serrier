@@ -3,7 +3,7 @@
     <div class="grid-container">
       <!-- Première section -->
       <div >
-        <Card title="Présentation" :router-link="'/presentation'" :description="'Description de la première section'" backgroundColor="bg-red-600">
+        <Card title="Présentation" :router-link="'/presentation'" :description="'Présentation du projet'" backgroundColor="bg-red-600">
           <template #routerText>
             En savoir plus
           </template>
@@ -12,14 +12,14 @@
 
       <!-- Deuxième section -->
       <div>
-        <Card title="Tutoriel" :router-link="'/tutoriel'" :description="'Description de la deuxième section'" backgroundColor="bg-blue-600">
+        <Card title="Tutoriel" :router-link="'/tutoriel'" :description="'Tutoriel pour la simulation'" backgroundColor="bg-blue-600">
             En savoir plus
           
         </Card>
       </div>
 
       <div>
-        <Card title="Qui sommes-nous?" :router-link="'/about'" :description="'Description de la deuxième section'" backgroundColor="bg-yellow-600">
+        <Card title="Qui sommes-nous?" :router-link="'/about'" :description="'En apprendre plus sur les membres du projet '" backgroundColor="bg-yellow-600">
           <template #routerText>
             En savoir plus
           </template>
@@ -27,9 +27,9 @@
       </div>
 
       <div>
-        <Card title="Lancer la simulation" :router-link="'/robotmoteur'" :description="'Description de la deuxième section'" backgroundColor="bg-green-600">
+        <Card title="Lancer la simulation" :router-link="'/robotmoteur'" :description="''" backgroundColor="bg-green-600">
           <template #routerText>
-            En savoir plus
+            
           </template>
         </Card>
       </div>
