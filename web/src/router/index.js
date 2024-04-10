@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import Page404 from "@/views/Page404.vue";
@@ -7,71 +7,77 @@ import InscriptionView from "@/views/InscriptionView.vue";
 import LoginView from "@/views/LoginView.vue";
 import RobotMoteur from "../views/RobotMoteur.vue";
 import PreviousLevels from "@/views/PreviousLevels.vue";
-import Tutoriel from '@/views/Tutoriel.vue';
+import Tutoriel from "@/views/Tutoriel.vue";
+import presentationView from "@/views/presentationView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: HomeView
+      path: "/",
+      name: "home",
+      component: HomeView,
     },
 
     {
-      path: '/diagrams',
-      name: 'diagrams',
-      component: () => import('../views/Diagrams.vue')
+      path: "/diagrams",
+      name: "diagrams",
+      component: () => import("../views/Diagrams.vue"),
     },
 
     {
-      path: '/profile',
-      name: 'profile',
-      component: ProfileView
+      path: "/profile",
+      name: "profile",
+      component: ProfileView,
     },
     {
-      path: '/tutoriel',
-      name: 'tutoriel',
-      component: Tutoriel
+      path: "/tutoriel",
+      name: "tutoriel",
+      component: Tutoriel,
     },
     {
-      path: '/about',
-      name: 'about',
-      component: () => import('../views/AboutView.vue')
-    },
-
-    {
-      path: '/programmationRobot',
-      name: 'programmationRobot',
-      component: ProgrammationRobotView
+      path: "/presentation",
+      name: "presentation",
+      component: presentationView,
     },
     {
-      path: '/connexion',
-      name: 'connexion',
-      component: LoginView
-    },
-    {
-      path: '/inscription',
-      name: 'inscription',
-      component: InscriptionView
-    },
-    {
-      path: '/robotMoteur',
-      name: 'robotMoteur',
-      component: RobotMoteur
-    },
-    {
-      path: '/previous-levels',
-        name: 'previous-levels',
-        component: PreviousLevels
+      path: "/about",
+      name: "about",
+      component: () => import("../views/AboutView.vue"),
     },
 
     {
-      path: '/:pathMatch(.*)',
-      name: 'page404',
-      component: Page404
-    }
-  ]
-})
+      path: "/programmationRobot",
+      name: "programmationRobot",
+      component: ProgrammationRobotView,
+    },
+    {
+      path: "/connexion",
+      name: "connexion",
+      component: LoginView,
+    },
+    {
+      path: "/inscription",
+      name: "inscription",
+      component: InscriptionView,
+    },
+    {
+      path: "/robotMoteur",
+      name: "robotMoteur",
+      component: RobotMoteur,
+    },
+    {
+      path: "/previous-levels",
+      name: "previous-levels",
+      component: PreviousLevels,
+    },
 
-export default router
+    {
+      path: "/:pathMatch(.*)",
+      name: "page404",
+      component: Page404,
+    },
+  ],
+});
+
+export default router;
