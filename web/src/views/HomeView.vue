@@ -13,9 +13,8 @@
       <!-- Deuxième section -->
       <div>
         <Card title="Tutoriel" :router-link="'/tutoriel'" :description="'Description de la deuxième section'" backgroundColor="bg-blue-600">
-          <template #routerText>
             En savoir plus
-          </template>
+          
         </Card>
       </div>
 
@@ -55,7 +54,6 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
-
   height: 80vh;
   margin-left: 20px;
   margin-right: 20px;

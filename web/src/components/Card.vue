@@ -1,13 +1,18 @@
 <!-- MyComponent.vue -->
 <template>
-  <div :class="cardClasses" class="card justify-center items-center block m-2">
+  <RouterLink :to="routerLink">
+    <div :class="cardClasses" class="card justify-center items-center">
     <div class="title">{{ title }}</div>
     <div class="description">{{ description }}</div>
-    <router-link class="link" :to="routerLink">{{ routerText }}</router-link>
+    {{ routerText }}
   </div>
+  </RouterLink>
+  
 </template>
 
 <script>
+import { RouterLink } from 'vue-router';
+
 export default {
   props: {
     title: {
@@ -46,13 +51,13 @@ export default {
         'focus:outline-none',
         'focus:ring-green-300',
         'dark:focus:ring-red-800',
-        'mr-3',
+        
         'hover:transition',
         'duration-300',
         'ease-in-out',
         'transform',
         'hover:scale-105',
-        'mb-14'
+        
       ];
 
       if (this.backgroundColor) {
