@@ -40,25 +40,18 @@ export default {
         response = await this.$api.post(SIGNIN, config);
 
         if (response.status !== 200) {
-          this.$toast.error(response.message);
+          this.$toast.error('echec de la connexion');
         } else if (response.status === 401 || response.status === 500) {
           this.$toast.error('Échec de la connexion suite à une erreur serveur ou une erreur d\'authentification');
         } else {
           if (response && response.message === "401 Authentification failed") {
             this.$toast.error('echec de la connexion');
             console.error(response.message);
-          } else {
-            const expiresIn = (((response.expiration) / 3000) / 24);
-
-            const accessToken = response.access_token;
-            if (!accessToken) {
-              console.error('Erreur lors de la récupération de l\'access token');
-              this.$toast.error(response.message);
-              return;
-            }
-            this.setconnected(this.email, accessToken);
-            await router.push("/");
+            return;
           }
+          this.setconnected(this.email);
+          await router.push("/");
+          this.$toast.success('Connexion réussie');
         }
       } catch (error) {
         console.error(response.request);
