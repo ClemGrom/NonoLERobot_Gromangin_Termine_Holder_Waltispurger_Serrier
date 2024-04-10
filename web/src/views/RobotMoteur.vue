@@ -10,7 +10,11 @@
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow">Mode Simple</button>
           <button @click="mode = 'custom'"
             class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow">Mode Custom</button>
-          <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded shadow">Mode Gojs</button>
+          <RouterLink to="/programmationRobot">
+
+            <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded shadow">Mode Gojs</button>
+          </RouterLink>
+
         </div>
         <div v-if="mode === 'default'">
           <div class="flex flex-col mb-4">

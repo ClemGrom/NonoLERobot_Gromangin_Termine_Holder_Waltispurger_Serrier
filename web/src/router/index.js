@@ -9,6 +9,7 @@ import InscriptionView from "@/views/InscriptionView.vue";
 import LoginView from "@/views/LoginView.vue";
 import RobotMoteur from "../views/RobotMoteur.vue";
 import PreviousLevels from "@/views/PreviousLevels.vue";
+import Tutoriel from '@/views/Tutoriel.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,6 +30,11 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: ProfileView
+    },
+    {
+      path: '/tutoriel',
+      name: 'tutoriel',
+      component: Tutoriel
     },
     {
       path: '/about',
