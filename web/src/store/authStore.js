@@ -4,7 +4,7 @@ export const useAuthStore = defineStore('auth', {
     state() {
         return {
             isConnected: false,
-            user_email: ""
+            user_email: "",
         }
     },
     actions: {

@@ -19,11 +19,10 @@ export default {
   methods: {
     ...mapActions(useAuthStore, ["setconnected"]),
     async submitForm() {
+      let response = '';
       try {
-        const email = this.email;
-        const password = this.password;
 
-        if (email.trim() === '' || password.trim() === '') {
+        if (this.email.trim() === '' || this.password.trim() === '') {
           console.error('Veuillez entrer votre email et votre mot de passe');
           this.isFill = false;
           return;
@@ -31,17 +30,31 @@ export default {
         const config = {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Basic ' + btoa(`${email}:${password}`),
+            'Authorization': 'Basic ' + btoa(`${this.email}:${this.password}`),
           },
+          data: {
+            user_email: this.email,
+            password: this.password
+          }
         };
-        const response = await this.$api.post(SIGNIN, config);
+        response = await this.$api.post(SIGNIN, config);
 
-        if (response.status === 200) {
-          this.setconnected(email);
+        if (response.status !== 200) {
+          this.$toast.error('echec de la connexion');
+        } else if (response.status === 401 || response.status === 500) {
+          this.$toast.error('Échec de la connexion suite à une erreur serveur ou une erreur d\'authentification');
+        } else {
+          if (response && response.message === "401 Authentification failed") {
+            this.$toast.error('echec de la connexion');
+            console.error(response.message);
+            return;
+          }
+          this.setconnected(this.email);
           await router.push("/");
           this.$toast.success('Connexion réussie');
         }
       } catch (error) {
+        console.error(response.request);
         this.$toast.error('Identifiant invalide');
       }
     }
@@ -53,7 +66,7 @@ export default {
   <div id="Container">
     <form @submit.prevent="submitForm" class="form">
       <div id="login-lable">Login</div>
-      <input class="form-content" type="text" placeholder="UserName" v-model="email" required/>
+      <input class="form-content" type="text" placeholder="Email" v-model="email" required/>
       <input class="form-content" type="password" placeholder="PassWord" v-model="password" required/>
       <button>Continue</button>
     </form>
