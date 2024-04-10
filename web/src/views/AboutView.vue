@@ -24,6 +24,7 @@
       </li>
     
     </ul>
+    <p class="mt-4">Ce projet a été réalisé dans le cadre de notre formation de BUT Informatique</p>
   </div>
 </template>
 <style>
