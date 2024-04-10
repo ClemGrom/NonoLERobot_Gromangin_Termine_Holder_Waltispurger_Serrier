@@ -107,19 +107,19 @@
           <div class="flex flex-line items-center justify-center">
 
             <button
-              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-red-800 shadow-red-500/50 dark:dark:shadow-red-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
+              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-green-500/50 dark:dark:shadow-green-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
               @click="startLevel(0)">Niveau 1</button>
             <button
-              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:focus:ring-green-800 shadow-green-500/50 dark:dark:shadow-green-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
+              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:focus:ring-green-800 shadow-yellow-500/50 dark:dark:shadow-yellow-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
               @click="startLevel(1)">Niveau 2</button>
             <button
-              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-purple-500 hover:bg-purple-600 focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-yellow-800 shadow-yellow-500/50 dark:dark:shadow-yellow-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
+              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-purple-500 hover:bg-purple-600 focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 shadow-purple-500/50 dark:dark:shadow-purple-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
               @click="startLevel(2)">Niveau 3</button>
             <button
-              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-purple-800 shadow-purple-500/50 dark:dark:shadow-purple-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
+              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-purple-500/50 dark:dark:shadow-red-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
               @click="startLevel(3)">Niveau 4</button>
             <button
-              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-black hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-black dark:focus:ring-blue-800 shadow-blue-500/50 dark:dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
+              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-black hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-black dark:focus:ring-black-800 shadow-black-500/50 dark:dark:shadow-black-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
               @click="startLevel(4)">Niveau 5</button>
 
           </div>
