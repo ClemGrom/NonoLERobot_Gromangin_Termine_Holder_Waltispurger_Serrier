@@ -17,31 +17,23 @@ export class LevelFinish extends Scene
 
         this.add.image(700, 200, 'background').setAlpha(0.5);
 
-        if (this.scoreFinal !== 0) {
-            this.add.text(450, 130, 'Victoire', {
-                fontFamily: 'Arial Black', fontSize: 64, color: '#ffffff',
-                stroke: '#000000', strokeThickness: 8,
-                align: 'center'
-            }).setOrigin(0.5).setDepth(100);
+        this.add.text(450, 110, 'Victoire', {
+            fontFamily: 'Arial Black', fontSize: 64, color: '#ffffff',
+            stroke: '#000000', strokeThickness: 8,
+            align: 'center'
+        }).setOrigin(0.5).setDepth(100);
 
-            this.add.text(450, 250, `Score : ${this.scoreFinal}`, {
-                fontFamily: 'Arial Black', fontSize: 48, color: '#ffffff',
-                stroke: '#000000', strokeThickness: 8,
-                align: 'center'
-            }).setOrigin(0.5).setDepth(100);
-        } else {
-            this.add.text(450, 130, 'Victoire', {
-                fontFamily: 'Arial Black', fontSize: 64, color: '#ffffff',
-                stroke: '#000000', strokeThickness: 8,
-                align: 'center'
-            }).setOrigin(0.5).setDepth(100);
+        this.add.text(480, 230, 'Finis en : ' + this.timerFinal + ' secondes', {
+            fontFamily: 'Arial Black', fontSize: 48, color: '#ffffff',
+            stroke: '#000000', strokeThickness: 8,
+            align: 'center'
+        }).setOrigin(0.5).setDepth(100);
 
-            this.add.text(480, 250, 'Finis en : ' + this.timerFinal + ' secondes', {
-                fontFamily: 'Arial Black', fontSize: 48, color: '#ffffff',
-                stroke: '#000000', strokeThickness: 8,
-                align: 'center'
-            }).setOrigin(0.5).setDepth(100);
-        }
+        this.add.text(450, 330, 'Score : ' + this.scoreFinal, {
+            fontFamily: 'Arial Black', fontSize: 48, color: '#ffffff',
+            stroke: '#000000', strokeThickness: 8,
+            align: 'center'
+        }).setOrigin(0.5).setDepth(100);
 
         EventBus.emit('current-scene-ready', this);
     }

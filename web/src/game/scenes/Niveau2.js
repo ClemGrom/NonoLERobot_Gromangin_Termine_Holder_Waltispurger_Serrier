@@ -35,6 +35,9 @@ export class Niveau2 extends Scene {
 
     // Initialisation de la santé du robot
     this.health = 2;
+    
+    // Initialisation du timer
+    this.timer = 0;
 
     // Initialisation du score
     this.score = 0;
@@ -111,7 +114,7 @@ export class Niveau2 extends Scene {
       function (robot, batterie) {
         batterie.destroy();
         this.energy += 20; // Augmenter l'énergie lorsque le robot ramasse une batterie
-        this.score += 100; // Augmenter le score de 100 points
+        this.score += 10; // Augmenter le score de 100 points
       },
       null,
       this
@@ -128,6 +131,23 @@ export class Niveau2 extends Scene {
 
     // Crée le texte du score
     this.scoreText = this.add.text(650, 0, "Score : 0", {
+      fontSize: "28px",
+      fontFamily: "Arial",
+      fill: "#ffffff",
+      stroke: "#000000",
+      strokeThickness: 4,
+      shadow: {
+        offsetX: 2,
+        offsetY: 2,
+        color: '#000',
+        blur: 2,
+        stroke: true,
+        fill: true
+      }
+    });
+
+    // Crée le texte du timer
+    this.TimerText = this.add.text(0, 0, "Timer : 0s", {
       fontSize: "28px",
       fontFamily: "Arial",
       fill: "#ffffff",
@@ -186,6 +206,10 @@ export class Niveau2 extends Scene {
 
     // Mettez à jour le texte chaque fois que le score change
     this.scoreText.setText('Score: ' + this.score);
+
+    // Met à jour le timer
+    this.timer += 1 / 60;
+    this.TimerText.setText("Timer : " + Math.floor(this.timer) + "s");
 
     if (this.robot.x > 900) {
       this.changeScene();
@@ -365,6 +389,7 @@ export class Niveau2 extends Scene {
     this.stopEnergy = true;
     let scoreTotal=this.score+this.energy;
     localStorage.setItem("score", scoreTotal);
+    localStorage.setItem("timer", this.timer);
     localStorage.setItem("currentSceneIndex", 1);
     this.scene.stop("Niveau2");
     this.scene.start("LevelFinish");

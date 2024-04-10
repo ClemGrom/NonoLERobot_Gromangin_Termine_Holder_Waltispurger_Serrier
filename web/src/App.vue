@@ -93,7 +93,8 @@ export default {
 
 
             <div v-if="showMenu"
-              class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+              class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
+              style="z-index: 3; background-color: white;">
               <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                 <div v-if="!isConnected">
                   <RouterLink to="/inscription"

@@ -40,9 +40,6 @@ export class Niveau4 extends Scene {
 
     // Timer
     this.timer = 0;
-
-    // Score
-    this.score = 0;
   }
 
   create() {
@@ -366,7 +363,7 @@ export class Niveau4 extends Scene {
   }
   
   changeScene() {
-    localStorage.setItem("score", 0); // Réinitialiser le score pour afficher uniquement le timer
+    localStorage.setItem("score", 100 - this.timer);
     localStorage.setItem("timer", this.timer);
     localStorage.setItem("currentSceneIndex", 3);
     this.scene.stop("Niveau4");
