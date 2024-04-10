@@ -17,7 +17,7 @@ services:
       - http_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
       - https_proxy=http://www-cache-iutnc.univ-lorraine.fr:3128
     volumes:
-      - ../FrontEndNonoLeRobot/dist:/usr/local/apache2/htdocs/nono
+      - ../web/dist:/usr/local/apache2/htdocs/nono
     networks:
       - nono.net
 
