@@ -366,7 +366,6 @@ export class Niveau4 extends Scene {
     localStorage.setItem("score", 100 - this.timer);
     localStorage.setItem("timer", this.timer);
     localStorage.setItem("currentSceneIndex", 3);
-    this.scene.stop("Niveau4");
     this.scene.start("LevelFinish");
   }
 }

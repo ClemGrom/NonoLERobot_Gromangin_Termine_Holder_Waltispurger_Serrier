@@ -110,7 +110,7 @@
               class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-green-500/50 dark:dark:shadow-green-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
               @click="startLevel(0)">Niveau 1</button>
             <button
-              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:focus:ring-green-800 shadow-yellow-500/50 dark:dark:shadow-yellow-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
+              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:focus:ring-yellow-800 shadow-yellow-500/50 dark:dark:shadow-yellow-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
               @click="startLevel(1)">Niveau 2</button>
             <button
               class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-purple-500 hover:bg-purple-600 focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 shadow-purple-500/50 dark:dark:shadow-purple-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
@@ -189,6 +189,7 @@ export default {
       currentSceneIndex.value = (currentSceneIndex.value + 1) % scenes.value.length;
       game.value.scene.start(scenes.value[currentSceneIndex.value]);
     };
+
     const startLevel = (levelIndex) => {
       // Ensure the level index is valid
       if (levelIndex < 0 || levelIndex >= scenes.value.length) {
@@ -196,18 +197,18 @@ export default {
         return;
       }
 
-      // Stop the current scene
-      game.value.scene.stop(scenes.value[currentSceneIndex.value]);
-
-      // Reset the game state here
-      // This depends on how your game is designed
-      // For example, if you have game objects or scores to reset, do it here
+      // Stop all other scenes
+      scenes.value.forEach(scene => {
+        if (game.value.scene.isActive(scene)) {
+          game.value.scene.stop(scene);
+        }
+      });
 
       // Start the new level
       currentSceneIndex.value = levelIndex;
       game.value.scene.start(scenes.value[currentSceneIndex.value]);
     };
-
+    
     const restart = () => {
       // Stop the current scene
       game.value.scene.stop(scenes.value[currentSceneIndex.value]);
