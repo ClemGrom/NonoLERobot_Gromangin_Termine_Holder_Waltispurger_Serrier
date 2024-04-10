@@ -27,7 +27,7 @@ export class Niveau5 extends Scene {
     this.degres2SensorsTouche = localStorage.getItem("degres2Touche") || false;
 
     // Initialisation de la vitesse du robot
-    this.vitesseRobot = 100;
+    this.vitesseRobot = 130;
 
     // Initialisation des angles des capteurs par défaut
     this.defaultangleGauche = 45;
@@ -123,7 +123,7 @@ export class Niveau5 extends Scene {
       this.robot.y > 768 &&
       this.robot.y < 896
     ) {
-      this.scene.start('Niveau1');
+      this.changeScene();
     }
   }
 
@@ -271,5 +271,12 @@ export class Niveau5 extends Scene {
     // Met à jour la vitesse du robot
     this.robot.setVelocity(vx, vy);
     
+  }
+  
+  changeScene() {
+    localStorage.setItem("score", 0);
+    localStorage.setItem("currentSceneIndex", 4);
+    this.scene.stop("Niveau5");
+    this.scene.start("LevelFinish");
   }
 }

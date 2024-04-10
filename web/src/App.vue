@@ -1,7 +1,9 @@
 <script>
 import {RouterView, RouterLink} from 'vue-router';
-//import AccueilRobot from "@/components/AccueilRobot.vue";
 import HomeView from "@/views/HomeView.vue";
+import {useAuthStore} from "@/store/authStore.js";
+import router from "@/router/index.js";
+
 
 
 export default {
@@ -14,15 +16,23 @@ export default {
   },
   data() {
     return {
-      isConnected: true,
       showMenu: false,
+      //isConnected: true,
     }
+
   },
   computed: {
-    isHomeRoute() {
-      return this.$route.path === '/';
-    },
+    isConnected() {
+      return useAuthStore().isConnected;
+    }
   },
+  methods: {
+    disconnect() {
+      const authstore = useAuthStore();
+      authstore.disconnect();
+      this.$router.push('/');
+    },
+  }
 };
 </script>
 
@@ -65,13 +75,13 @@ export default {
         <div
             class=" max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105">
           <RouterLink to="/robotMoteur">
-            <button class="h-full w-full">Jouer</button>
+            <button class="h-full w-full">Lancer la simulation</button>
           </RouterLink>
         </div>
         <div
             class=" max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105">
           <RouterLink to="/previous-levels">
-            <button class="h-full w-full">Jouer aux anciens niveaux</button>
+            <button class="h-full w-full">Anciens niveaux</button>
           </RouterLink>
         </div>
 
@@ -92,7 +102,7 @@ export default {
         </div>
         <div v-else>
           <RouterLink to="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Mes parties</RouterLink>
-          <button class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Déconnexion</button>
+          <button @click="disconnect" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Déconnexion</button>
         </div>
       </div>
     </div>
@@ -102,8 +112,6 @@ export default {
       </div>
     </div>
   </header>
-
-  <AccueilRobot v-if="isHomeRoute"/>
 
   <!-- affiche les routes -->
   <RouterView/>

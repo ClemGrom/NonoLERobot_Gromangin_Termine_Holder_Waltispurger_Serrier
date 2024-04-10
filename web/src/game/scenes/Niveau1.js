@@ -48,6 +48,9 @@ export class Niveau1 extends Scene {
     this.defaultangleDroit = 45;
     this.defaultangle3 = 135;
     this.defaultangle4 = 135;
+
+    // Initialisation du score
+    this.score = 0;
   }
 
   create() {
@@ -115,6 +118,7 @@ export class Niveau1 extends Scene {
       function (robot, batterie) {
         batterie.destroy();
         this.energy += 20;
+        this.score += 100;
       },
       null,
       this
@@ -151,6 +155,14 @@ export class Niveau1 extends Scene {
     // Créez l'objet graphics
     this.graphics = this.add.graphics({
       lineStyle: { width: 2, color: 0x00ff00 },
+    });
+
+    // Crée le texte du score
+    this.scoreText = this.add.text(600, 2, "Score : 0", {
+      fontSize: "26px",
+      fill: "#ffffff",
+      stroke: "#000000",
+      strokeThickness: 2,
     });
     
     EventBus.emit("current-scene-ready", this);
@@ -208,6 +220,9 @@ export class Niveau1 extends Scene {
         this.consumeEnergy(); 
       }
     }
+
+    // Mettez à jour le texte chaque fois que le score change
+    this.scoreText.setText('Score: ' + this.score);
 
     // Change de niveau si le robot atteint la fin du niveau
     if (this.robot.x > 900) {
@@ -409,6 +424,10 @@ export class Niveau1 extends Scene {
   
   changeScene() {
     this.stopEnergy = true;
-    this.scene.start("Niveau2");
+    let scoreTotal=this.score+this.energy;
+    localStorage.setItem("score", scoreTotal);
+    localStorage.setItem("currentSceneIndex", 0);
+    this.scene.stop("Niveau1");
+    this.scene.start("LevelFinish");
   }
 }

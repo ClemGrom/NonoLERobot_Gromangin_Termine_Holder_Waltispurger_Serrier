@@ -37,7 +37,6 @@ export class Niveau4 extends Scene {
 
     this.defaultangleGauche = 45;
     this.defaultangleDroit = 45;
-
   }
 
   create() {
@@ -379,33 +378,11 @@ export class Niveau4 extends Scene {
       this.robotFantome.setVelocity(0, 0);
     }
   }
-
-  // drawHealthBar() {
-  //   // Clear the previous health bar
-  //   this.vieGraphics.clear();
-
-  //   // Calculate the number of health bars to draw
-  //   let healthBars = Math.floor(this.energy / 20);
-
-  //   // Draw new health bar
-  //   for (let i = 0; i < healthBars; i++) {
-  //     this.vieGraphics.fillStyle(0xff0000); // Red color
-  //     this.vieGraphics.fillRect(925 - i * 20, 5, 15, 15);
-  //   }
-  // }
-
-  // consumeEnergy() {
-  //   this.energy -= 0.1; // Consommer une certaine quantité d'énergie
-  //   // console.log(this.energy);
-  //   if (this.energy <= 0) {
-  //     this.stopEnergy = true; // Arrêter le robot lorsque l'énergie atteint 0
-  //     this.scene.start("GameOver");
-  //   }
-  // }
+  
   changeScene() {
-    this.stopEnergy = true;
-    this.scene.start("Niveau5");
+    localStorage.setItem("score", 0);
+    localStorage.setItem("currentSceneIndex", 3);
+    this.scene.stop("Niveau4");
+    this.scene.start("LevelFinish");
   }
-
-
 }
