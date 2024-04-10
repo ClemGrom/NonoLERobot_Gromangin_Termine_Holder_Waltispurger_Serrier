@@ -30,6 +30,10 @@
             <p class="text-lg text-gray-700 mb-4">Quand un capteur de Nono touche un obstacle, le robot tourne selon
                 l'angle défini par l'utilisateur. La taille du capteur change selon la distance entre l'obstacle et Nono
                 : plus le capteur est court plus le robot va tourner.</p>
+            <h2 class="text-2xl font-semibold mb-2">Batteries</h2>
+            <p class="text-lg text-gray-700 mb-4">Nono a besoin de batteries pour fonctionner. Si Nono n'a plus de batteries il MEURT.
+                Il faut donc faire attention à la consommation de batterie de Nono. </p>
+            
 
             <h2 class="text-2xl font-semibold mb-2">Mode Simple</h2>
             <div class="flex items-center">

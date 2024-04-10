@@ -61,7 +61,7 @@ export class Niveau2 extends Scene {
 
 
     // Création du robot
-    this.robot = this.physics.add.image(145, 176, "robot");
+    this.robot = this.physics.add.image(125, 285, "robot");
     this.robot.body.collideWorldBounds = true;
     this.robot.setDepth(1);
 
