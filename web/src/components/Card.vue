@@ -10,8 +10,6 @@
 </template>
 
 <script>
-import { RouterLink } from 'vue-router';
-
 export default {
   props: {
     title: {
@@ -32,7 +30,7 @@ export default {
     },
     backgroundColor: {
       type: String,
-      default: 'white',
+      default: ''
     }
   },
   computed: {
@@ -56,8 +54,7 @@ export default {
         'ease-in-out',
         'transform',
         'hover:scale-105',
-        'mb-14',
-        'w-80',
+        'mb-14'
       ];
 
       if (this.backgroundColor) {
@@ -71,44 +68,28 @@ export default {
 </script>
 
 <style>
-  body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    background-color: #f8f9fa;
-  }
+.card {
+  margin: auto;
+  height: 80%;
+  align-content: center;
+  align-items: center;
+  text-align: justify;
+  width: 60%;
+}
 
-  .card {
-    height: 80%;
-    align-content: center;
-    align-items: center;
-    text-align: justify;
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 15px;
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
-  }
+.description {
+  margin-top: 10px;
+  font-size: 1.5rem;
+}
 
-  .title {
-    color: #343a40;
-  }
+.link {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  text-decoration: none;
+}
 
-  .description {
-    color: #6c757d;
-  }
-
-  .link {
-    text-decoration: none;
-    color: #3b9cdd;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    margin: 10px;
-  }
-
-  .link:hover {
-    color: #1e6bb8;
-  }
+.link:hover {
+  color: rgb(0, 0, 0);
+}
 </style>
