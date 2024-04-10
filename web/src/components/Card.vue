@@ -2,12 +2,11 @@
 <template>
   <RouterLink :to="routerLink">
     <div :class="cardClasses" class="card justify-center items-center block m-2">
-    <div class="title">{{ title }}</div>
-    <div class="description">{{ description }}</div>
-    <router-link class="link" :to="routerLink">{{ routerText }}</router-link>
-  </div>
+      <div class="title">{{ title }}</div>
+      <div class="description">{{ description }}</div>
+      <router-link class="link" :to="routerLink">{{ routerText }}</router-link>
+    </div>
   </RouterLink>
-  
 </template>
 
 <script>
@@ -33,7 +32,7 @@ export default {
     },
     backgroundColor: {
       type: String,
-      default: ''
+      default: 'white',
     }
   },
   computed: {
@@ -57,7 +56,8 @@ export default {
         'ease-in-out',
         'transform',
         'hover:scale-105',
-        'mb-14'
+        'mb-14',
+        'w-80',
       ];
 
       if (this.backgroundColor) {
@@ -71,10 +71,44 @@ export default {
 </script>
 
 <style>
-.card {
-  height: 80%;
-  align-content: center;
-  align-items: center;
-  text-align: justify;
-}
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f8f9fa;
+  }
+
+  .card {
+    height: 80%;
+    align-content: center;
+    align-items: center;
+    text-align: justify;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .title {
+    color: #343a40;
+  }
+
+  .description {
+    color: #6c757d;
+  }
+
+  .link {
+    text-decoration: none;
+    color: #3b9cdd;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin: 10px;
+  }
+
+  .link:hover {
+    color: #1e6bb8;
+  }
 </style>

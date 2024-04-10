@@ -12,9 +12,8 @@
 
       <!-- Deuxième section -->
       <div>
-        <Card title="Tutoriel" :router-link="'/tutoriel'" :description="'Tutoriel pour la simulation'" backgroundColor="bg-blue-600">
+        <Card title="Tutoriel" :router-link="'/tutoriel'" :description="'Apprend à utiliser notre application !'" backgroundColor="bg-blue-600">
             En savoir plus
-          
         </Card>
       </div>
 
