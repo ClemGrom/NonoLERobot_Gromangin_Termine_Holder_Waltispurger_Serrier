@@ -46,10 +46,18 @@ export class LevelFinish extends Scene
     }
 
     changeScene = () => {
-        // Stop the current scene
+        // Stop la scène actuelle
         this.scene.stop('LevelFinish');
         this.currentSceneIndex = parseInt(localStorage.getItem('currentSceneIndex'));
         const scenes = ['Niveau1', 'Niveau2', 'Niveau3', 'Niveau4', 'Niveau5'];
+    
+        // Stop toutes les scènes actives
+        scenes.forEach(scene => {
+            if (this.scene.isActive(scene)) {
+                this.scene.stop(scene);
+            }
+        });
+    
         const nextSceneIndex = (this.currentSceneIndex + 1) % scenes.length;
         const nextScene = scenes[nextSceneIndex];
         this.scene.start(nextScene);
