@@ -66,7 +66,7 @@ export default {
   <div id="Container">
     <form @submit.prevent="submitForm" class="form">
       <div id="login-lable">Login</div>
-      <input class="form-content" type="text" placeholder="UserName" v-model="email" required/>
+      <input class="form-content" type="text" placeholder="Email" v-model="email" required/>
       <input class="form-content" type="password" placeholder="PassWord" v-model="password" required/>
       <button>Continue</button>
     </form>

@@ -12,23 +12,26 @@ export default {
       mdp: '',
       mdpverif: '',
       inscriptionDone: false,
+      isFill: true,
     }
   },
   methods: {
-
     async submitForm() {
       let response = '';
       try {
-        const config = {
-          data: {
-            email: this.email,
-            mdp: this.mdp,
-            pseudo: this.pseudo
-          }
-        };
 
-        response = await this.$api.post("http://localhost:3320/signup", config);
-        console.log(response.request);
+        if (this.email.trim() === '' || this.mdp.trim() === '' || this.pseudo.trim() === '') {
+          console.error('Veuillez entrer votre email et votre mot de passe');
+          this.isFill = false;
+          return;
+        }
+
+        response = await this.$api.post(SIGNUP, {
+          email: this.email,
+          pseudo: this.pseudo,
+          mdp: this.mdp
+        });
+
         if (response.status === 200) {
           //this.finirInscription();
           await router.push("/connexion");
@@ -36,7 +39,7 @@ export default {
         }
 
       } catch (error) {
-        console.error(response.request);
+        console.error(error);
       }
     },
 
@@ -78,7 +81,7 @@ export default {
   <div id="Container">
     <form @submit.prevent="submitForm" class="form">
       <div id="register-lable">Inscription</div>
-      <input class="form-content" type="text" placeholder="UserName" v-model="email" required/>
+      <input class="form-content" type="text" placeholder="Email" v-model="email" required/>
       <input class="form-content" type="text" placeholder="Pseudo" v-model="pseudo" required/>
       <input class="form-content" type="password" placeholder="PassWord" v-model="mdp" required/>
       <input class="form-content" type="password" placeholder="ConfirmPassWord" v-model="mdpverif" required/>
