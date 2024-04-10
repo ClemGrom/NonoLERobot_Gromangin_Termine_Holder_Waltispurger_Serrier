@@ -100,16 +100,19 @@ export class Niveau1 extends Scene {
     this.batteries = this.physics.add.group(); // Créer un groupe
     this.energy = 100;
     this.stopEnergy = false;
-    //mets aléatoirement batteries sur la carte
-    for (let i = 0; i < 5; i++) {
-      let batterie = this.physics.add.image(
-        Phaser.Math.Between(250, 700),
-        Phaser.Math.Between(100, 300),
-        "batterie"
-      );
-      this.batteries.add(batterie);
-      this.physics.add.collider(this.robot, this.calqueNiveau);
-    }
+
+    // Met les batteries sur la cartes
+    let batterie = this.physics.add.image(280, 100, "batterie");
+    let batterie2 = this.physics.add.image(500, 240 , "batterie");
+    let batterie3 = this.physics.add.image(600, 100, "batterie");
+    let batterie4 = this.physics.add.image(750, 320, "batterie");
+
+    this.batteries.add(batterie);
+    this.batteries.add(batterie2);
+    this.batteries.add(batterie3);
+    this.batteries.add(batterie4);
+
+    this.physics.add.collider(this.robot, this.calqueNiveau);
 
     // Batteries qui disparaissent au contact du robot
     this.physics.add.overlap(

@@ -119,7 +119,7 @@ export class Niveau4 extends Scene {
     this.indexCheminFantome = 0;
 
     // Crée le texte du timer
-    this.TimerText = this.add.text(750, 2, "Timer : 0s", {
+    this.TimerText = this.add.text(750, 0, "Timer : 0s", {
       fontSize: "32px",
       fontFamily: "Arial",
       fill: "#ffffff",
