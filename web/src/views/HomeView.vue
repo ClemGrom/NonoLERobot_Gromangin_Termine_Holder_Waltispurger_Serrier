@@ -1,107 +1,61 @@
-<script>
-import { defineComponent } from 'vue'
-import { Carousel, Navigation, Pagination, Slide } from 'vue3-carousel'
-
-import SlideContent from "@/components/homeComponent.vue";
-
-import 'vue3-carousel/dist/carousel.css'
-
-export default defineComponent({
-  name: 'Basic',
-  components: {
-    Carousel,
-    Slide,
-    Pagination,
-    Navigation,
-    SlideContent,
-  },
-  data() {
-    return {
-      slidesData: [
-        {
-          title: "NONO LE ROBOT",
-          description: "Nono, le robot à programmer!",
-          link: "/",
-          index: 0
-        },
-        {
-          title: "A propos",
-          description: "Qu'est-ce que Nono le robot?",
-          link: "/",
-          index: 1
-        },
-        {
-          title: "Tutoriel",
-          description: "Apprends comment programmer nono!",
-          link: "/",
-          index: 2
-        },
-        {
-          title: "Jouer",
-          description: "Il est temps de commencer à jouer!",
-          link: "/robotMoteur",
-          index: 3
-        },
-      ]
-    }
-  }
-})
-</script>
-
 <template>
   <main>
-    <Carousel>
-      <Slide v-for="(slide, index) in slidesData" :key="index">
-        <SlideContent class="carousel__item" :title="slide.title" :description="slide.description" :link="index === 0 ? '' : slide.link" :index="slide.index" />
-      </Slide>
-
-      <template #addons>
-        <navigation>
-          <template #next>
-            <span class="text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105 mb-14 "> >> </span>
+    <div class="grid-container">
+      <!-- Première section -->
+      <div >
+        <Card title="Présentation" :router-link="'/presentation'" :description="'Présentation du projet'" backgroundColor="bg-red-600">
+          <template #routerText>
+            En savoir plus
           </template>
-          <template #prev>
-            <span class="text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105 mb-14 "> << </span>
-          </template>
-        </navigation>
-        <pagination />
-      </template>
+        </Card>
+      </div>
 
-    </Carousel>
+      <!-- Deuxième section -->
+      <div>
+        <Card title="Tutoriel" :router-link="'/tutoriel'" :description="'Tutoriel pour la simulation'" backgroundColor="bg-blue-600">
+            En savoir plus
+        </Card>
+      </div>
+
+      <div>
+        <Card title="Qui sommes-nous?" :router-link="'/about'" :description="'En apprendre plus sur les membres du projet '" backgroundColor="bg-yellow-600">
+          <template #routerText>
+            En savoir plus
+          </template>
+        </Card>
+      </div>
+
+      <div>
+        <Card title="Lancer la simulation" :router-link="'/robotmoteur'" :description="''" backgroundColor="bg-green-600">
+          <template #routerText>
+            
+          </template>
+        </Card>
+      </div>
+    </div>
   </main>
 </template>
 
+<script>
+  import Card from "@/components/Card.vue"
+
+  export default {
+    components: {
+      Card
+    }
+  }
+
+</script>
+
 <style scoped>
-.carousel__item {
-  min-height: 78vh;
-  width: 100%;
-  background-color: transparent;
-  color:white;
-  font-size: 20px;
-  border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
-.carousel__slide {
-  padding: 10px;
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  height: 80vh;
+  margin-left: 20px;
+  margin-right: 20px;
+  padding-top: 20px;
 }
-
-.carousel__prev,
-.carousel__next {
-  box-sizing: content-box;
-  border: 5px solid white;
-  background-color: red;
-}
-
-.custom-navigation,
-.custom-pagination {
-  color: white !important;
-}
-
-:root {
-  --carousel-color-primary: red;
-}
-
 </style>

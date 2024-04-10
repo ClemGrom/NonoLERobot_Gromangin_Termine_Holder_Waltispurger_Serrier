@@ -5,37 +5,26 @@ export class Niveau1 extends Scene {
   constructor() {
     super("Niveau1");
 
-    //Conteur de frame
     this.frameCount = 0;
 
     // Initialisation des capteurs actifs ou non
     this.sensor1Active = true;
     this.sensor2Active = true;
-    this.sensor3Active = false;
-    this.sensor4Active = false;
 
     // Initialisation des longueurs des capteurs
     this.maxlongueurSensor1 = localStorage.getItem("tailleSensorGauche") || 50;
     this.maxlongueurSensor2 = localStorage.getItem("tailleSensorDroit") || 50;
-    this.maxlongueurSensor3 = 50;
-    this.maxlongueurSensor4= 50;
     this.longueurSensor1 = 0;
     this.longueurSensor2 = 0;
-    this.longueurSensor3 = 0;
-    this.longueurSensor4 = 0;
 
-    // Capteurs
+    //Capteurs
     this.sensor1 = null;
     this.sensor2 = null;
-    this.sensor3 = null;
-    this.sensor4 = null;
 
     // Initialisation des angles des capteurs
     this.degresSensorGauche = localStorage.getItem("degresGauche") || 90;
     this.degresSensorDroit = localStorage.getItem("degresDroit") || -90;
-    this.degres2SensorsToucher = localStorage.getItem("degres2Touche") || false;
-    this.degresSensor3 = 50;
-    this.degresSensor4 = -50;
+    this.degres2SensorsTouche = localStorage.getItem("degres2Touche") || false;
 
     // Initialisation de la vitesse du robot
     this.vitesseRobot = 100;
@@ -46,145 +35,134 @@ export class Niveau1 extends Scene {
     // Initialisation des angles des capteurs par défaut
     this.defaultangleGauche = 45;
     this.defaultangleDroit = 45;
-    this.defaultangle3 = 135;
-    this.defaultangle4 = 135;
-
-    // Initialisation du score
-    this.score = 0;
   }
 
   create() {
+
+    // Score
+    this.score = 0;
+
+    // Timer
+    this.timer = 0;
+
     this.carteDuNiveau = this.make.tilemap({ key: "niveau1" });
 
     // Création du robot
-    this.robot = this.physics.add.image(145, 176, "robot");
+    this.robot = this.physics.add.image(50, 75, "robot");
     //comme un calque le robot est au dessus
     this.robot.setDepth(1);
     //Direction et vitese du robot
     this.robot.setVelocityX(this.vitesseRobot);
 
-    // Créer le tileset pour les calques "Niveau" et "Props"
+    // Créer le tileset pour le calque "Niveau"
     const tilesetVaisseau = this.carteDuNiveau.addTilesetImage(
       "vaisseau",
       "tuilesJeu"
     );
-    const tilesetProps = this.carteDuNiveau.addTilesetImage(
-      "Props",
-      "tuilesProps"
-    );
 
     // Créer les calques
-    this.calqueNiveau = this.carteDuNiveau.createLayer("Niveau",tilesetVaisseau);
-    this.calqueProps = this.carteDuNiveau.createLayer("Props", tilesetProps);
+    this.calqueNiveau = this.carteDuNiveau.createLayer(
+      "Niveau",
+      tilesetVaisseau
+    );
 
     // Définir les collisions
     this.calqueNiveau.setCollisionByProperty({ estSolide: true });
-    this.calqueProps.setCollisionByProperty({ estSolide: true });
-    this.robot.body.collideWorldBounds = true;
-  
     // collision entre le robot et le calque de niveau
     this.physics.add.collider(this.robot, this.calqueNiveau);
-    // collision entre le robot et le calque de props
-    this.physics.add.collider(this.robot, this.calqueProps);
 
+    // Création des capteurs
+    this.sensor1 = new Phaser.Geom.Line();
+    this.sensor2 = new Phaser.Geom.Line();
 
-    // Créez l'objet graphics pour les capteurs
+    // Initialisation des longueurs des capteurs
+    this.longueurSensor1 = this.maxlongueurSensor1;
+    this.longueurSensor2 = this.maxlongueurSensor2;
+    // Créez l'objet graphics pour les lignes du capteurs
     this.graphics = this.add.graphics({
       lineStyle: { width: 2, color: 0x00ff00 },
     });
 
-     
-     //
+    //Clavier
+    this.cursors = this.input.keyboard.createCursorKeys();
+
+    //
     // Batteries
     //
-    this.batteries = this.physics.add.group(); // Créer un groupe
+    this.batteries = this.physics.add.group(); // Créer un groupe pour les batteries
+
     this.energy = 100;
     this.stopEnergy = false;
-    //mets aléatoirement batteries sur la carte
-    for (let i = 0; i < 5; i++) {
-      let batterie = this.physics.add.image(
-        Phaser.Math.Between(250, 700),
-        Phaser.Math.Between(100, 300),
-        "batterie"
-      );
-      this.batteries.add(batterie);
-      this.physics.add.collider(this.robot, this.calqueNiveau);
-    }
+    
+    let batterie = this.physics.add.image(500, 75, "batterie");
+    let batterie2 = this.physics.add.image(800, 200, "batterie");
+    let batterie3 = this.physics.add.image(500, 300, "batterie");
+    let batterie4 = this.physics.add.image(100, 200, "batterie");
 
-    // Batteries qui disparaissent au contact du robot
+    this.batteries.add(batterie);
+    this.batteries.add(batterie2);
+    this.batteries.add(batterie3);
+    this.batteries.add(batterie4);
+
     this.physics.add.overlap(
       this.robot,
       this.batteries,
       function (robot, batterie) {
         batterie.destroy();
-        this.energy += 20;
-        this.score += 100;
+        this.energy += 20; // Augmenter l'énergie lorsque le robot ramasse une batterie
+        this.score += 10; // Augmenter le score lorsque le robot ramasse une batterie
       },
       null,
       this
     );
 
-    // Créer l'objet graphics pour la barre de santé
+    // Créez l'objet graphics  pour la vie
     this.vieGraphics = this.add.graphics({
       lineStyle: { width: 2, color: 0x00ff00 },
-      fillStyle: { color: 0xff0000 },
     });
 
-    // Initialisation des touches du clavier
-    this.cursors = this.input.keyboard.createCursorKeys();
-    this.spaceKey = this.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.SPACE
-    ); 
-
-    // Création du group de lasers
-    this.lasers = this.physics.add.group(); // Création du groupe de lasers
-
-    // Création des capteurs
-    this.sensor1 = new Phaser.Geom.Line();
-    this.sensor2 = new Phaser.Geom.Line();
-    this.sensor3 = new Phaser.Geom.Line();
-    this.sensor4 = new Phaser.Geom.Line();
-    
-    // Initialisation des longueurs des capteurs
-    this.longueurSensor1 = this.maxlongueurSensor1;
-    this.longueurSensor2 = this.maxlongueurSensor2;
-    this.longueurSensor3 = this.maxlongueurSensor3;
-   this.longueurSensor4 = this.maxlongueurSensor4;
-   
-
-    // Créez l'objet graphics
-    this.graphics = this.add.graphics({
-      lineStyle: { width: 2, color: 0x00ff00 },
-    });
+    // Dessinez la barre de santé initiale
+    this.drawHealthBar();
 
     // Crée le texte du score
-    this.scoreText = this.add.text(600, 2, "Score : 0", {
-      fontSize: "26px",
+    this.scoreText = this.add.text(650, 0, "Score : 0", {
+      fontSize: "28px",
+      fontFamily: "Arial",
       fill: "#ffffff",
       stroke: "#000000",
-      strokeThickness: 2,
+      strokeThickness: 4,
+      shadow: {
+        offsetX: 2,
+        offsetY: 2,
+        color: '#000',
+        blur: 2,
+        stroke: true,
+        fill: true
+      }
+    });
+
+    // Crée le texte du timer
+    this.TimerText = this.add.text(0, 0, "Timer : 0s", {
+      fontSize: "28px",
+      fontFamily: "Arial",
+      fill: "#ffffff",
+      stroke: "#000000",
+      strokeThickness: 4,
+      shadow: {
+        offsetX: 2,
+        offsetY: 2,
+        color: '#000',
+        blur: 2,
+        stroke: true,
+        fill: true
+      }
     });
     
     EventBus.emit("current-scene-ready", this);
   }
 
   update() {
-
     this.frameCount++;
-
-    // Si la touche espace est enfoncée, tire un laser
-    if (Phaser.Input.Keyboard.JustDown(this.spaceKey)) {
-      const laser = this.lasers.create(this.robot.x, this.robot.y, "laser");
-      laser.setVelocityX(300); // Vitesse du laser
-    }
-
-    // Supprime les lasers qui sont sortis de l'écran
-    this.lasers.children.each(function (laser) {
-      if (laser.x > 960) {
-        laser.destroy();
-      }
-    }, this);
-
     // Définis à chaque frame la position et l'angle des capteurs
     this.updateSensors();
 
@@ -196,6 +174,8 @@ export class Niveau1 extends Scene {
 
     // Dessine les capteurs du robot sur l'écran
     this.drawSensors(this.graphics);
+
+    // Dessine la barre de santé du robot
     this.drawHealthBar();
 
     // Met à jour la vitesse du robot en fonction de son orientation
@@ -209,23 +189,27 @@ export class Niveau1 extends Scene {
       if (this.longueurSensor2 < this.maxlongueurSensor2) {
         this.longueurSensor2 += 5;
       }
-      if (this.longueurSensor3 < this.maxlongueurSensor3) {
-        this.longueurSensor3+= 5;
-      }
-      if (this.longueurSensor4 < this.maxlongueurSensor4) {
-        this.longueurSensor4 += 5;
+      if (this.longueurMidSensor < this.maxlongueurMidSensor) {
+        this.longueurMidSensor += 5;
       }
       if (!this.stopEnergy) {
-
-        this.consumeEnergy(); 
+        this.consumeEnergy();
       }
     }
 
     // Mettez à jour le texte chaque fois que le score change
-    this.scoreText.setText('Score: ' + this.score);
+    this.scoreText.setText('Score : ' + this.score);
 
-    // Change de niveau si le robot atteint la fin du niveau
-    if (this.robot.x > 900) {
+    // Met à jour le timer
+    this.timer += 1 / 60;
+    this.TimerText.setText("Timer : " + Math.floor(this.timer) + "s");
+
+    if (
+      this.robot.x > 640 &&
+      this.robot.x < 704 &&
+      this.robot.y > 160 &&
+      this.robot.y < 224
+    ) {
       this.changeScene();
     }
   }
@@ -236,27 +220,33 @@ export class Niveau1 extends Scene {
 
   updateSensors() {
     //Mets à jour la position et l'angle des capteurs
-    let angle1 = Phaser.Math.DegToRad(this.robot.angle - this.defaultangleGauche);
-    let angle2 = Phaser.Math.DegToRad(this.robot.angle + this.defaultangleDroit);
-    let angle3= Phaser.Math.DegToRad(this.robot.angle + this.defaultangle3);
-    let angle4 = Phaser.Math.DegToRad(this.robot.angle - this.defaultangle4);
-    
+    let angle1 = Phaser.Math.DegToRad(
+      this.robot.angle - this.defaultangleGauche
+    );
+    let angle2 = Phaser.Math.DegToRad(
+      this.robot.angle + this.defaultangleDroit
+    );
 
     // Si le capteur est actif alors on le met à jour
     if (this.sensor1Active) {
-      Phaser.Geom.Line.SetToAngle(this.sensor1,this.robot.x,this.robot.y,angle1,this.longueurSensor1);
+      Phaser.Geom.Line.SetToAngle(
+        this.sensor1,
+        this.robot.x,
+        this.robot.y,
+        angle1,
+        this.longueurSensor1
+      );
     }
     if (this.sensor2Active) {
-      Phaser.Geom.Line.SetToAngle(this.sensor2,this.robot.x,this.robot.y,angle2,this.longueurSensor2);
-    }
-    if (this.sensor3Active) {
-      Phaser.Geom.Line.SetToAngle(this.sensor3,this.robot.x,this.robot.y,angle3,this.longueurSensor3);
-    }
-    if (this.sensor4Active) {
-      Phaser.Geom.Line.SetToAngle(this.sensor4,this.robot.x,this.robot.y,angle4,this.longueurSensor4);
+      Phaser.Geom.Line.SetToAngle(
+        this.sensor2,
+        this.robot.x,
+        this.robot.y,
+        angle2,
+        this.longueurSensor2
+      );
     }
   }
-
   // Fonction pour ajuster la longueur des capteurs
   adjustSensorLength(sensorName) {
     if (sensorName === "sensor1" && this.longueurSensor1 > 0) {
@@ -264,12 +254,6 @@ export class Niveau1 extends Scene {
     }
     if (sensorName === "sensor2" && this.longueurSensor2 > 0) {
       this.longueurSensor2 -= 5;
-    }
-    if (sensorName === "sensor3" && this.longueurSensor3 > 0) {
-      this.longueurSensor3 -= 5;
-    }
-    if (sensorName === "sensor4" && this.longueurSensor4 > 0) {
-      this.longueurSensor4 -= 5;
     }
   }
 
@@ -290,29 +274,14 @@ export class Niveau1 extends Scene {
         name: "sensor2",
         maxLength: this.maxlongueurSensor2,
       },
-      {
-        isActive: this.sensor3Active,
-        sensor: this.sensor3,
-        angleChange: this.degresSensor3,
-        name: "sensor3",
-        maxLength: this.maxlongueurSensor3,
-      },
-      {
-        isActive: this.sensor4Active,
-        sensor: this.sensor4,
-        angleChange: this.degresSensor4,
-        name: "sensor4",
-        maxLength: this.maxlongueurSensor4,
-      },
     ];
 
     // Compteur pour les capteurs activés
     let sensorsActivated = 0;
-// Pour chaque capteur actif, vérifie s'il touche un obstacle
+    // Pour chaque capteur actif, vérifie s'il touche un obstacle
     for (let i = 0; i < activeSensors.length; i++) {
       let sensorData = activeSensors[i];
       if (!sensorData.isActive) continue;
-
       // Récupère les données du capteur
       let sensor = sensorData.sensor;
       let angleChange = sensorData.angleChange;
@@ -321,9 +290,7 @@ export class Niveau1 extends Scene {
 
       // Récupère les tuiles touchées par le capteur
       let tiles = this.calqueNiveau.getTilesWithinShape(sensor);
-      let props = this.calqueProps.getTilesWithinShape(sensor);
-
-      let combined = tiles.concat(props);
+      let combined = tiles;
 
       // Pour chaque tuile touchée, ajuste l'angle du robot
       for (let j = 0; j < combined.length; j++) {
@@ -341,7 +308,7 @@ export class Niveau1 extends Scene {
         }
       }
     }
-// Si les deux capteurs sont activés, ajuste l'angle du robot en fonction de leur état
+    // Si les deux capteurs sont activés, ajuste l'angle du robot en fonction de leur état
     if (sensorsActivated === 2) {
       console.log(this.degres2SensorsTouche);
       if (this.degres2SensorsTouche) {
@@ -351,9 +318,9 @@ export class Niveau1 extends Scene {
       }
     }
   }
-// Dessine les capteurs sur l'écran
+
+  // Dessine les capteurs sur l'écran
   drawSensors() {
-    // Efface les capteurs précédents
     this.graphics.clear();
     // Dessine des capteurs seulement si leur variable active est true
     if (this.sensor1Active) {
@@ -362,13 +329,6 @@ export class Niveau1 extends Scene {
     if (this.sensor2Active) {
       this.graphics.strokeLineShape(this.sensor2);
     }
-    if (this.sensor3Active) {
-      this.graphics.strokeLineShape(this.sensor3);
-    }
-    if (this.sensor4Active) {
-      this.graphics.strokeLineShape(this.sensor4);
-    }
-   
   }
 
   // Déplace le robot en fonction des entrées claviers de l'utilisateur
@@ -377,9 +337,12 @@ export class Niveau1 extends Scene {
     let keyK = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K);
     let keyL = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L);
 
-    if (keyK.isDown) {this.robot.angle -= 10;}
-
-    if (keyL.isDown) {this.robot.angle += 10;}
+    if (keyK.isDown) {
+      this.robot.angle -= 10;
+    }
+    if (keyL.isDown) {
+      this.robot.angle += 10;
+    }
   }
 
   // Met à jour la vitesse du robot en fonction de son orientation
@@ -387,7 +350,7 @@ export class Niveau1 extends Scene {
     let vx = 0;
     let vy = 0;
 
-   //Met à jour la direction du robot
+    //Met à jour la direction du robot
     let angleInRadians = Phaser.Math.DegToRad(this.robot.angle);
     vx = Math.cos(angleInRadians) * this.vitesseRobot;
     vy = Math.sin(angleInRadians) * this.vitesseRobot;
@@ -401,19 +364,19 @@ export class Niveau1 extends Scene {
     // Efface la barre de santé précédente
     this.vieGraphics.clear();
 
-// Calcule le nombre de barres de santé à dessiner
+    // Calcule le nombre de barres de santé à dessiner
     let healthBars = Math.floor(this.energy / 20);
 
     // Dessine la nouvelle barre de santé
     for (let i = 0; i < healthBars; i++) {
-      this.vieGraphics.fillStyle(0xff0000); 
+      this.vieGraphics.fillStyle(0xff0000); // Red color
       this.vieGraphics.fillRect(925 - i * 20, 5, 15, 15);
     }
   }
 
-  // Consomme de l'énergie à chaque frame
-  consumeEnergy() {
-    this.energy -= 1; 
+   // Consomme de l'énergie
+   consumeEnergy() {
+    this.energy -= 1;
     // console.log(this.energy);
     // Si l'énergie est inférieure ou égale à 0, arrête le robot
     if (this.energy <= 0) {
@@ -421,13 +384,12 @@ export class Niveau1 extends Scene {
       this.scene.start("GameOver");
     }
   }
-  
   changeScene() {
     this.stopEnergy = true;
-    let scoreTotal=this.score+this.energy;
-    localStorage.setItem("score", scoreTotal);
+    let scoreTotal= this.score + this.energy;
+    localStorage.setItem("scoreTotal", scoreTotal);
+    localStorage.setItem("timer", this.timer);
     localStorage.setItem("currentSceneIndex", 0);
-    this.scene.stop("Niveau1");
     this.scene.start("LevelFinish");
   }
 }

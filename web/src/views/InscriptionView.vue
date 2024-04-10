@@ -1,20 +1,48 @@
 <script>
-import togglePassword from "@/components/togglePassword.vue";
 
+import router from "@/router/index.js";
+
+import {SIGNUP} from "@/apiLiens.js";
 
 export default {
-  components: {togglePassword},
   data() {
     return {
-      email: null,
-      pseudo: null,
-      pwd: null,
-      pwdverif: null,
+      email: '',
+      pseudo: '',
+      mdp: '',
+      mdpverif: '',
       inscriptionDone: false,
-      showPassword: false,
+      isFill: true,
     }
   },
   methods: {
+    async submitForm() {
+      let response = '';
+      try {
+
+        if (this.email.trim() === '' || this.mdp.trim() === '' || this.pseudo.trim() === '') {
+          console.error('Veuillez entrer votre email et votre mot de passe');
+          this.isFill = false;
+          return;
+        }
+
+        response = await this.$api.post(SIGNUP, {
+          email: this.email,
+          pseudo: this.pseudo,
+          mdp: this.mdp
+        });
+
+        if (response.status === 200) {
+          //this.finirInscription();
+          await router.push("/connexion");
+          this.$toast.success('inscription réussie');
+        }
+
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
     /**
      * Méthode qui vérifie le format de l'email saisi par l'utilisateur
      * @param email email saisi par l'utilisateur
@@ -42,66 +70,21 @@ export default {
      * Méthode qui permet à l'utilisateur de finaliser son inscription qui son email a été vérifié et que ses mots de passe sont cohérents
      */
     finirInscription() {
-      if (this.verifEmail(this.email) && this.verifMdp(this.pwd, this.pwdverif)) {
-        this.inscriptionDone = true;
-      }
-    },
-    /**
-     * Permet de basculer entre l'affichage du mot de passe en clair et masqué
-     * @returns {void} - return true si le passeport est valide, false sinon
-     */
-    togglePassword() {
-      this.showPassword = !this.showPassword;
+      this.inscriptionDone = true;
     },
 
-    async userInscription() {
-      if (this.verifEmail(this.email) && this.verifMdp(this.pwd, this.pwdverif)) {
-        this.inscriptionDone = true;
-      }
-      if (this.verifEmail(this.email) && this.verifMdp(this.pwd, this.pwdverif)) {
-        try {
-          const formData = new URLSearchParams();
-          formData.append('email', this.email);
-          formData.append('pseudo', this.pseudo);
-          formData.append('mdp', this.pwd);
-
-          const response = await fetch(SIGNUP, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: formData.toString(),
-          });
-          console.log("C1" + response);
-          if (response.ok) {
-            console.log("C2" + response.status)
-            // Inscription réussie
-            this.inscriptionDone = true;
-            // Réinitialiser les champs
-            this.email = null;
-            this.pseudo = null;
-            this.pwd = null;
-            this.pwdverif = null;
-          } else {
-            // Gérer les erreurs de requête
-            console.error('Erreur lors de la requête:', response.status);
-          }
-        } catch (error) {
-          console.error('Erreur lors de la requête:', error);
-        }
-      }
-    },
   }
 }
 </script>
 
 <template>
   <div id="Container">
-    <form class="form">
+    <form @submit.prevent="submitForm" class="form">
       <div id="register-lable">Inscription</div>
-      <input class="form-content" type="text" placeholder="UserName" />
-      <input class="form-content" type="password" placeholder="PassWord" />
-      <input class="form-content" type="password" placeholder="ConfirmPassWord" />
+      <input class="form-content" type="text" placeholder="Email" v-model="email" required/>
+      <input class="form-content" type="text" placeholder="Pseudo" v-model="pseudo" required/>
+      <input class="form-content" type="password" placeholder="PassWord" v-model="mdp" required/>
+      <input class="form-content" type="password" placeholder="ConfirmPassWord" v-model="mdpverif" required/>
       <button>Continue</button>
 
       <RouterLink to="/connexion">

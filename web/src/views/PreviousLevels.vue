@@ -37,6 +37,13 @@
   </div>
 </template>
 
+<style scoped>
+#game-container {
+  z-index: 2;
+}
+</style>
+
+
 <script>
 
 export default {

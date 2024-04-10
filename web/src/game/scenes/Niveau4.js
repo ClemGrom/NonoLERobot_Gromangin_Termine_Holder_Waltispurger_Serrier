@@ -40,6 +40,10 @@ export class Niveau4 extends Scene {
   }
 
   create() {
+    
+    // Initialiser le timer
+    this.timer = 0;
+
     this.carteDuNiveau = this.make.tilemap({ key: "niveau4" });
 
     // Créer le tileset pour le calque "Niveau"
@@ -112,43 +116,25 @@ export class Niveau4 extends Scene {
     
     this.indexCheminFantome = 0;
 
-    // this.batteries = this.physics.add.group(); // Créer un groupe pour les batteries
+    // Crée le texte du timer
+    this.TimerText = this.add.text(750, 0, "Timer : 0s", {
+      fontSize: "32px",
+      fontFamily: "Arial",
+      fill: "#ffffff",
+      stroke: "#000000",
+      strokeThickness: 4,
+      shadow: {
+        offsetX: 2,
+        offsetY: 2,
+        color: '#000',
+        blur: 2,
+        stroke: true,
+        fill: true
+      }
+    });
 
-    // let batterie = this.physics.add.image(500, 75, "batterie");
-    // let batterie2 = this.physics.add.image(800, 200, "batterie");
-    // let batterie3 = this.physics.add.image(500, 300, "batterie");
-    // let batterie4 = this.physics.add.image(100, 200, "batterie");
-
-    // this.batteries.add(batterie);
-    // this.batteries.add(batterie2);
-    // this.batteries.add(batterie3);
-    // this.batteries.add(batterie4);
-
-    // this.physics.add.overlap(
-    //   this.robot,
-    //   this.batteries,
-    //   function (robot, batterie) {
-    //     batterie.destroy();
-    //     this.energy += 20; // Augmenter l'énergie lorsque le robot ramasse une batterie
-    //   },
-    //   null,
-    //   this
-    // );
-
-    // // Créez l'objet graphics
-    // this.vieGraphics = this.add.graphics({
-    //   lineStyle: { width: 2, color: 0x00ff00 },
-    //   fillStyle: { color: 0xff0000 },
-    // });
-
-    // // Dessinez la barre de santé initiale
-    // this.drawHealthBar();
-
-    // this.energy = 100;
-    // this.stopEnergy = false;
-
-    // let timer = 0;
-    // let intervalId = null;
+    // Fixe le texte du timer pour qu'il ne défile pas avec la caméra
+    this.TimerText.setScrollFactor(0);
   }
 
   update() {
@@ -187,7 +173,7 @@ export class Niveau4 extends Scene {
     // Vérifiez si le robot a atteint la fin du niveau
     if (
       this.robot.x > 450 &&
-      this.robot.x < 700 &&
+      this.robot.x < 600 &&
       this.robot.y > 0 &&
       this.robot.y < 300
     ) {
@@ -204,11 +190,9 @@ export class Niveau4 extends Scene {
       this.scene.start('GameOver');
     }
 
-    // if (!this.stopEnergy) {
-    //   this.consumeEnergy(); // Consommer de l'énergie à chaque mise à jour
-    // }
-
-    // this.drawHealthBar(); // Dessiner la barre de santé
+    // Met à jour le timer
+    this.timer += 1 / 60;
+    this.TimerText.setText("Timer : " + Math.floor(this.timer) + "s");
   }
 
   //########################
@@ -380,9 +364,9 @@ export class Niveau4 extends Scene {
   }
   
   changeScene() {
-    localStorage.setItem("score", 0);
+    localStorage.setItem("scoreTotal", 100 - this.timer);
+    localStorage.setItem("timer", this.timer);
     localStorage.setItem("currentSceneIndex", 3);
-    this.scene.stop("Niveau4");
     this.scene.start("LevelFinish");
   }
 }

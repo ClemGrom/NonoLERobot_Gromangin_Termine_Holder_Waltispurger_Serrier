@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col md:flex-row items-stretch justify-center min-h-screen p-6">
-    <div class="md:w-1/4 p-6 bg-white shadow-lg rounded-lg flex-grow">
+  <div class=" contenerJeu flex flex-col md:flex-row items-stretch justify-center min-h-screen p-6">
+    <div class="md:w-1/4 p-6 bg-white rounded-lg flex-grow">
       <div class="flex flex-col mb-4 space-y-4">
 
         <h2 class="text-2xl font-bold mb-4 text-center">Paramétrage des capteurs du Robot :</h2>
@@ -10,7 +10,11 @@
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow">Mode Simple</button>
           <button @click="mode = 'custom'"
             class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow">Mode Custom</button>
-          <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded shadow">Mode Gojs</button>
+          <RouterLink to="/programmationRobot">
+
+            <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded shadow">Mode Gojs</button>
+          </RouterLink>
+
         </div>
         <div v-if="mode === 'default'">
           <div class="flex flex-col mb-4">
@@ -55,7 +59,7 @@
 
 
         </div>
-        <div v-if="mode === 'custom'" class="bg-gray-100 p-6 rounded-lg shadow-md">
+        <div v-if="mode === 'custom'" class="bg-gray-100 p-6 rounded-lg">
           <div class="space-y-4">
             <div class="flex space-x-2">
               <button v-for="sensor in sensors" @click="selectedSensor = sensor" :key="sensor.id"
@@ -64,7 +68,7 @@
               </button>
             </div>
 
-            <div v-if="selectedSensor" class="bg-white p-4 rounded-lg shadow-md">
+            <div v-if="selectedSensor" class="bg-white p-4 rounded-lg">
               <h1 class="text-xl font-bold mb-2">Capteur {{ selectedSensor.id }}</h1>
               <p class="font-bold">Longueur :</p>
               <input type="number" v-model="selectedSensor.numberValue" placeholder="Entrez un nombre ici"
@@ -78,45 +82,44 @@
             </div>
           </div>
 
-        </div>
+        </div>  
         <button @click="chargePartie"
           class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Envoyer</button>
       </div>
     </div>
 
-    <div class="md:w-3/4 p-4 flex items-center justify-center bg-white shadow-lg rounded-lg flex-grow mx-4">
+    <div class="md:w-3/4 p-4 flex items-center justify-center bg-white rounded-lg flex-grow mx-4">
 
       <div>
+        <div id="simulation-title">Simulation : </div>
         <div id="game-container"></div>
         <div class="">
           <div class="flex flex-line items-center justify-center">
             <button
-              class="mb-4 max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
+              id="demarrer-btn" class="mb-4 max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 dark:dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
               @click="restart">Démarrer</button>
-            <!-- <button
-    class="mb-4 max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
-    @click="restart">Redémarrer</button> -->
+
             <button
-              class="mb-4 max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
+              id="niveau-suivant-btn" class="mb-4 max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-blue-500/50 dark:dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
               @click="changeScene">Niveau Suivant</button>
           </div>
           <h1 class="text-2xl font-bold mb-4 text-center">Choisissez un niveau :</h1>
           <div class="flex flex-line items-center justify-center">
 
             <button
-              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
+              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-green-500/50 dark:dark:shadow-green-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
               @click="startLevel(0)">Niveau 1</button>
             <button
-              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-lg shadow-green-500/50 dark:shadow-lg dark:shadow-green-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
+              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:focus:ring-yellow-800 shadow-yellow-500/50 dark:dark:shadow-yellow-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
               @click="startLevel(1)">Niveau 2</button>
             <button
-              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:focus:ring-yellow-800 shadow-lg shadow-yellow-500/50 dark:shadow-lg dark:shadow-yellow-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
+              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-purple-500 hover:bg-purple-600 focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 shadow-purple-500/50 dark:dark:shadow-purple-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
               @click="startLevel(2)">Niveau 3</button>
             <button
-              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-purple-400 via-purple-500 to-purple-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 shadow-lg shadow-purple-500/50 dark:shadow-lg dark:shadow-purple-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
+              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-purple-500/50 dark:dark:shadow-red-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
               @click="startLevel(3)">Niveau 4</button>
             <button
-              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
+              class="max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-black hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-black dark:focus:ring-black-800 shadow-black-500/50 dark:dark:shadow-black-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105"
               @click="startLevel(4)">Niveau 5</button>
 
           </div>
@@ -182,23 +185,26 @@ export default {
 
     const changeScene = () => {
       // Stop the current scene
+      localStorage.clear();
       game.value.scene.stop(scenes.value[currentSceneIndex.value]);
       currentSceneIndex.value = (currentSceneIndex.value + 1) % scenes.value.length;
       game.value.scene.start(scenes.value[currentSceneIndex.value]);
     };
+
     const startLevel = (levelIndex) => {
+      localStorage.clear();
       // Ensure the level index is valid
       if (levelIndex < 0 || levelIndex >= scenes.value.length) {
         console.error(`Invalid level index: ${levelIndex}`);
         return;
       }
 
-      // Stop the current scene
-      game.value.scene.stop(scenes.value[currentSceneIndex.value]);
-
-      // Reset the game state here
-      // This depends on how your game is designed
-      // For example, if you have game objects or scores to reset, do it here
+      // Stop all other scenes
+      scenes.value.forEach(scene => {
+        if (game.value.scene.isActive(scene)) {
+          game.value.scene.stop(scene);
+        }
+      });
 
       // Start the new level
       currentSceneIndex.value = levelIndex;
@@ -206,6 +212,7 @@ export default {
     };
 
     const restart = () => {
+      localStorage.clear();
       // Stop the current scene
       game.value.scene.stop(scenes.value[currentSceneIndex.value]);
       game.value.scene.start(scenes.value[currentSceneIndex.value]);
@@ -227,3 +234,20 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.contenerJeu {
+  z-index: 2;
+}
+
+#demarrer-btn, #niveau-suivant-btn {
+  margin-top: 15px;
+}
+
+#simulation-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+</style>
+```

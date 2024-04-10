@@ -36,6 +36,9 @@ export class Niveau5 extends Scene {
 
   create() {
 
+    // Timer
+    this.timer = 0;
+
     let niveauLargeur = 1600;
     let niveauHauteur = 960;
 
@@ -84,6 +87,26 @@ export class Niveau5 extends Scene {
     //Clavier
     this.cursors = this.input.keyboard.createCursorKeys();
 
+    // Crée le texte du timer
+    this.TimerText = this.add.text(750, 0, "Timer : 0s", {
+      fontSize: "32px",
+      fontFamily: "Arial",
+      fill: "#ffffff",
+      stroke: "#000000",
+      strokeThickness: 4,
+      shadow: {
+        offsetX: 2,
+        offsetY: 2,
+        color: '#000',
+        blur: 2,
+        stroke: true,
+        fill: true
+      }
+    });
+
+    // Fixe le texte du timer pour qu'il ne défile pas avec la caméra
+    this.TimerText.setScrollFactor(0);
+
     EventBus.emit("current-scene-ready", this);
   }
 
@@ -116,6 +139,10 @@ export class Niveau5 extends Scene {
         this.longueurMidSensor += 5;
       }
     }
+
+    // Met à jour le timer
+    this.timer += 1 / 60;
+    this.TimerText.setText("Timer : " + Math.floor(this.timer) + "s");
 
     if (
       this.robot.x > 1408 &&
@@ -274,9 +301,9 @@ export class Niveau5 extends Scene {
   }
   
   changeScene() {
-    localStorage.setItem("score", 0);
+    localStorage.setItem("score", 100 - this.timer);
+    localStorage.setItem("timer", this.timer);
     localStorage.setItem("currentSceneIndex", 4);
-    this.scene.stop("Niveau5");
     this.scene.start("LevelFinish");
   }
 }
