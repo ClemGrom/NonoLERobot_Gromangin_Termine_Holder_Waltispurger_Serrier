@@ -1,5 +1,7 @@
 import { EventBus } from '../EventBus';
 import { Scene } from 'phaser';
+import { useRobotStore } from "../../store/robotStore";
+
 
 export class LevelFinish extends Scene
 {
@@ -10,7 +12,9 @@ export class LevelFinish extends Scene
 
     create() {
         this.scoreFinal = parseInt(localStorage.getItem('scoreTotal'));
-        this.timerFinal = localStorage.getItem('timer');
+        this.scoreFinal = useRobotStore().score;
+        
+        this.timerFinal = useRobotStore().temps;
 
         this.frame = 0;
         this.cameras.main.setBackgroundColor(0x00ff00);
