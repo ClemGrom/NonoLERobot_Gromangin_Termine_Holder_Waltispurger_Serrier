@@ -1,5 +1,6 @@
 import { EventBus } from "../EventBus";
 import { Scene } from "phaser";
+import { useRobotStore } from "../../store/robotStore";
 
 export class Niveau4 extends Scene {
   constructor() {
