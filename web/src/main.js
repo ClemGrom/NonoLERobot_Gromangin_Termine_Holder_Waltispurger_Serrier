@@ -19,6 +19,9 @@ pinia.use(piniaPersist)
 import { useAuthStore } from "@/store/authStore.js";
 const authStore = useAuthStore();
 
+import { useRobotStore } from "@/store/robotStore.js";
+const robotStore = useRobotStore();
+
 app.use(ApiPlugins, {
     baseURL: 'http://localhost:3320/'
 })

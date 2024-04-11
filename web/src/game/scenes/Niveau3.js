@@ -1,11 +1,12 @@
 import { EventBus } from "../EventBus";
 import { Scene } from "phaser";
+import { useRobotStore } from "../../store/robotStore";
 
 export class Niveau3 extends Scene {
   constructor() {
     super("Niveau3");
 
-    //Conteur de frame
+    // Initialisation du compteur de frames
     this.frameCount = 0;
 
     // Initialisation des capteurs actifs ou non
@@ -15,8 +16,8 @@ export class Niveau3 extends Scene {
     this.sensor4Active = false;
 
     // Initialisation des longueurs des capteurs
-    this.maxlongueurSensor1 = localStorage.getItem("tailleSensorGauche") || 50;
-    this.maxlongueurSensor2 = localStorage.getItem("tailleSensorDroit") || 50;
+    this.maxlongueurSensor1 = useRobotStore().capteurGlongueur || 50;
+    this.maxlongueurSensor2 = useRobotStore().capteurDlongueur || 50;
     this.maxlongueurSensor3 = 50;
     this.maxlongueurSensor4= 50;
     this.longueurSensor1 = 0;
@@ -31,8 +32,8 @@ export class Niveau3 extends Scene {
     this.sensor4 = null;
 
     // Initialisation des angles des capteurs
-    this.degresSensorGauche = localStorage.getItem("degresGauche") || 90;
-    this.degresSensorDroit = localStorage.getItem("degresDroit") || -90;
+    this.degresSensorGauche = useRobotStore().capteurGangle || 90;
+    this.degresSensorDroit = useRobotStore().capteurDangle || -90;
     this.degres2SensorsToucher = localStorage.getItem("degres2Touche") || false;
     this.degresSensor3 = 50;
     this.degresSensor4 = -50;
@@ -479,14 +480,17 @@ export class Niveau3 extends Scene {
   changeScene() {
     this.stopEnergy = true;
     let scoreTotal=this.score+this.energy;
-    localStorage.setItem("scoreTotal", scoreTotal);
+    
+    useRobotStore().updateScore(scoreTotal);
+
     const hours = Math.floor(this.timer / 3600);
     const minutes = Math.floor((this.timer % 3600) / 60);
     const seconds = Math.floor(this.timer % 60);
 
     const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
-    localStorage.setItem("timer", formattedTime);
+    useRobotStore().updateTemps(formattedTime);
+
     localStorage.setItem("currentSceneIndex", 2);
     this.scene.start("LevelFinish");
   }

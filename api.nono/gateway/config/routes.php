@@ -20,13 +20,13 @@ return function(\Slim\App $app):void {
 
     //PARTIES
 
-    $app->get("/api/parties/{id_party}[/]", MethodPartiesAction::class)
-        ->setName('partyById');
+    $app->get("/api/party[/]", MethodPartiesAction::class)
+        ->setName('partyByNiveau');
 
-    $app->post("/api/parties[/]", MethodPartiesAction::class)
+    $app->post("/api/parties/create", MethodPartiesAction::class)
         ->setName('createParty');
 
-    $app->patch("/api/parties[/]", MethodPartiesAction::class)
+    $app->patch("/api/parties/update", MethodPartiesAction::class)
         ->setName('updateParty');
 
     //PROFILE

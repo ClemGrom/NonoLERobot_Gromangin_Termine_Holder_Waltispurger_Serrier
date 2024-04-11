@@ -88,6 +88,7 @@
       </div>
     </div>
 
+
     <div class="md:w-3/4 p-4 flex items-center justify-center bg-white rounded-lg flex-grow mx-4">
 
       <div>
@@ -130,8 +131,15 @@
 </template>
 
 <script>
-import { onMounted, onUnmounted, ref } from 'vue';
 import StartGame from '../game/main';
+import { useAuthStore } from "@/store/authStore.js";
+import { useRobotStore } from '@/store/robotStore';
+import { mapActions } from "pinia";
+    
+
+import { PARTIESCREATE, PARTIESUPDATE } from "@/apiLiens.js";
+
+import{PARTYBYNIVEAU} from "@/apiLiens.js";
 
 export default {
   data() {
@@ -144,93 +152,169 @@ export default {
         { id: 4, numberValue: 0, rangeValue: 0 },
       ],
       selectedSensor: null,
-
+      game: null,
+      gameStarted: false,
+      currentSceneIndex: 0,
+      scenes: ['Niveau1', 'Niveau2', 'Niveau3', 'Niveau4', 'Niveau5'],
+      numberValue1: useRobotStore().capteurGlongueur || 50,
+      numberValue2: useRobotStore().capteurDlongueur  || 50,
+      rangeValue1: useRobotStore().capteurGangle || 50,
+      rangeValue2: useRobotStore().capteurDangle  || 50,
+      rangeValue3: localStorage.getItem('degres2Touche'),
     };
   },
-  setup() {
-    const game = ref(null);
-    const gameStarted = ref(false);
-    const currentSceneIndex = ref(0);
-    const scenes = ref(['Niveau1', 'Niveau2', 'Niveau3', 'Niveau4', 'Niveau5']);
-    const numberValue1 = ref(localStorage.getItem('tailleSensorGauche') || 50);
-    const numberValue2 = ref(localStorage.getItem('tailleSensorDroit') || 50);
-    const rangeValue1 = ref(localStorage.getItem('degresGauche') || 50);
-    const rangeValue2 = ref(localStorage.getItem('degresDroit') || 50);
-    const rangeValue3 = ref(localStorage.getItem('degres2Touche'));
+  computed: {
+    loggedIn() {
+      return useAuthStore().isConnected;
+    },
+    userEmail() {
+      return useAuthStore().user_email;
+    }
+  },
+  mounted() {
+    this.chargePartie();
+  },
 
-    onMounted(() => {
-      chargePartie();
-    });
+  methods: {
+    ...mapActions(useRobotStore, ["updateScore", "updateTemps", "updateCapteurGlongueur", "updateCapteurDlongueur", "updateCapteurGangle", "updateCapteurDangle", "updateStatus"]),
 
-    const activeButton = ref(null);
+    async partyExists(user_email, niveau) {
+      try {
+        let level = niveau;
+        level = level + 1;
+        const getResponse = await this.$api.get(`${PARTYBYNIVEAU}?user_email=${user_email}&niveau=${level}`);
+        return getResponse.status === 200 && getResponse.data;
+      } catch (error) {
+        return false;
+      }
+    },
 
-    const sensor2touche = (index) => {
+    async updateParty(user_email, niveau) {
+      try {
+        let level = niveau;
+        level = level + 1.
+        const patchResponse = await this.$api.patch(PARTIESUPDATE, {
+          user_email: user_email,
+          niveau: level,
+          // Ajoutez ici les données à mettre à jour
+          score: useRobotStore().score || 0,
+          temps: useRobotStore().temps || 0,
+          capteurDlongeur: useRobotStore().capteurDlongueur || 50,
+          capteurGlongeur: useRobotStore().capteurGlongueur || 50,
+          capteurDangle: useRobotStore().capteurDangle || "50",
+          capteurGangle: useRobotStore().capteurGangle || "50",
+        });
+
+        if (patchResponse.status !== 200) {
+          this.$toast.error('Echec de la mise à jour de la partie dans la base de données');
+        } else {
+          this.$toast.success('Partie mise à jour');
+        }
+      } catch (error) {
+        console.error('Erreur lors de la mise à jour de la partie:', error);
+        this.$toast.error('Echec de la mise à jour de la partie dans la base de données');
+      }
+    },
+
+    async createParty(user_email, niveau) {
+      try {
+        let level = niveau;
+        level = level + 1.
+        const postResponse = await this.$api.post(PARTIESCREATE, {
+          user_email: user_email,
+          niveau: level,
+        });
+
+        if (postResponse.status !== 200) {
+          this.$toast.error('Echec du stockage de la partie dans la base de données');
+        } else {
+          this.$toast.success('Partie enregistrée');
+        }
+      } catch (error) {
+        console.error('Erreur lors de la création de la partie:', error);
+        this.$toast.error('Echec de la création de la partie dans la base de données');
+      }
+    },
+
+    async saveParty(index, user_email) {
+      if (this.loggedIn) {
+        try {
+          const exists = await this.partyExists(user_email, index);
+          if (exists) {
+            await this.updateParty(user_email, index);
+          } else {
+            await this.createParty(user_email, index);
+          }
+        } catch (error) {
+          console.error('Erreur lors de la sauvegarde de la partie:', error);
+          this.$toast.error('Echec de la sauvegarde de la partie dans la base de données');
+        }
+      }
+    },
+
+    sensor2touche(index) {
       if (index === 1) {
-        rangeValue3.value = true
+        this.rangeValue3 = true;
       } else {
-        rangeValue3.value = false
+        this.rangeValue3 = false;
       }
-
-    };
-
-    const chargePartie = () => {
-      if (game.value) {
-        game.value.destroy(true);
-        game.value = null;
+    },
+    chargePartie() {
+      if (this.game) {
+        this.game.destroy(true);
+        this.game = null;
       }
-      saveValues();
-      gameStarted.value = true;
-      game.value = StartGame('game-container');
-    };
-
-    const changeScene = () => {
-      // Stop the current scene
-      localStorage.clear();
-      game.value.scene.stop(scenes.value[currentSceneIndex.value]);
-      currentSceneIndex.value = (currentSceneIndex.value + 1) % scenes.value.length;
-      game.value.scene.start(scenes.value[currentSceneIndex.value]);
-    };
-
-    const startLevel = (levelIndex) => {
-      localStorage.clear();
-      // Ensure the level index is valid
-      if (levelIndex < 0 || levelIndex >= scenes.value.length) {
+      this.saveValues();
+      this.gameStarted = true;
+      this.game = StartGame('game-container');
+    },
+    changeScene() {
+      //localStorage.clear();
+      this.game.scene.stop(this.scenes[this.currentSceneIndex]);
+      this.currentSceneIndex = (this.currentSceneIndex + 1) % this.scenes.length;
+      this.game.scene.start(this.scenes[this.currentSceneIndex]);
+      this.saveParty(this.currentSceneIndex, this.userEmail); // Appeler saveParty avec les données appropriées
+    },
+    startLevel(levelIndex) {
+      //localStorage.clear();
+      if (levelIndex < 0 || levelIndex >= this.scenes.length) {
         console.error(`Invalid level index: ${levelIndex}`);
         return;
       }
 
-      // Stop all other scenes
-      scenes.value.forEach(scene => {
-        if (game.value.scene.isActive(scene)) {
-          game.value.scene.stop(scene);
+      this.scenes.forEach(scene => {
+        if (this.game.scene.isActive(scene)) {
+          this.game.scene.stop(scene);
         }
       });
-
-      // Start the new level
-      currentSceneIndex.value = levelIndex;
-      game.value.scene.start(scenes.value[currentSceneIndex.value]);
-    };
-
-    const restart = () => {
+      this.currentSceneIndex = levelIndex;
+      this.game.scene.start(this.scenes[this.currentSceneIndex]);
+      console.log(levelIndex)
+      this.saveParty(levelIndex, this.userEmail); // Appeler saveParty avec les données appropriées
+    },
+    restart() {
       localStorage.clear();
-      // Stop the current scene
-      game.value.scene.stop(scenes.value[currentSceneIndex.value]);
-      game.value.scene.start(scenes.value[currentSceneIndex.value]);
-    };
-
-    const saveValues = () => {
-      localStorage.setItem('tailleSensorGauche', numberValue1.value);
-      localStorage.setItem('tailleSensorDroit', numberValue2.value);
-      localStorage.setItem('degresGauche', rangeValue1.value);
-      localStorage.setItem('degresDroit', rangeValue2.value);
-      localStorage.setItem('degres2Touche', rangeValue3.value);
+      this.game.scene.stop(this.scenes[this.currentSceneIndex]);
+      this.game.scene.start(this.scenes[this.currentSceneIndex]);
+      this.saveParty(this.currentSceneIndex, this.userEmail); // Appeler saveParty avec les données appropriées
+    },
+    saveValues() {
+      useRobotStore().updateCapteurGlongueur(this.numberValue1);
+      useRobotStore().updateCapteurDlongueur(this.numberValue2);
+      useRobotStore().updateCapteurGangle(this.rangeValue1);
+      useRobotStore().updateCapteurDangle(this.rangeValue2);
+      useRobotStore().updateScore(0);
+      useRobotStore().updateTemps(0);
+      /**
+      localStorage.setItem('tailleSensorGauche', this.numberValue1);
+      localStorage.setItem('tailleSensorDroit', this.numberValue2);
+      localStorage.setItem('degresGauche', this.rangeValue1);
+      localStorage.setItem('degresDroit', this.rangeValue2);
+      localStorage.setItem('degres2Touche', this.rangeValue3);
+      localStorage.setItem('score', 0);
+      localStorage.setItem('timer', 0);**/
       console.log('Values saved');
-    };
-
-
-
-
-    return { game, gameStarted, chargePartie, numberValue1, numberValue2, rangeValue1, rangeValue2, rangeValue3, changeScene, restart, startLevel, sensor2touche };
+    },
   },
 };
 </script>
@@ -250,4 +334,4 @@ export default {
   margin-bottom: 10px;
 }
 </style>
-```
+

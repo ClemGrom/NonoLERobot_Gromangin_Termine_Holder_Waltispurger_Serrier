@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import * as joint from 'jointjs';
+import * as joint from '@joint/core';
 import {onMounted, ref, watch} from "vue";
 import StartGame from "@/game/main.js";
 
