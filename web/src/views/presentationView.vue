@@ -1,31 +1,84 @@
 <template>
-    <div class="bg-white rounded m-2">
-        <h1 class="text-4xl font-bold mb-2 p-2">Présentation</h1>
-   <p class="p-2">L'idée du projet est de créer une application web qui simule un robot mobile (une boîte avec 4 roues) évoluant dans un environnement prédéfinie. 
-</p>
-<p class="p-2">
-Le robot sera programmable à l'aide d'une interface de programmation visuelle basée sur le glisser-déposer, qui permettra de relier les blocs moteurs à différents pool de capteurs. Les utilisateurs pourront définir le comportement du robot en réaction à son environnement, en utilisant des capteurs (à définir) pour détecter des objets tels que des cailloux ou des obstacles, et en spécifiant comment le robot devrait réagir à ces informations, par exemple en les poussant ou en les évitant, via les différentes combinaisons de capteurs reliés aux moteurs. 
-</p>
-<h2 class="text-2xl font-semibold p-2">Conception du Projet</h2>
-<p class="p-2">Créer une application web de simulation de programmation de robot. Les utilisateurs peuvent programmer un robot pour réagir à son environnement à l'aide d'une interface visuelle.L’application permet ainsi aux utilisateurs d'apprendre la programmation et la robotique de manière interactive et ludique en expérimentant avec un robot virtuel dans un environnement simulé. 
-Le projet s’adresse aux enfants et adolescents voulant comprendre le fonctionnement d’un robot.
-</p>
-<h2 class="text-2xl font-semibold p-2">Périmètre du Projet:
-</h2><p class="p-2">Le périmètre de notre projet consiste à créer une application web interactive de simulation de robot qui permettra aux utilisateurs de programmer un robot mobile virtuel dans un environnement 2D (qui pourra être configurable). 
-Cette application offrira aux utilisateurs la possibilité de programmer un robot mobile virtuel dans un environnement en temps réel. Cette simulation sera à la fois un outil d’apprentissage et une source de divertissement, visant à initier les utilisateurs à la programmation et à la robotique.
-
-L'application fournira une interface visuelle intuitive, permettant aux utilisateurs de personnaliser le contrôleur de leur robot. La programmation du comportement du robot se fera à travers plusieurs branchements simples à utiliser, suivant le modèle de véhicule Braintenberg. 
-Ce système de branchements capteurs/moteurs est adapté aux utilisateurs débutants. Ce système de programmation visuelle permet de voir quel capteur sera relié à quel moteur et ensuite  de visualiser directement dans la simulation le comportement que cela induit au robot.
-
-Cette association des capteurs avec les moteurs présents sur le robot conduiront à lui construire un centre de contrôle et ainsi de réagir aux stimulations de son environnement. Il pourront ainsi appréhender la façon dont  les robots collectent et utilisent des données de leur environnement. La simulation se déroulera en temps réel, offrant une expérience interactive, où les utilisateurs verront instantanément les résultats des séries d’instructions qu’ils auront programmé sur leur robot. 
-Pour aller plus loin, notre application pourra proposer des défis ou des missions, afin d'accompagner les utilisateurs dans leur progression. 
-
-Ce qui fait de notre projet une application qui sera à la fois une plateforme d'apprentissage et de divertissement, adaptée à un public varié, des débutants en programmation et en robotique aux personnes ayant déjà des notions. Elle permettra d'initier les utilisateurs aux concepts de la robotique et de l’intelligence artificielle de bas niveau. Nous espérons ainsi susciter et encourager l'intérêt pour ces domaines technologiques en pleine croissance.        
-</p>
-
-<h2 class="text-2xl font-semibold p-2">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Molestiae atque quidem laboriosam, sit porro quas nemo inventore corporis perferendis. Illum, sed corporis! Possimus, saepe ipsum! Voluptatum, animi blanditiis. Cum, repellendus?</h2>
-<p class="p-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto omnis quibusdam voluptate. Quam nisi facere, blanditiis magni alias, quaerat mollitia molestiae autem ratione a praesentium voluptate? Veniam cupiditate eligendi aspernatur?</p>
-
-
+  <div id="pres" class="bg-white rounded m-2">
+    <h1 class="text-4xl font-bold mb-2 p-2">Présentation</h1>
+    <div>
+      <h2 class="text-2xl font-semibold p-2 m-5">Introduction:</h2>
+      <img class="float-left m-5" src="https://m.media-amazon.com/images/I/61wubGbULDL._AC_UF1000,1000_QL80_.jpg"
+           alt="flatland" height="250px" width="175">
+      <p class="p-2 m-5">Nono est une créature qui vit dans la planète Flatland. Il se déplace dans un univers 2D, ce
+        qui lui permet d’explorer et trouver la nourriture qui lui permet de survivre. Il perçoit son environnement
+        proche et ne voit rien au delà d’une certaine limite. Cependant, Nono n’a pas de cerveau évolué qui l’aide à
+        décider quelle direction suivre, ou que faire dans une situation donnée, il repose sur l’utilisateur pour lui en
+        créer un. Ce dernier doit, régler et bien connecter les neurones de Nono, pour qu'il puisse se déplacer
+        correctement dans son environnement et pouvoir survivre.
+      </p>
+      <p class="p-2 m-5">
+        <img class="float-right" src="https://storage.canalblog.com/57/86/58047/129488939.jpg" alt="nono le robot" width="179" height="133">
+        En intelligence artificielle, construire un cerveau (on parle dans ce cas de contrôleur) est une problématique
+        centrale et il existe plusieurs solutions automatiques (sans intervention de l’utilisateur) pour le faire.
+        Ici le projet est de permettre à l’utilisateur de se mettre à la place de l’intelligence artificielle et tester
+        de manière interactive différents réglages et d’observer leur effets sur le comportement de Nono.
+      </p>
     </div>
+
+
+    <div>
+      <br>
+      <br>
+      <h2 class="text-2xl font-semibold p-2 m-5">Sujet initial:</h2>
+      <p class="p-2 m-5">Le projet est de concevoir et construire une application Web qui simule un environnement
+        simple dans lequel Nono se déplacera. L’application doit permettre à l’utilisateur de modifier les paramètres du
+        cerveau de Nono et visualiser le résultat en temps réel sur son comportement. L’utilisateur peut sauvegarder et
+        charger les contrôleurs qu’il conçoit et décider de la forme et des capacités du robot (type de capteurs etc.).
+        <br>
+        En plus des outils et technologie de développement Web classiques (frameworks sur client et serveur, base de
+        données etc.), il peut y avoir l’intégration d’un moteur de jeux pour la simulation et utilisation d’un
+        bibliothèque de visualisation et d’interaction de graphes, etc.
+      </p>
+    </div>
+
+    <div class="float-right">
+      <h2 class="text-2xl font-semibold p-2 m-5">Conception du projet: </h2>
+      <img class="float-left m-10" src="https://www.researchgate.net/profile/Alban-Laflaquiere/publication/281015368/figure/fig2/AS:6715248308
+        46989@1537115404243/Vehicule-de-VBraitenberg-faisant-preuve-de-phototaxie-par-le-simple-branchement-de.ppm"
+           height="400px" width="400px" alt="véhicules de braitenberg">
+      <p class="p-2 m-5">
+        Les principes du comportement du robot se basent sur les véhicules de Braintenberg: des robots qui réagissent à
+        la lumière de leur environnement, en fonction de la distance et de l’intensité de la lumière. <br>
+        L'intensité de la lumière est captée par des capteurs, qui envoient des signaux électriques aux moteurs du
+        robot. Selon si le capteur gauche ou droit est déclenché, le robot tournera à gauche ou à droite selon les
+        branchements réalisés par l'utilisateur: il s'agit de phototaxie positive lorsque le robot se dirige vers la
+        lumière et de phototaxie négative lorsqu'il s'en éloigne.
+      </p>
+      <p class="italic p-2 m-5">Ci-contre, une illustration des véhicules de Braitenberg: celui de gauche a une
+        phototaxie
+        négative, celui de droite a une phototaxie positive. Cette phototaxie s'explique par le côté du capteur auquel
+        est relié la roue: dans l'exemple (a), le capteur droit est relié à la roue droite, faisant tourner la roue
+        droite uniquement et donc déplace le robot vers la gauche. Dans l'exemple (b), c'est l'inverse: la roue droite
+        est activée par le capteur gauche, et donc le robot tourne dans la direction de la source de lumière</p>
+      <p class="p-2 m-5">
+        Dans le cas de notre robot, celui-ci agira avec un comportement de phototaxie négative, c'est à dire qu'il
+        s'orientera de façon à éviter un obstacle et se tournant du côté opposé à celui-ci.
+      </p>
+      <p class="p-2 m-5">
+        Le robot évolue dans un monde en 2D, issue d'une librairie utilisée pour des jeux-vidéos. Nono est
+        programmable à l'aide d'une interface de programmation visuelle basée sur différents éléments représentant les
+        moteurs et les capteurs du robot. Les utilisateurs peuvent définir ainsi le comportement du robot en réaction à
+        son environnement, grâce aux capteurs qui détectent des obstacles. <br>
+        <br>
+        Certains niveaux proposent à l'utilisateur de simplement traverser l'environnement en allant de gauche vers la
+        droite, en essayant d'obtenir le meilleur score basé sur le nombre d'éléments ramassés et le temps imparti
+        restant, tandis que d'autres niveaux proposent à l'utilisateur de faire faire la course à leur robot avec leur
+        configuration face à un robot prédéfini.
+      </p>
+    </div>
+  </div>
 </template>
+<script setup lang="ts">
+</script>
+
+<style scoped>
+#pres {
+  z-index: 2;
+}
+</style>
