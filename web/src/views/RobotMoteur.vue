@@ -178,64 +178,55 @@ export default {
   },
 
   methods: {
-    async createParty(index, user_email) {
-      try {
-        const getResponse = await this.$api.get(PARTYBYNIVEAU, {
-          user_email: user_email,
-          niveau: index,
-        });
+    async saveParty(index, user_email) {
+      if (this.loggedIn){
+        try {
 
-        if (getResponse.status === 200 && getResponse.data) {
-          await this.updateParty(index, user_email);
-        } else {
-          const postResponse = await this.$api.post(PARTIES, {
+          const getResponse = await this.$api.get(PARTYBYNIVEAU, {
             user_email: user_email,
             niveau: index,
           });
 
-          if (postResponse.status !== 200) {
-            this.$toast.error('Echec du stockage de la partie dans la base de données');
+          if (getResponse.status === 200 && getResponse.data) {
+            // Si des données sont renvoyées, cela signifie qu'une partie existe déjà
+            // Effectuer une requête PATCH pour mettre à jour la partie existante
+            const patchResponse = await this.$api.patch(PARTYBYNIVEAU, {
+              user_email: user_email,
+              niveau: index,
+              // Ajoutez ici les données à mettre à jour
+              status: "FINISHED",
+              score: localStorage.getItem("score"),
+              temps: localStorage.getItem("timerFinal"),
+              capteurDlongeur: localStorage.getItem("tailleSensorDroit"),
+              capteurGlongeur: localStorage.getItem("tailleSensorGauche"),
+              capteurDangle: localStorage.getItem("degresDroit"),
+              capteurGangle: localStorage.getItem("degresGauche")
+            });
+
+            if (patchResponse.status !== 200) {
+              this.$toast.error('Echec de la mise à jour de la partie dans la base de données');
+            } else {
+              this.$toast.success('Partie mise à jour');
+            }
           } else {
-            this.$toast.success('Partie enregistrée');
+            // Si aucune donnée n'est renvoyée, cela signifie qu'aucune partie n'existe
+            // Effectuer une requête POST pour créer une nouvelle partie
+            const postResponse = await this.$api.post(PARTIES, {
+              user_email: user_email,
+              niveau: index,
+            });
+
+            if (postResponse.status !== 200) {
+              this.$toast.error('Echec du stockage de la partie dans la base de données');
+            } else {
+              this.$toast.success('Partie enregistrée');
+            }
           }
+        } catch (error) {
+          this.$toast.error('Echec de l\'enregistrement de la partie dans la base de données');
         }
-      } catch (error) {
-        this.$toast.error('Echec de l\'enregistrement de la partie dans la base de données');
-      }
-    },
+    }
 
-    async updateParty(index, user_email) {
-      try {
-        const getResponse = await this.$api.get(PARTYBYNIVEAU, {
-          user_email: user_email,
-          niveau: index,
-        });
-
-        if (getResponse.status !== 200 || !getResponse.data) {
-          await this.createParty(index, user_email);
-        } else {
-          const patchResponse = await this.$api.patch(PARTIES, {
-            user_email: user_email,
-            niveau: index,
-            // Ajoutez ici les données à mettre à jour
-            status: "FINISHED",
-            score: localStorage.getItem("score"),
-            temps: localStorage.getItem("timerFinal"),
-            capteurDlongeur: localStorage.getItem("tailleSensorDroit"),
-            capteurGlongeur: localStorage.getItem("tailleSensorGauche"),
-            capteurDangle: localStorage.getItem("degresDroit"),
-            capteurGangle: localStorage.getItem("degresGauche")
-          });
-
-          if (patchResponse.status !== 200) {
-            this.$toast.error('Echec de la mise à jour de la partie dans la base de données');
-          } else {
-            this.$toast.success('Partie mise à jour');
-          }
-        }
-      } catch (error) {
-        this.$toast.error('Echec de la mise à jour de la partie dans la base de données');
-      }
     },
 
     sensor2touche(index) {
@@ -275,11 +266,13 @@ export default {
 
       this.currentSceneIndex = levelIndex;
       this.game.scene.start(this.scenes[this.currentSceneIndex]);
+      this.saveParty(levelIndex, this.user_email); // Appeler saveParty avec les données appropriées
     },
     restart() {
       localStorage.clear();
       this.game.scene.stop(this.scenes[this.currentSceneIndex]);
       this.game.scene.start(this.scenes[this.currentSceneIndex]);
+      this.saveParty(this.currentSceneIndex, this.user_email); // Appeler saveParty avec les données appropriées
     },
     saveValues() {
       localStorage.setItem('tailleSensorGauche', this.numberValue1);
