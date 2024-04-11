@@ -178,59 +178,76 @@ export default {
   methods: {
     ...mapActions(useRobotStore, ["updateScore", "updateTemps", "updateCapteurGlongueur", "updateCapteurDlongueur", "updateCapteurGangle", "updateCapteurDangle", "updateStatus"]),
 
+    async partyExists(user_email, niveau) {
+      try {
+        let level = niveau;
+        level = level + 1;
+        const getResponse = await this.$api.get(`${PARTYBYNIVEAU}?user_email=${user_email}&niveau=${level}`);
+        return getResponse.status === 200 && getResponse.data;
+      } catch (error) {
+        return false;
+      }
+    },
+
+    async updateParty(user_email, niveau) {
+      try {
+        let level = niveau;
+        level = level + 1.
+        const patchResponse = await this.$api.patch(PARTIESUPDATE, {
+          user_email: user_email,
+          niveau: level,
+          // Ajoutez ici les données à mettre à jour
+          score: useRobotStore().score || 0,
+          temps: useRobotStore().temps || 0,
+          capteurDlongeur: useRobotStore().capteurDlongueur || 50,
+          capteurGlongeur: useRobotStore().capteurGlongueur || 50,
+          capteurDangle: useRobotStore().capteurDangle || "50",
+          capteurGangle: useRobotStore().capteurGangle || "50",
+        });
+
+        if (patchResponse.status !== 200) {
+          this.$toast.error('Echec de la mise à jour de la partie dans la base de données');
+        } else {
+          this.$toast.success('Partie mise à jour');
+        }
+      } catch (error) {
+        console.error('Erreur lors de la mise à jour de la partie:', error);
+        this.$toast.error('Echec de la mise à jour de la partie dans la base de données');
+      }
+    },
+
+    async createParty(user_email, niveau) {
+      try {
+        let level = niveau;
+        level = level + 1.
+        const postResponse = await this.$api.post(PARTIESCREATE, {
+          user_email: user_email,
+          niveau: level,
+        });
+
+        if (postResponse.status !== 200) {
+          this.$toast.error('Echec du stockage de la partie dans la base de données');
+        } else {
+          this.$toast.success('Partie enregistrée');
+        }
+      } catch (error) {
+        console.error('Erreur lors de la création de la partie:', error);
+        this.$toast.error('Echec de la création de la partie dans la base de données');
+      }
+    },
+
     async saveParty(index, user_email) {
       if (this.loggedIn) {
         try {
-          //index++;
-          console.log(index);
-
-          const getResponse = await this.$api.get(`${PARTYBYNIVEAU}?user_email=${user_email}&niveau=${index}`);
-          console.log("res status : ",getResponse.status)
-          if (getResponse.status === 200) {
-            console.log("res data : ",getResponse.data)
-            if (getResponse.data) {
-              // Si des données sont renvoyées, cela signifie qu'une partie existe déjà
-              // Effectuer une requête PATCH pour mettre à jour la partie existante
-              const patchResponse = await this.$api.patch(PARTIESUPDATE, {
-                user_email: user_email,
-                niveau: index,
-                // Ajoutez ici les données à mettre à jour
-                score: useRobotStore().score || 0,
-                temps: useRobotStore().temps || 0,
-                capteurDlongeur: useRobotStore().capteurDlongueur || 50,
-                capteurGlongeur: useRobotStore().capteurGlongueur || 50,
-                capteurDangle: useRobotStore().capteurDangle || "50",
-                capteurGangle: useRobotStore().capteurGangle || "50",
-              });
-
-              console.log("patch res status : ",getResponse.status)
-              if (patchResponse.status !== 200) {
-                this.$toast.error('Echec de la mise à jour de la partie dans la base de données');
-              } else {
-                this.$toast.success('Partie mise à jour');
-              }
-            } else {
-              // Si aucune donnée n'est renvoyée, cela signifie qu'aucune partie n'existe
-              // Effectuer une requête POST pour créer une nouvelle partie
-              const postResponse = await this.$api.post(PARTIESCREATE, {
-                user_email: user_email,
-                niveau: index,
-              });
-
-              if (postResponse.status !== 200) {
-                this.$toast.error('Echec du stockage de la partie dans la base de données');
-              } else {
-                this.$toast.success('Partie enregistrée');
-              }
-            }
+          const exists = await this.partyExists(user_email, index);
+          if (exists) {
+            await this.updateParty(user_email, index);
           } else {
-            // Si le statut de la réponse n'est pas 200, il y a une erreur dans la requête
-            console.error('Erreur lors de la récupération de la partie:', getResponse.statusText);
-            this.$toast.error('Echec de l\'enregistrement de la partie dans la base de données');
+            await this.createParty(user_email, index);
           }
         } catch (error) {
-          console.error('Erreur lors de la récupération de la partie:', error);
-          this.$toast.error('Echec de l\'enregistrement de la partie dans la base de données');
+          console.error('Erreur lors de la sauvegarde de la partie:', error);
+          this.$toast.error('Echec de la sauvegarde de la partie dans la base de données');
         }
       }
     },
