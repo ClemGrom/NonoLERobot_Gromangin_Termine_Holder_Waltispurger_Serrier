@@ -1,5 +1,7 @@
 import { EventBus } from "../EventBus";
 import { Scene } from "phaser";
+import { useRobotStore } from "../../store/robotStore";
+
 
 export class Niveau4 extends Scene {
   constructor() {
@@ -11,8 +13,8 @@ export class Niveau4 extends Scene {
     this.sensor1Active = true;
     this.sensor2Active = true;
 
-    this.maxlongueurSensor1 = localStorage.getItem("tailleSensorGauche") || 50;
-    this.maxlongueurSensor2 = localStorage.getItem("tailleSensorDroit") || 0;
+    this.maxlongueurSensor1 = useRobotStore().capteurGlongueur || 50;
+    this.maxlongueurSensor2 = useRobotStore().capteurDlongueur || 50;
     this.longueurSensor1 = 0;
     this.longueurSensor2 = 0;
 
@@ -24,8 +26,8 @@ export class Niveau4 extends Scene {
     this.sensor1 = null;
     this.sensor2 = null;
 
-    this.degresSensorGauche = localStorage.getItem("degresGauche") || 90;
-    this.degresSensorDroit = localStorage.getItem("degresDroit") || -90;
+    this.degresSensorGauche = useRobotStore().capteurGangle || 90;
+    this.degresSensorDroit = useRobotStore().capteurDangle || -90;
     this.degres2SensorsTouche = localStorage.getItem("degres2Touche") || false;
     this.vitesseRobot = 130;
     this.vitesseRobotFantome = 110;
@@ -364,14 +366,15 @@ export class Niveau4 extends Scene {
   }
   
   changeScene() {
-    localStorage.setItem("scoreTotal", 100 - this.timer);
+    useRobotStore().updateScore(100 - this.timer);
+    useRobotStore().updateTemps(this.timer);
+   
     const hours = Math.floor(this.timer / 3600);
     const minutes = Math.floor((this.timer % 3600) / 60);
     const seconds = Math.floor(this.timer % 60);
 
     const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
-    localStorage.setItem("timer", formattedTime);
     localStorage.setItem("currentSceneIndex", 3);
     this.scene.start("LevelFinish");
   }

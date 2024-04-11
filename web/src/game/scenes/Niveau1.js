@@ -411,16 +411,17 @@ export class Niveau1 extends Scene {
   changeScene() {
     this.stopEnergy = true;
     let scoreTotal= this.score + this.energy;
-    localStorage.setItem("scoreTotal", scoreTotal);
+    
     useRobotStore().updateScore(scoreTotal);
     useRobotStore().updateTemps(this.timer);
+    
     const hours = Math.floor(this.timer / 3600);
     const minutes = Math.floor((this.timer % 3600) / 60);
     const seconds = Math.floor(this.timer % 60);
 
     const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
-    localStorage.setItem("timer", formattedTime);
+   
     localStorage.setItem("currentSceneIndex", 0);
     this.scene.start("LevelFinish");
   }
