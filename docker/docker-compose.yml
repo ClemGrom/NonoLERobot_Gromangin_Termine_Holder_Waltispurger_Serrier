@@ -10,16 +10,15 @@ services:
   #############################
 
   web:
-    image: httpd:latest
+    image: node:alpine
     ports:
-      - "38209:80"
-    environment:
-      - http_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
-      - https_proxy=http://www-cache-iutnc.univ-lorraine.fr:3128
+      - "38209:5173"
     volumes:
-      - ../web/dist:/usr/local/apache2/htdocs/nono
+      - ../web:/usr/local/nono
     networks:
       - nono.net
+    working_dir: /usr/local/nono
+    command: sh -c "npm i && npm run dev -- --host"
 
   #############################
   ### Gateway               ###
