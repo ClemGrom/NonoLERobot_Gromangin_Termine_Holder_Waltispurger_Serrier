@@ -10,7 +10,7 @@ export class LevelFinish extends Scene
 
     create() {
         this.scoreFinal = parseInt(localStorage.getItem('scoreTotal'));
-        this.timerFinal = parseInt(localStorage.getItem('timer'));
+        this.timerFinal = localStorage.getItem('timer');
 
         this.frame = 0;
         this.cameras.main.setBackgroundColor(0x00ff00);
@@ -23,7 +23,23 @@ export class LevelFinish extends Scene
             align: 'center'
         }).setOrigin(0.5).setDepth(100);
 
-        this.add.text(480, 200, 'Finis en : ' + this.timerFinal + ' secondes', {
+        const timerParts = this.timerFinal.split(':');
+        const hours = parseInt(timerParts[0]);
+        const minutes = parseInt(timerParts[1]);
+        const seconds = parseInt(timerParts[2]);
+
+        let timerText = 'Finis en : ';
+        if (hours > 0) {
+            timerText += hours + ' heures ';
+        }
+        if (minutes > 0) {
+            timerText += minutes + ' minutes ';
+        }
+        if (seconds > 0) {
+            timerText += seconds + ' secondes';
+        }
+
+        this.add.text(480, 200, timerText, {
             fontFamily: 'Arial Black', fontSize: 48, color: '#ffffff',
             stroke: '#000000', strokeThickness: 8,
             align: 'center'
