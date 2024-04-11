@@ -3,7 +3,7 @@
     <h1 class="text-4xl font-bold mb-2 p-2">Présentation</h1>
     <div>
       <h2 class="text-2xl font-semibold p-2 m-5">Introduction:</h2>
-      <img class="float-left m-5" src="https://m.media-amazon.com/images/I/61wubGbULDL._AC_UF1000,1000_QL80_.jpg"
+      <img class="float-left m-5 rounded" src="https://m.media-amazon.com/images/I/61wubGbULDL._AC_UF1000,1000_QL80_.jpg"
            alt="flatland" height="250px" width="175">
       <p class="p-2 m-5">Nono est une créature qui vit dans la planète Flatland. Il se déplace dans un univers 2D, ce
         qui lui permet d’explorer et trouver la nourriture qui lui permet de survivre. Il perçoit son environnement
@@ -13,7 +13,7 @@
         correctement dans son environnement et pouvoir survivre.
       </p>
       <p class="p-2 m-5">
-        <img class="float-right" src="https://storage.canalblog.com/57/86/58047/129488939.jpg" alt="nono le robot" width="179" height="133">
+        <img class="float-right rounded m-2" src="https://storage.canalblog.com/57/86/58047/129488939.jpg" alt="nono le robot" width="179" height="133">
         En intelligence artificielle, construire un cerveau (on parle dans ce cas de contrôleur) est une problématique
         centrale et il existe plusieurs solutions automatiques (sans intervention de l’utilisateur) pour le faire.
         Ici le projet est de permettre à l’utilisateur de se mettre à la place de l’intelligence artificielle et tester
@@ -42,7 +42,8 @@
       <img class="float-left m-10" src="https://www.researchgate.net/profile/Alban-Laflaquiere/publication/281015368/figure/fig2/AS:6715248308
         46989@1537115404243/Vehicule-de-VBraitenberg-faisant-preuve-de-phototaxie-par-le-simple-branchement-de.ppm"
            height="400px" width="400px" alt="véhicules de braitenberg">
-      <p class="p-2 m-5">
+      <div class="float-right">
+        <p class="p-2 m-5">
         Les principes du comportement du robot se basent sur les véhicules de Braintenberg: des robots qui réagissent à
         la lumière de leur environnement, en fonction de la distance et de l’intensité de la lumière. <br>
         L'intensité de la lumière est captée par des capteurs, qui envoient des signaux électriques aux moteurs du
@@ -71,6 +72,9 @@
         restant, tandis que d'autres niveaux proposent à l'utilisateur de faire faire la course à leur robot avec leur
         configuration face à un robot prédéfini.
       </p>
+
+      </div>
+      
     </div>
   </div>
 </template>
