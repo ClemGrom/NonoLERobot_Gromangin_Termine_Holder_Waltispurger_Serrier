@@ -6,6 +6,7 @@ export class Niveau2 extends Scene {
   constructor() {
     super("Niveau2");
 
+    // Initialisation du compteur de frames
     this.frameCount = 0;
 
     // Initialisez les variables des capteurs à true pour les activer par défaut
@@ -406,7 +407,6 @@ export class Niveau2 extends Scene {
     this.stopEnergy = true;
     let scoreTotal=this.score+this.energy;
     useRobotStore().updateScore(scoreTotal);
-    useRobotStore().updateTemps(this.timer);
    
     const hours = Math.floor(this.timer / 3600);
     const minutes = Math.floor((this.timer % 3600) / 60);
@@ -414,7 +414,8 @@ export class Niveau2 extends Scene {
 
     const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
-   
+    useRobotStore().updateTemps(formattedTime);
+
     localStorage.setItem("currentSceneIndex", 1);
     this.scene.start("LevelFinish");
   }

@@ -2,11 +2,11 @@ import { EventBus } from "../EventBus";
 import { Scene } from "phaser";
 import { useRobotStore } from "../../store/robotStore";
 
-
 export class Niveau4 extends Scene {
   constructor() {
     super("Niveau4");
 
+    // Initialisation du compteur de frames
     this.frameCount = 0;
 
     // Initialisez les variables des capteurs à true pour les activer par défaut
@@ -367,13 +367,14 @@ export class Niveau4 extends Scene {
   
   changeScene() {
     useRobotStore().updateScore(100 - this.timer);
-    useRobotStore().updateTemps(this.timer);
    
     const hours = Math.floor(this.timer / 3600);
     const minutes = Math.floor((this.timer % 3600) / 60);
     const seconds = Math.floor(this.timer % 60);
 
     const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+    useRobotStore().updateTemps(formattedTime);
 
     localStorage.setItem("currentSceneIndex", 3);
     this.scene.start("LevelFinish");

@@ -3,14 +3,13 @@ import { Scene } from "phaser";
 import { useRobotStore } from "@/store/robotStore";
 import { mapActions } from "pinia";
    
-
 export class Niveau1 extends Scene {
   constructor() {
     super("Niveau1");
     
   mapActions(useRobotStore, ["updateScore", "updateTemps", "updateCapteurGlongueur", "updateCapteurDlongueur", "updateCapteurGangle", "updateCapteurDangle", "updateStatus"]);
 
-
+    // Initialisation du compteur de frames
     this.frameCount = 0;
 
     // Initialisation des capteurs actifs ou non
@@ -413,7 +412,6 @@ export class Niveau1 extends Scene {
     let scoreTotal= this.score + this.energy;
     
     useRobotStore().updateScore(scoreTotal);
-    useRobotStore().updateTemps(this.timer);
     
     const hours = Math.floor(this.timer / 3600);
     const minutes = Math.floor((this.timer % 3600) / 60);
@@ -421,7 +419,8 @@ export class Niveau1 extends Scene {
 
     const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
-   
+    useRobotStore().updateTemps(formattedTime);
+
     localStorage.setItem("currentSceneIndex", 0);
     this.scene.start("LevelFinish");
   }
