@@ -419,6 +419,7 @@ export class Niveau1 extends Scene {
 
     const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
+    useRobotStore().updateScore(this.score);
     useRobotStore().updateTemps(formattedTime);
 
     localStorage.setItem("currentSceneIndex", 0);
