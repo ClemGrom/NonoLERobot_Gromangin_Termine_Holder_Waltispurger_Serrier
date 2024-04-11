@@ -133,6 +133,9 @@
 <script>
 import StartGame from '../game/main';
 import { useAuthStore } from "@/store/authStore.js";
+import { useRobotStore } from '@/store/robotStore';
+import { mapActions } from "pinia";
+    
 
 import {PARTIES} from "@/apiLiens.js";
 
@@ -153,10 +156,10 @@ export default {
       gameStarted: false,
       currentSceneIndex: 0,
       scenes: ['Niveau1', 'Niveau2', 'Niveau3', 'Niveau4', 'Niveau5'],
-      numberValue1: localStorage.getItem('tailleSensorGauche') || 50,
-      numberValue2: localStorage.getItem('tailleSensorDroit') || 50,
-      rangeValue1: localStorage.getItem('degresGauche') || 50,
-      rangeValue2: localStorage.getItem('degresDroit') || 50,
+      numberValue1: useRobotStore().capteurGlongueur || 50,
+      numberValue2: useRobotStore().capteurDlongueur  || 50,
+      rangeValue1: useRobotStore().capteurGangle || 50,
+      rangeValue2: useRobotStore().capteurDangle  || 50,
       rangeValue3: localStorage.getItem('degres2Touche'),
     };
   },
@@ -173,6 +176,9 @@ export default {
   },
 
   methods: {
+    ...mapActions(useRobotStore, ["updateScore", "updateTemps", "updateCapteurGlongueur", "updateCapteurDlongueur", "updateCapteurGangle", "updateCapteurDangle", "updateStatus"]),
+
+
     async saveParty(index, user_email) {
       if (this.loggedIn){
         try {
@@ -192,12 +198,13 @@ export default {
               niveau: index,
               // Ajoutez ici les données à mettre à jour
               status: "FINISHED",
-              score: localStorage.getItem("score"),
-              temps: localStorage.getItem("timer"),
-              capteurDlongeur: localStorage.getItem("tailleSensorDroit"),
-              capteurGlongeur: localStorage.getItem("tailleSensorGauche"),
-              capteurDangle: localStorage.getItem("degresDroit"),
-              capteurGangle: localStorage.getItem("degresGauche")
+              
+              score: useRobotStore().score || 0,
+              temps: useRobotStore().temps || 0,
+              capteurDlongeur: useRobotStore().capteurDlongueur || 50,
+              capteurGlongeur: useRobotStore().capteurGlongueur || 50,
+              capteurDangle: useRobotStore().capteurDangle || 50,
+              capteurGangle: useRobotStore().capteurGangle || 50,
             });
 
             if (patchResponse.status !== 200) {
@@ -274,6 +281,12 @@ export default {
       this.saveParty(this.currentSceneIndex, this.userEmail); // Appeler saveParty avec les données appropriées
     },
     saveValues() {
+      useRobotStore().updateCapteurGlongueur(this.numberValue1);
+      useRobotStore().updateCapteurDlongueur(this.numberValue2);
+      useRobotStore().updateCapteurGangle(this.rangeValue1);
+      useRobotStore().updateCapteurDangle(this.rangeValue2);
+      useRobotStore().updateScore(0);
+      useRobotStore().updateTemps(0);
       localStorage.setItem('tailleSensorGauche', this.numberValue1);
       localStorage.setItem('tailleSensorDroit', this.numberValue2);
       localStorage.setItem('degresGauche', this.rangeValue1);
