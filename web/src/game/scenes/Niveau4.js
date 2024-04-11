@@ -365,7 +365,13 @@ export class Niveau4 extends Scene {
   
   changeScene() {
     localStorage.setItem("scoreTotal", 100 - this.timer);
-    localStorage.setItem("timer", this.timer);
+    const hours = Math.floor(this.timer / 3600);
+    const minutes = Math.floor((this.timer % 3600) / 60);
+    const seconds = Math.floor(this.timer % 60);
+
+    const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+    localStorage.setItem("timer", formattedTime);
     localStorage.setItem("currentSceneIndex", 3);
     this.scene.start("LevelFinish");
   }

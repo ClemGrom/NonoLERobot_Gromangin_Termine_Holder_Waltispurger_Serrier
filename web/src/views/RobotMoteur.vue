@@ -10,9 +10,9 @@
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow">Mode Simple</button>
           <button @click="mode = 'custom'"
             class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow">Mode Custom</button>
-          <RouterLink to="/programmationRobot">
 
-            <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded shadow">Mode Gojs</button>
+          <RouterLink to="/programmationRobot">
+            <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded shadow">Mode liens</button>
           </RouterLink>
 
         </div>
@@ -82,7 +82,7 @@
             </div>
           </div>
 
-        </div>  
+        </div>
         <button @click="chargePartie"
           class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Envoyer</button>
       </div>
