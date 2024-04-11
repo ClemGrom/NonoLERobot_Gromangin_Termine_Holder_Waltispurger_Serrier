@@ -1,10 +1,12 @@
 import { EventBus } from "../EventBus";
 import { Scene } from "phaser";
+import { useRobotStore } from "../../store/robotStore";
 
 export class Niveau5 extends Scene {
   constructor() {
     super("Niveau5");
 
+    // Initialisation du compteur de frames
     this.frameCount = 0;
 
     // Initialisation des capteurs actifs ou non
@@ -12,8 +14,8 @@ export class Niveau5 extends Scene {
     this.sensor2Active = true;
 
     // Initialisation des longueurs des capteurs
-    this.maxlongueurSensor1 = localStorage.getItem("tailleSensorGauche") || 50;
-    this.maxlongueurSensor2 = localStorage.getItem("tailleSensorDroit") || 50;
+    this.maxlongueurSensor1 = useRobotStore().capteurGlongueur || 50;
+    this.maxlongueurSensor2 = useRobotStore().capteurDlongueur || 50;
     this.longueurSensor1 = 0;
     this.longueurSensor2 = 0;
 
@@ -22,8 +24,8 @@ export class Niveau5 extends Scene {
     this.sensor2 = null;
 
     // Initialisation des angles des capteurs
-    this.degresSensorGauche = localStorage.getItem("degresGauche") || 90;
-    this.degresSensorDroit = localStorage.getItem("degresDroit") || -90;
+    this.degresSensorGauche = useRobotStore().capteurGangle || 90;
+    this.degresSensorDroit = useRobotStore().capteurDangle || -90;
     this.degres2SensorsTouche = localStorage.getItem("degres2Touche") || false;
 
     // Initialisation de la vitesse du robot
@@ -301,6 +303,8 @@ export class Niveau5 extends Scene {
   }
   
   changeScene() {
+    useRobotStore().updateScore(100 - this.timer);
+
     localStorage.setItem("score", 100 - this.timer);
     const hours = Math.floor(this.timer / 3600);
     const minutes = Math.floor((this.timer % 3600) / 60);
@@ -308,6 +312,7 @@ export class Niveau5 extends Scene {
 
     const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
+    useRobotStore().updateTemps(formattedTime);
     localStorage.setItem("timer", formattedTime);
     localStorage.setItem("currentSceneIndex", 4);
     this.scene.start("LevelFinish");

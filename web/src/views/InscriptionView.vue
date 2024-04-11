@@ -83,8 +83,8 @@ export default {
       <div id="register-lable">Inscription</div>
       <input class="form-content" type="text" placeholder="Email" v-model="email" required/>
       <input class="form-content" type="text" placeholder="Pseudo" v-model="pseudo" required/>
-      <input class="form-content" type="password" placeholder="PassWord" v-model="mdp" required/>
-      <input class="form-content" type="password" placeholder="ConfirmPassWord" v-model="mdpverif" required/>
+      <input class="form-content" type="password" placeholder="Mot de passe" v-model="mdp" required/>
+      <input class="form-content" type="password" placeholder="Confirmé MDP" v-model="mdpverif" required/>
       <button>Continue</button>
 
       <RouterLink to="/connexion">
@@ -429,7 +429,7 @@ export default {
 .form button {
   cursor: pointer;
   height: 3.5rem;
-  padding: 0%;
+  padding: 5px;
   color: white;
   font-size: 1.5em;
   letter-spacing: 0.3rem;

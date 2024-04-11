@@ -37,7 +37,6 @@ export default {
     <div class="card-container">
       <div v-for="(partie, index) in parties" :key="index" class="card text-white text-2xl font-bold py-2 px-4 rounded-xl bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105 mb-14 ">
         <h3>Partie {{ partie.niveau }}</h3>
-        <p>Statut: {{ partie.status }}</p>
         <p>Temps: {{ partie.temps }}</p>
         <p>Score: {{ partie.score }}</p>
       </div>

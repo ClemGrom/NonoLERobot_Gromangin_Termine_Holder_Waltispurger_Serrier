@@ -10,12 +10,11 @@ CREATE TABLE `parties`
     `id`                INT(11) NOT NULL AUTO_INCREMENT,
     `niveau`            INT NOT NULL,
     `user_email`        VARCHAR(128) NOT NULL,
-    `status`            VARCHAR(25),
     `temps`             TIME,
     `score`             FLOAT,
     `capteurGlongeur`   INT,
-    `capteurGangle`     INT,
+    `capteurGangle`     VARCHAR(10),
     `capteurDlongeur`   INT,
-    `capteurDangle`     INT,
+    `capteurDangle`     VARCHAR(10),
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
