@@ -141,7 +141,7 @@ import { useAuthStore } from "@/store/authStore.js";
 
 import {PARTIES} from "@/apiLiens.js";
 
-import{PARTIESBYNIVEAU} from "@/apiLiens.js";
+import{PARTYBYNIVEAU} from "@/apiLiens.js";
 
 export default {
   data() {
@@ -178,24 +178,65 @@ export default {
   },
 
   methods: {
-    async createParty(index, user_email){
+    async createParty(index, user_email) {
       try {
-        const response = await this.$api.post(PARTIES, {
-          user_email: this.user_email,
+        const getResponse = await this.$api.get(PARTYBYNIVEAU, {
+          user_email: user_email,
           niveau: index,
         });
 
-        if (response.status !== 200){
-          this.$toast.error('Echec du stockage de la partie dans la base de données');
+        if (getResponse.status === 200 && getResponse.data) {
+          await this.updateParty(index, user_email);
         } else {
-          this.$toast.success('Partie enregistré');
+          const postResponse = await this.$api.post(PARTIES, {
+            user_email: user_email,
+            niveau: index,
+          });
+
+          if (postResponse.status !== 200) {
+            this.$toast.error('Echec du stockage de la partie dans la base de données');
+          } else {
+            this.$toast.success('Partie enregistrée');
+          }
         }
       } catch (error) {
         this.$toast.error('Echec de l\'enregistrement de la partie dans la base de données');
       }
     },
 
+    async updateParty(index, user_email) {
+      try {
+        const getResponse = await this.$api.get(PARTYBYNIVEAU, {
+          user_email: user_email,
+          niveau: index,
+        });
 
+        if (getResponse.status !== 200 || !getResponse.data) {
+          await this.createParty(index, user_email);
+        } else {
+          const patchResponse = await this.$api.patch(PARTIES, {
+            user_email: user_email,
+            niveau: index,
+            // Ajoutez ici les données à mettre à jour
+            status: "FINISHED",
+            score: localStorage.getItem("score"),
+            temps: localStorage.getItem("timerFinal"),
+            capteurDlongeur: localStorage.getItem("tailleSensorDroit"),
+            capteurGlongeur: localStorage.getItem("tailleSensorGauche"),
+            capteurDangle: localStorage.getItem("degresDroit"),
+            capteurGangle: localStorage.getItem("degresGauche")
+          });
+
+          if (patchResponse.status !== 200) {
+            this.$toast.error('Echec de la mise à jour de la partie dans la base de données');
+          } else {
+            this.$toast.success('Partie mise à jour');
+          }
+        }
+      } catch (error) {
+        this.$toast.error('Echec de la mise à jour de la partie dans la base de données');
+      }
+    },
 
     sensor2touche(index) {
       if (index === 1) {

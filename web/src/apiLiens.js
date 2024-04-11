@@ -9,7 +9,7 @@ export const VALIDATE_USER = "http://localhost:3320/users/validate"
 
 export const PARTIES = "http://localhost:3320/api/parties"
 
-export const PARTIESBYNIVEAU = "http://localhost:3320/api/party"
+export const PARTYBYNIVEAU = "http://localhost:3320/api/party"
 export const PROFILEPARTIES = "http://localhost:3320/api/profile/parties"
 
 
