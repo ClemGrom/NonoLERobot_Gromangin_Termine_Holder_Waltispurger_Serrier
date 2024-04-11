@@ -15,7 +15,7 @@ router
 // Route pour récupérer une partie par son ID
 router
     .route("/party")
-    .get(getPartyByNiveauAction)
+    .post(getPartyByNiveauAction)
     .all((req, res, next) => next(405));
 
 //filtre dispo sur le status

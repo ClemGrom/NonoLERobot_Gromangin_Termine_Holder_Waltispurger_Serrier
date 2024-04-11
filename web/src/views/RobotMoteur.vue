@@ -124,11 +124,6 @@
               @click="startLevel(4)">Niveau 5</button>
 
           </div>
-          <div v-if="loggedIn">
-            <p>loggedIn : {{loggedIn}}</p>
-            <button @click="saveParty" class="mb-4 max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 dark:dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105">
-              Sauvegarder la partie</button>
-          </div>
         </div>
       </div>
     </div>
@@ -181,8 +176,10 @@ export default {
     async saveParty(index, user_email) {
       if (this.loggedIn){
         try {
+          //index++;
+          console.log(index);
 
-          const getResponse = await this.$api.get(PARTYBYNIVEAU, {
+          const getResponse = await this.$api.post(PARTYBYNIVEAU, {
             user_email: user_email,
             niveau: index,
           });
@@ -190,13 +187,13 @@ export default {
           if (getResponse.status === 200 && getResponse.data) {
             // Si des données sont renvoyées, cela signifie qu'une partie existe déjà
             // Effectuer une requête PATCH pour mettre à jour la partie existante
-            const patchResponse = await this.$api.patch(PARTYBYNIVEAU, {
+            const patchResponse = await this.$api.patch(PARTIES, {
               user_email: user_email,
               niveau: index,
               // Ajoutez ici les données à mettre à jour
               status: "FINISHED",
               score: localStorage.getItem("score"),
-              temps: localStorage.getItem("timerFinal"),
+              temps: localStorage.getItem("timer"),
               capteurDlongeur: localStorage.getItem("tailleSensorDroit"),
               capteurGlongeur: localStorage.getItem("tailleSensorGauche"),
               capteurDangle: localStorage.getItem("degresDroit"),
@@ -223,6 +220,7 @@ export default {
             }
           }
         } catch (error) {
+          console.error(error)
           this.$toast.error('Echec de l\'enregistrement de la partie dans la base de données');
         }
     }
@@ -250,9 +248,10 @@ export default {
       this.game.scene.stop(this.scenes[this.currentSceneIndex]);
       this.currentSceneIndex = (this.currentSceneIndex + 1) % this.scenes.length;
       this.game.scene.start(this.scenes[this.currentSceneIndex]);
+      this.saveParty(this.currentSceneIndex, this.userEmail); // Appeler saveParty avec les données appropriées
     },
     startLevel(levelIndex) {
-      localStorage.clear();
+      //localStorage.clear();
       if (levelIndex < 0 || levelIndex >= this.scenes.length) {
         console.error(`Invalid level index: ${levelIndex}`);
         return;
@@ -263,16 +262,16 @@ export default {
           this.game.scene.stop(scene);
         }
       });
-
       this.currentSceneIndex = levelIndex;
       this.game.scene.start(this.scenes[this.currentSceneIndex]);
-      this.saveParty(levelIndex, this.user_email); // Appeler saveParty avec les données appropriées
+      console.log(levelIndex)
+      this.saveParty(levelIndex, this.userEmail); // Appeler saveParty avec les données appropriées
     },
     restart() {
       localStorage.clear();
       this.game.scene.stop(this.scenes[this.currentSceneIndex]);
       this.game.scene.start(this.scenes[this.currentSceneIndex]);
-      this.saveParty(this.currentSceneIndex, this.user_email); // Appeler saveParty avec les données appropriées
+      this.saveParty(this.currentSceneIndex, this.userEmail); // Appeler saveParty avec les données appropriées
     },
     saveValues() {
       localStorage.setItem('tailleSensorGauche', this.numberValue1);
@@ -280,6 +279,8 @@ export default {
       localStorage.setItem('degresGauche', this.rangeValue1);
       localStorage.setItem('degresDroit', this.rangeValue2);
       localStorage.setItem('degres2Touche', this.rangeValue3);
+      localStorage.setItem('score', 0);
+      localStorage.setItem('timer', 0);
       console.log('Values saved');
     },
   },
