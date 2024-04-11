@@ -11,7 +11,7 @@ export class LevelFinish extends Scene
     }
 
     create() {
-        this.scoreFinal = parseInt(localStorage.getItem('scoreTotal'));
+      
         this.scoreFinal = useRobotStore().score;
         
         this.timerFinal = useRobotStore().temps;
