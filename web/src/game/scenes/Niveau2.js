@@ -29,8 +29,6 @@ export class Niveau2 extends Scene {
     this.degres2SensorsTouche = localStorage.getItem("degres2Touche") || false;
     this.vitesseRobot = 100;
 
-
-
     this.defaultangleGauche = 45;
     this.defaultangleDroit = 45;
 
