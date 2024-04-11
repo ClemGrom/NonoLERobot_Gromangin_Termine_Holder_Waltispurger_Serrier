@@ -302,7 +302,9 @@ export class Niveau5 extends Scene {
   }
   
   changeScene() {
-    useRobotStore.updateTimer(100-this.timer);
+    useRobotStore().updateScore(100 - this.timer);
+    useRobotStore().updateTemps(formattedTime);
+
         localStorage.setItem("score", 100 - this.timer);
     const hours = Math.floor(this.timer / 3600);
     const minutes = Math.floor((this.timer % 3600) / 60);
