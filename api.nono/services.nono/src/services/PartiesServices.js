@@ -7,19 +7,12 @@ export const getParty = async (user_email, niveau) => {
     return db('parties').where({'user_email': user_email, 'niveau': niveau}).first();
 };
 
-export const getUserParties = async (user_email, status) => {
-    let query = db('parties').select('*').where('user_email', '=', user_email);
-
-    if (status) {
-        query = query.where('status', '=', status);
-    }
-
-    return query;
+export const getUserParties = async (user_email) => {
+    return db('parties').select('*').where('user_email', '=', user_email);
 };
 
-export const updateParty = async (user_email, niveau, status, temps, score, capteurGlongeur, capteurGangle, capteurDlongeur, capteurDangle) => {
+export const updateParty = async (user_email, niveau, temps, score, capteurGlongeur, capteurGangle, capteurDlongeur, capteurDangle) => {
     await db('parties').where({ 'user_email': user_email, 'niveau': niveau }).update({
-        status: status,
         temps: temps,
         score: score,
         capteurGlongeur: capteurGlongeur,
@@ -40,7 +33,6 @@ export const createParty = async (niveau, user_email) => {
     const insertedPartie = await db('parties').insert({
         user_email: user_email,
         niveau: niveau,
-        status: "CREATED",
         capteurGlongeur: defaultCapteurLengthValue,
         capteurGangle: defaultCapteurAngleValue,
         capteurDlongeur: defaultCapteurLengthValue,
