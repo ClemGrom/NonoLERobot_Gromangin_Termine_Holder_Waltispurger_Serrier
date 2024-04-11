@@ -2,7 +2,7 @@ import express from 'express';
 import getUserPartiesAction from "../actions/getUsersPartiesAction.js";
 import updatePartyAction from "../actions/updatePartyAction.js";
 import createPartyAction from "../actions/createPartyAction.js";
-import getPartyByIdAction from "../actions/getPartyByIdAction.js"; // Import de l'action correspondante
+import getPartyByNiveauAction from "../actions/getPartyByNiveauAction.js"; // Import de l'action correspondante
 
 const router = express.Router();
 
@@ -14,8 +14,8 @@ router
 
 // Route pour récupérer une partie par son ID
 router
-    .route("/parties/:id")
-    .get(getPartyByIdAction)
+    .route("/party")
+    .get(getPartyByNiveauAction)
     .all((req, res, next) => next(405));
 
 //filtre dispo sur le status

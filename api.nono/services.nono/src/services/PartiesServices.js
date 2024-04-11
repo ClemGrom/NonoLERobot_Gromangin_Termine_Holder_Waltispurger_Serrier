@@ -3,8 +3,8 @@ import knexConfig from '../configs/db.config.js'
 
 const db = knex(knexConfig);
 
-export const getPartyById = async (id) => {
-    return db('parties').where('id', '=', id).first();
+export const getParty = async (user_email, niveau) => {
+    return db('parties').where({'user_email': user_email, 'niveau': niveau}).first();
 };
 
 export const getUserParties = async (user_email, status) => {

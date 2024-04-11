@@ -88,6 +88,7 @@
       </div>
     </div>
 
+
     <div class="md:w-3/4 p-4 flex items-center justify-center bg-white rounded-lg flex-grow mx-4">
 
       <div>
@@ -123,6 +124,11 @@
               @click="startLevel(4)">Niveau 5</button>
 
           </div>
+          <div v-if="loggedIn">
+            <p>loggedIn : {{loggedIn}}</p>
+            <button @click="saveParty" class="mb-4 max-sm:text-xs max-sm:mr-1.5 sm:text-base text-white text-2xl font-bold py-2 px-4 rounded-xl bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 dark:dark:shadow-blue-800/80 mr-3 hover:transition duration-300 ease-in-out transform hover:scale-105">
+              Sauvegarder la partie</button>
+          </div>
         </div>
       </div>
     </div>
@@ -130,8 +136,12 @@
 </template>
 
 <script>
-import { onMounted, onUnmounted, ref } from 'vue';
 import StartGame from '../game/main';
+import { useAuthStore } from "@/store/authStore.js";
+
+import {PARTIES} from "@/apiLiens.js";
+
+import{PARTIESBYNIVEAU} from "@/apiLiens.js";
 
 export default {
   data() {
@@ -144,93 +154,100 @@ export default {
         { id: 4, numberValue: 0, rangeValue: 0 },
       ],
       selectedSensor: null,
-
+      game: null,
+      gameStarted: false,
+      currentSceneIndex: 0,
+      scenes: ['Niveau1', 'Niveau2', 'Niveau3', 'Niveau4', 'Niveau5'],
+      numberValue1: localStorage.getItem('tailleSensorGauche') || 50,
+      numberValue2: localStorage.getItem('tailleSensorDroit') || 50,
+      rangeValue1: localStorage.getItem('degresGauche') || 50,
+      rangeValue2: localStorage.getItem('degresDroit') || 50,
+      rangeValue3: localStorage.getItem('degres2Touche'),
     };
   },
-  setup() {
-    const game = ref(null);
-    const gameStarted = ref(false);
-    const currentSceneIndex = ref(0);
-    const scenes = ref(['Niveau1', 'Niveau2', 'Niveau3', 'Niveau4', 'Niveau5']);
-    const numberValue1 = ref(localStorage.getItem('tailleSensorGauche') || 50);
-    const numberValue2 = ref(localStorage.getItem('tailleSensorDroit') || 50);
-    const rangeValue1 = ref(localStorage.getItem('degresGauche') || 50);
-    const rangeValue2 = ref(localStorage.getItem('degresDroit') || 50);
-    const rangeValue3 = ref(localStorage.getItem('degres2Touche'));
+  computed: {
+    loggedIn() {
+      return useAuthStore().isConnected;
+    },
+    userEmail() {
+      return useAuthStore().user_email;
+    }
+  },
+  mounted() {
+    this.chargePartie();
+  },
 
-    onMounted(() => {
-      chargePartie();
-    });
+  methods: {
+    async createParty(index, user_email){
+      try {
+        const response = await this.$api.post(PARTIES, {
+          user_email: this.user_email,
+          niveau: index,
+        });
 
-    const activeButton = ref(null);
+        if (response.status !== 200){
+          this.$toast.error('Echec du stockage de la partie dans la base de données');
+        } else {
+          this.$toast.success('Partie enregistré');
+        }
+      } catch (error) {
+        this.$toast.error('Echec de l\'enregistrement de la partie dans la base de données');
+      }
+    },
 
-    const sensor2touche = (index) => {
+
+
+    sensor2touche(index) {
       if (index === 1) {
-        rangeValue3.value = true
+        this.rangeValue3 = true;
       } else {
-        rangeValue3.value = false
+        this.rangeValue3 = false;
       }
-
-    };
-
-    const chargePartie = () => {
-      if (game.value) {
-        game.value.destroy(true);
-        game.value = null;
+    },
+    chargePartie() {
+      if (this.game) {
+        this.game.destroy(true);
+        this.game = null;
       }
-      saveValues();
-      gameStarted.value = true;
-      game.value = StartGame('game-container');
-    };
-
-    const changeScene = () => {
-      // Stop the current scene
+      this.saveValues();
+      this.gameStarted = true;
+      this.game = StartGame('game-container');
+    },
+    changeScene() {
       localStorage.clear();
-      game.value.scene.stop(scenes.value[currentSceneIndex.value]);
-      currentSceneIndex.value = (currentSceneIndex.value + 1) % scenes.value.length;
-      game.value.scene.start(scenes.value[currentSceneIndex.value]);
-    };
-
-    const startLevel = (levelIndex) => {
+      this.game.scene.stop(this.scenes[this.currentSceneIndex]);
+      this.currentSceneIndex = (this.currentSceneIndex + 1) % this.scenes.length;
+      this.game.scene.start(this.scenes[this.currentSceneIndex]);
+    },
+    startLevel(levelIndex) {
       localStorage.clear();
-      // Ensure the level index is valid
-      if (levelIndex < 0 || levelIndex >= scenes.value.length) {
+      if (levelIndex < 0 || levelIndex >= this.scenes.length) {
         console.error(`Invalid level index: ${levelIndex}`);
         return;
       }
 
-      // Stop all other scenes
-      scenes.value.forEach(scene => {
-        if (game.value.scene.isActive(scene)) {
-          game.value.scene.stop(scene);
+      this.scenes.forEach(scene => {
+        if (this.game.scene.isActive(scene)) {
+          this.game.scene.stop(scene);
         }
       });
 
-      // Start the new level
-      currentSceneIndex.value = levelIndex;
-      game.value.scene.start(scenes.value[currentSceneIndex.value]);
-    };
-
-    const restart = () => {
+      this.currentSceneIndex = levelIndex;
+      this.game.scene.start(this.scenes[this.currentSceneIndex]);
+    },
+    restart() {
       localStorage.clear();
-      // Stop the current scene
-      game.value.scene.stop(scenes.value[currentSceneIndex.value]);
-      game.value.scene.start(scenes.value[currentSceneIndex.value]);
-    };
-
-    const saveValues = () => {
-      localStorage.setItem('tailleSensorGauche', numberValue1.value);
-      localStorage.setItem('tailleSensorDroit', numberValue2.value);
-      localStorage.setItem('degresGauche', rangeValue1.value);
-      localStorage.setItem('degresDroit', rangeValue2.value);
-      localStorage.setItem('degres2Touche', rangeValue3.value);
+      this.game.scene.stop(this.scenes[this.currentSceneIndex]);
+      this.game.scene.start(this.scenes[this.currentSceneIndex]);
+    },
+    saveValues() {
+      localStorage.setItem('tailleSensorGauche', this.numberValue1);
+      localStorage.setItem('tailleSensorDroit', this.numberValue2);
+      localStorage.setItem('degresGauche', this.rangeValue1);
+      localStorage.setItem('degresDroit', this.rangeValue2);
+      localStorage.setItem('degres2Touche', this.rangeValue3);
       console.log('Values saved');
-    };
-
-
-
-
-    return { game, gameStarted, chargePartie, numberValue1, numberValue2, rangeValue1, rangeValue2, rangeValue3, changeScene, restart, startLevel, sensor2touche };
+    },
   },
 };
 </script>
@@ -250,4 +267,4 @@ export default {
   margin-bottom: 10px;
 }
 </style>
-```
+

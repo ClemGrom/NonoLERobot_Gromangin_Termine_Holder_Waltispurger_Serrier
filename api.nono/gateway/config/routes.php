@@ -20,8 +20,8 @@ return function(\Slim\App $app):void {
 
     //PARTIES
 
-    $app->get("/api/parties/{id_party}[/]", MethodPartiesAction::class)
-        ->setName('partyById');
+    $app->get("/api/party", MethodPartiesAction::class)
+        ->setName('partyByNiveau');
 
     $app->post("/api/parties[/]", MethodPartiesAction::class)
         ->setName('createParty');
