@@ -16,10 +16,16 @@ class MethodPartiesAction extends AbstractAction {
 
     public function __invoke(Request $request, Response $response, array $args): Response
     {
-        $headers = $request->getHeaders();
-        $uri = $request->getUri()->getPath();
         $method = $request->getMethod();
+        $uri = $request->getUri()->getPath();
+        $query = $request->getUri()->getQuery();
+        $headers = $request->getHeaders();
         $body = $request->getBody();
+
+        if (!empty($query)) {
+            $uri .= '?' . $query;
+        }
+
         if ($method == 'GET'){
             $data = $this->client->get($uri,["headers"=>$headers,"body"=>$body]);
         }

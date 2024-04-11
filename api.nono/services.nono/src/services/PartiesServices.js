@@ -24,19 +24,15 @@ export const updateParty = async (user_email, niveau, temps, score, capteurGlong
     return db('parties').where({ 'user_email': user_email, 'niveau': niveau }).first();
 }
 
-
-
-
 export const createParty = async (niveau, user_email) => {
-    const defaultCapteurLengthValue = 100;
-    const defaultCapteurAngleValue = 90;
+
     const insertedPartie = await db('parties').insert({
         user_email: user_email,
         niveau: niveau,
-        capteurGlongeur: defaultCapteurLengthValue,
-        capteurGangle: defaultCapteurAngleValue,
-        capteurDlongeur: defaultCapteurLengthValue,
-        capteurDangle: defaultCapteurAngleValue
+        capteurGlongeur: null,
+        capteurGangle: null,
+        capteurDlongeur: null,
+        capteurDangle: null,
     });
 
     return db('parties').where('id', insertedPartie[0]).first();

@@ -137,7 +137,7 @@ import { useRobotStore } from '@/store/robotStore';
 import { mapActions } from "pinia";
     
 
-import {PARTIES} from "@/apiLiens.js";
+import { PARTIESCREATE, PARTIESUPDATE } from "@/apiLiens.js";
 
 import{PARTYBYNIVEAU} from "@/apiLiens.js";
 
@@ -178,60 +178,61 @@ export default {
   methods: {
     ...mapActions(useRobotStore, ["updateScore", "updateTemps", "updateCapteurGlongueur", "updateCapteurDlongueur", "updateCapteurGangle", "updateCapteurDangle", "updateStatus"]),
 
-
     async saveParty(index, user_email) {
-      if (this.loggedIn){
+      if (this.loggedIn) {
         try {
           //index++;
           console.log(index);
 
-          const getResponse = await this.$api.post(PARTYBYNIVEAU, {
-            user_email: user_email,
-            niveau: index,
-          });
+          const getResponse = await this.$api.get(`${PARTYBYNIVEAU}?user_email=${user_email}&niveau=${index}`);
+          console.log("res status : ",getResponse.status)
+          if (getResponse.status === 200) {
+            console.log("res data : ",getResponse.data)
+            if (getResponse.data) {
+              // Si des données sont renvoyées, cela signifie qu'une partie existe déjà
+              // Effectuer une requête PATCH pour mettre à jour la partie existante
+              const patchResponse = await this.$api.patch(PARTIESUPDATE, {
+                user_email: user_email,
+                niveau: index,
+                // Ajoutez ici les données à mettre à jour
+                score: useRobotStore().score || 0,
+                temps: useRobotStore().temps || 0,
+                capteurDlongeur: useRobotStore().capteurDlongueur || 50,
+                capteurGlongeur: useRobotStore().capteurGlongueur || 50,
+                capteurDangle: useRobotStore().capteurDangle || "50",
+                capteurGangle: useRobotStore().capteurGangle || "50",
+              });
 
-          if (getResponse.status === 200 && getResponse.data) {
-            // Si des données sont renvoyées, cela signifie qu'une partie existe déjà
-            // Effectuer une requête PATCH pour mettre à jour la partie existante
-            const patchResponse = await this.$api.patch(PARTIES, {
-              user_email: user_email,
-              niveau: index,
-              // Ajoutez ici les données à mettre à jour
-              status: "FINISHED",
-              
-              score: useRobotStore().score || 0,
-              temps: useRobotStore().temps || 0,
-              capteurDlongeur: useRobotStore().capteurDlongueur || 50,
-              capteurGlongeur: useRobotStore().capteurGlongueur || 50,
-              capteurDangle: useRobotStore().capteurDangle || 50,
-              capteurGangle: useRobotStore().capteurGangle || 50,
-            });
-
-            if (patchResponse.status !== 200) {
-              this.$toast.error('Echec de la mise à jour de la partie dans la base de données');
+              console.log("patch res status : ",getResponse.status)
+              if (patchResponse.status !== 200) {
+                this.$toast.error('Echec de la mise à jour de la partie dans la base de données');
+              } else {
+                this.$toast.success('Partie mise à jour');
+              }
             } else {
-              this.$toast.success('Partie mise à jour');
+              // Si aucune donnée n'est renvoyée, cela signifie qu'aucune partie n'existe
+              // Effectuer une requête POST pour créer une nouvelle partie
+              const postResponse = await this.$api.post(PARTIESCREATE, {
+                user_email: user_email,
+                niveau: index,
+              });
+
+              if (postResponse.status !== 200) {
+                this.$toast.error('Echec du stockage de la partie dans la base de données');
+              } else {
+                this.$toast.success('Partie enregistrée');
+              }
             }
           } else {
-            // Si aucune donnée n'est renvoyée, cela signifie qu'aucune partie n'existe
-            // Effectuer une requête POST pour créer une nouvelle partie
-            const postResponse = await this.$api.post(PARTIES, {
-              user_email: user_email,
-              niveau: index,
-            });
-
-            if (postResponse.status !== 200) {
-              this.$toast.error('Echec du stockage de la partie dans la base de données');
-            } else {
-              this.$toast.success('Partie enregistrée');
-            }
+            // Si le statut de la réponse n'est pas 200, il y a une erreur dans la requête
+            console.error('Erreur lors de la récupération de la partie:', getResponse.statusText);
+            this.$toast.error('Echec de l\'enregistrement de la partie dans la base de données');
           }
         } catch (error) {
-          console.error(error)
+          console.error('Erreur lors de la récupération de la partie:', error);
           this.$toast.error('Echec de l\'enregistrement de la partie dans la base de données');
         }
-    }
-
+      }
     },
 
     sensor2touche(index) {
@@ -251,7 +252,7 @@ export default {
       this.game = StartGame('game-container');
     },
     changeScene() {
-      localStorage.clear();
+      //localStorage.clear();
       this.game.scene.stop(this.scenes[this.currentSceneIndex]);
       this.currentSceneIndex = (this.currentSceneIndex + 1) % this.scenes.length;
       this.game.scene.start(this.scenes[this.currentSceneIndex]);
@@ -287,13 +288,14 @@ export default {
       useRobotStore().updateCapteurDangle(this.rangeValue2);
       useRobotStore().updateScore(0);
       useRobotStore().updateTemps(0);
-      // localStorage.setItem('tailleSensorGauche', this.numberValue1);
-      // localStorage.setItem('tailleSensorDroit', this.numberValue2);
-      // localStorage.setItem('degresGauche', this.rangeValue1);
-      // localStorage.setItem('degresDroit', this.rangeValue2);
-      // localStorage.setItem('degres2Touche', this.rangeValue3);
-      // localStorage.setItem('score', 0);
-      // localStorage.setItem('timer', 0);
+      /**
+      localStorage.setItem('tailleSensorGauche', this.numberValue1);
+      localStorage.setItem('tailleSensorDroit', this.numberValue2);
+      localStorage.setItem('degresGauche', this.rangeValue1);
+      localStorage.setItem('degresDroit', this.rangeValue2);
+      localStorage.setItem('degres2Touche', this.rangeValue3);
+      localStorage.setItem('score', 0);
+      localStorage.setItem('timer', 0);**/
       console.log('Values saved');
     },
   },

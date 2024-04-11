@@ -7,15 +7,19 @@ import getPartyByNiveauAction from "../actions/getPartyByNiveauAction.js"; // Im
 const router = express.Router();
 
 router
-    .route("/parties")
+    .route("/parties/create")
     .post(createPartyAction)
+    .all((req, res, next) => next(405));
+
+router
+    .route("/parties/update")
     .patch(updatePartyAction)
     .all((req, res, next) => next(405));
 
 // Route pour récupérer une partie par son ID
 router
     .route("/party")
-    .post(getPartyByNiveauAction)
+    .get(getPartyByNiveauAction)
     .all((req, res, next) => next(405));
 
 //filtre dispo sur le status

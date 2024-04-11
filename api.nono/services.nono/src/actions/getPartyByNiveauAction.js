@@ -2,18 +2,22 @@ import { getParty } from "../services/PartiesServices.js";
 
 export default async (req, res, next) => {
     try {
-        const user_email = req.body.user_email;
-        const niveau = req.body.niveau;
+        const { user_email, niveau } = req.query;
 
-        const party = await getParty(user_email, niveau); // Appel de la fonction pour récupérer la partie par son ID
+        if (!user_email || !niveau) {
+            return res.status(400).json({ message: "Les paramètres user_email et niveau sont requis" });
+        }
+
+        const party = await getParty(user_email, niveau);
 
         if (!party) {
-            next(400);
+            return res.status(404).json({ message: "La partie n'a pas été trouvée" });
         }
 
         res.json(party);
     } catch (error) {
         console.log(error);
-        next(500);
+        res.status(500).json({ message: "Erreur interne du serveur" });
     }
 };
+

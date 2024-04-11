@@ -13,8 +13,8 @@ CREATE TABLE `parties`
     `temps`             TIME,
     `score`             FLOAT,
     `capteurGlongeur`   INT,
-    `capteurGangle`     INT,
+    `capteurGangle`     VARCHAR(10),
     `capteurDlongeur`   INT,
-    `capteurDangle`     INT,
+    `capteurDangle`     VARCHAR(10),
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
