@@ -30,11 +30,12 @@
             <p class="text-lg text-gray-700 mb-4">Quand un capteur de Nono touche un obstacle, le robot tourne selon
                 l'angle défini par l'utilisateur. La taille du capteur change selon la distance entre l'obstacle et Nono
                 : plus le capteur est court plus le robot va tourner.</p>
-            <h2 class="text-2xl font-semibold mb-2">Batteries</h2>
-            <p class="text-lg text-gray-700 mb-4">Nono a besoin de batteries pour fonctionner. Si Nono n'a plus de
-                batteries il MEURT.
-                Il faut donc faire attention à la consommation de batterie de Nono. </p>
-
+            <h2 class="text-2xl font-semibold mb-2">Barre de vie</h2>
+            <p class="text-lg text-gray-700 mb-4">Nono a besoin de batteries pour fonctionner. Sa barre de vie diminue avec le temps. Il faut donc faire attention à sa consommation de batterie avant qu'il ne s'éteigne. Récupérer des batteries augmente également le score !</p>
+            <div class="flex items-center">
+                <div> Une batterie : <img src="..\assets\images\batterie.png" alt="Batterie" class="mb-4 rounded shadow" /></div>
+                <div class="ml-4"> La barre de vie : <img src="..\assets\images\barredevie.png" alt="Barre de vie" class="mb-4 rounded shadow" /></div>
+            </div>
 
             <h2 class="text-2xl font-semibold mb-2">Mode Simple</h2>
             <div class="flex items-center">
