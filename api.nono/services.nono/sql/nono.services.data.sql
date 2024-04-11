@@ -10,7 +10,6 @@ CREATE TABLE `parties`
     `id`                INT(11) NOT NULL AUTO_INCREMENT,
     `niveau`            INT NOT NULL,
     `user_email`        VARCHAR(128) NOT NULL,
-    `status`            VARCHAR(25),
     `temps`             TIME,
     `score`             FLOAT,
     `capteurGlongeur`   INT,

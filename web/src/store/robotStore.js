@@ -3,7 +3,6 @@ import { defineStore } from 'pinia'
 export const useRobotStore = defineStore("robot", {
     state() {
         return {
-            status: "STARTED",
             temps: 0,
             score: 0,
             capteurGlongueur: 50,
@@ -13,9 +12,6 @@ export const useRobotStore = defineStore("robot", {
         }
     },
     actions: {
-        updateStatus(status){
-            this.status = status;
-        },
         updateTemps(temps){
             this.temps = temps;
         },
@@ -38,7 +34,7 @@ export const useRobotStore = defineStore("robot", {
     persist: {
         enabled: true,
         strategies: [
-            {storage: localStorage, paths:['status', 'temps', 'score', 'capteurGlongueur', 'capteurDlongueur', 'capteurGangle', 'capteurDangle']}
+            {storage: localStorage, paths:['temps', 'score', 'capteurGlongueur', 'capteurDlongueur', 'capteurGangle', 'capteurDangle']}
         ]
     }
 })
