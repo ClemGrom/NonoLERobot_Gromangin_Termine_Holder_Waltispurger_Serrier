@@ -164,8 +164,25 @@ export class Niveau3 extends Scene {
       lineStyle: { width: 2, color: 0x00ff00 },
     });
 
+    // Crée le texte de la barre de vie
+    this.add.text(780, 0, "Vie : ", {
+      fontSize: "28px",
+      fontFamily: "Arial",
+      fill: "#ffffff",
+      stroke: "#000000",
+      strokeThickness: 4,
+      shadow: {
+        offsetX: 2,
+        offsetY: 2,
+        color: '#000',
+        blur: 2,
+        stroke: true,
+        fill: true
+      }
+    });
+
     // Crée le texte du score
-    this.scoreText = this.add.text(650, 0, "Score : 0", {
+    this.scoreText = this.add.text(400, 0, "Score : 0", {
       fontSize: "28px",
       fontFamily: "Arial",
       fill: "#ffffff",
@@ -182,7 +199,7 @@ export class Niveau3 extends Scene {
     });
 
     // Crée le texte du timer
-    this.TimerText = this.add.text(0, 0, "Timer : 0s", {
+    this.TimerText = this.add.text(10, 0, "Timer : 0s", {
       fontSize: "28px",
       fontFamily: "Arial",
       fill: "#ffffff",
@@ -444,7 +461,7 @@ export class Niveau3 extends Scene {
     // Dessine la nouvelle barre de santé
     for (let i = 0; i < healthBars; i++) {
       this.vieGraphics.fillStyle(0xff0000); 
-      this.vieGraphics.fillRect(925 - i * 20, 5, 15, 15);
+      this.vieGraphics.fillRect(925 - i * 20, 10, 15, 15);
     }
   }
 
@@ -463,7 +480,13 @@ export class Niveau3 extends Scene {
     this.stopEnergy = true;
     let scoreTotal=this.score+this.energy;
     localStorage.setItem("scoreTotal", scoreTotal);
-    localStorage.setItem("timer", this.timer);
+    const hours = Math.floor(this.timer / 3600);
+    const minutes = Math.floor((this.timer % 3600) / 60);
+    const seconds = Math.floor(this.timer % 60);
+
+    const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+    localStorage.setItem("timer", formattedTime);
     localStorage.setItem("currentSceneIndex", 2);
     this.scene.start("LevelFinish");
   }

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Robot Model</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.4.0/backbone-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jointjs/3.4.1/joint.min.js"></script>
+    <style>
+        #paper {
+            width: 800px;
+            height: 600px;
+            border: 1px solid #aaa;
+        }
+        .link-weight-input {
+            width: 40px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div id="paper"></div>
+
+<script>
+    $(document).ready(function() {
+        var graph = new joint.dia.Graph;
+        var paper = new joint.dia.Paper({
+            el: $('#paper'),
+            width: 800,
+            height: 600,
+            gridSize: 1,
+            model: graph,
+        });
+
+        // Create robot
+        var robot = new joint.shapes.standard.Rectangle();
+        robot.position(100, 100);
+        robot.resize(300, 250);
+        robot.attr({
+            body: {
+                fill: 'lightgray'
+            },
+            label: {
+                text: 'Robot',
+                fill: 'black',
+                fontSize: 25,
+                fontWeight: 'bold',
+            }
+        });
+        graph.addCell(robot);
+
+        // Create sensors
+        var sensor1 = new joint.shapes.standard.Rectangle();
+        sensor1.position(100, 80);
+        sensor1.resize(70, 20);
+        sensor1.attr({
+            body: {
+                fill: 'orange'
+            },
+            label: {
+                text: 'Sensor 1',
+                fill: 'black'
+            }
+        });
+        sensor1.set('selectable', false);
+        graph.addCell(sensor1);
+
+        var sensor2 = new joint.shapes.standard.Rectangle();
+        sensor2.position(190, 70);
+        sensor2.resize(40, 20);
+        sensor2.attr({
+            body: {
+                fill: 'orange'
+            },
+            label: {
+                text: 'Sensor 2',
+                fill: 'black'
+            }
+        });
+        sensor2.set('selectable', false);
+        graph.addCell(sensor2);
+
+        var sensor3 = new joint.shapes.standard.Rectangle();
+        sensor3.position(250, 70);
+        sensor3.resize(40, 20);
+        sensor3.attr({
+            body: {
+                fill: 'orange'
+            },
+            label: {
+                text: 'Sensor 3',
+                fill: 'black'
+            }
+        });
+        sensor3.set('selectable', false);
+        graph.addCell(sensor3);
+
+        // Create motors
+        var motorLeft = new joint.shapes.standard.Rectangle();
+        motorLeft.position(80, 130);
+        motorLeft.resize(20, 40);
+        motorLeft.attr({
+            body: {
+                fill: 'green'
+            },
+            label: {
+                text: 'Motor L',
+                fill: 'black'
+            }
+        });
+        motorLeft.set('selectable', false);
+        graph.addCell(motorLeft);
+
+        var motorRight = new joint.shapes.standard.Rectangle();
+        motorRight.position(310, 130);
+        motorRight.resize(20, 40);
+        motorRight.attr({
+            body: {
+                fill: 'green'
+            },
+            label: {
+                text: 'Motor R',
+                fill: 'black'
+            }
+        });
+        motorRight.set('selectable', false);
+        graph.addCell(motorRight);
+
+        // Create links with labels
+        var link1 = new joint.dia.Link({
+            source: { id: sensor1.id },
+            target: { id: motorLeft.id },
+            labels: [{ position: 0.5, attrs: { text: { text: 'Weight: 0.8' }, rect: { fill: 'white' } } }]
+        });
+        graph.addCell(link1);
+
+        var link2 = new joint.dia.Link({
+            source: { id: sensor2.id },
+            target: { id: motorLeft.id },
+            labels: [{ position: 0.5, attrs: { text: { text: 'Weight: 0.6' }, rect: { fill: 'white' } } }]
+        });
+        graph.addCell(link2);
+
+        var link3 = new joint.dia.Link({
+            source: { id: sensor3.id },
+            target: { id: motorRight.id },
+            labels: [{ position: 0.5, attrs: { text: { text: 'Weight: 0.9' }, rect: { fill: 'white' } } }]
+        });
+        graph.addCell(link3);
+
+        // Initialize link weights
+        var linkWeights = {
+            link1: 0.8,
+            link2: 0.6,
+            link3: 0.9
+        };
+
+        // Function to update link weight
+        function updateLinkWeight(link, weight) {
+            var labels = link.get('labels');
+            if (labels && labels.length > 0) {
+                labels.forEach(function(label) {
+                    label.attrs.text.text = 'Weight: ' + weight;
+                });
+            } else {
+                link.label(0, {
+                    position: 0.5,
+                    attrs: {
+                        text: { text: 'Weight: ' + weight },
+                        rect: { fill: 'white' }
+                    }
+                });
+            }
+            link.attr('.label/text', 'Weight: ' + weight);
+        }
+
+
+
+        // Update link weights on button click
+        $('#updateWeightsBtn').click(function() {
+            updateLinkWeight(link1, linkWeights.link1);
+            updateLinkWeight(link2, linkWeights.link2);
+            updateLinkWeight(link3, linkWeights.link3);
+        });
+
+        // Event listener for input changes
+        $('.link-weight-input').on('input', function() {
+            var id = $(this).attr('id');
+            var weight = parseFloat($(this).val());
+            if (!isNaN(weight)) {
+                linkWeights[id] = weight;
+            }
+        });
+    });
+</script>
+
+<!-- Input fields for link weights -->
+<input id="link1" class="link-weight-input" type="text" value="0.8">
+<input id="link2" class="link-weight-input" type="text" value="0.6">
+<input id="link3" class="link-weight-input" type="text" value="0.9">
+
+<!-- Button to update link weights -->
+<button id="updateWeightsBtn">Update Weights</button>
+
+</body>
+</html>
