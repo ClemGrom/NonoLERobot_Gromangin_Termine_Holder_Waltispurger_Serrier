@@ -27,7 +27,7 @@ services:
     image: 'canals/php:8.2'
     env_file: ./auth.env
     ports:
-      - '3320:80'
+      - '38210:80'
     volumes:
       - ../api.nono/gateway:/var/www/
       - ../api.nono/gateway/public:/var/www/html
@@ -42,7 +42,7 @@ services:
     image: adminer
     command: php -S 0.0.0.0:8080 -t /var/www/html
     ports:
-      - '8081:8080' ## 8081 40510
+      - '40510:8081' ## 8081 40510
     networks:
       - nono.net
 
@@ -51,7 +51,7 @@ services:
     command: '--default-authentication-plugin=mysql_native_password --character-set-server=utf8 --collation-server=utf8_general_ci'
     env_file: ./services.env
     ports:
-      - '3311:3306' ## 40509
+      - '40509:3306' ## 40509
     networks:
       - nono.net
     volumes:
@@ -66,7 +66,7 @@ services:
     volumes:
       - ../api.nono/services.nono:/usr/app
     ports:
-      - '3333:3333'
+      - '40508:3333'
     networks:
       - nono.net
     env_file:
@@ -84,8 +84,8 @@ services:
     image: 'canals/php:8.2'
     env_file: ./auth.env
     ports:
-      - '2082:80' ## 2082 45053
-      - '1444:443' ## 1444 45054
+      - '45053:2082' ## 2082 45053
+      - '54054:1444' ## 1444 45054
     volumes:
       - ../api.nono/auth.nono:/var/www/
       - ../api.nono/auth.nono/public:/var/www/html
@@ -103,7 +103,7 @@ services:
     command: '--default-authentication-plugin=mysql_native_password --character-set-server=utf8 --collation-server=utf8_general_ci'
     env_file: ./auth.env
     ports:
-      - '45055:3306' ## 3309
+      - '45055:3309' ## 3309
     networks:
       - nono.net
     volumes:

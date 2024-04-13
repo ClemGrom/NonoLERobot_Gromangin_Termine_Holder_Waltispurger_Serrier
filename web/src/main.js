@@ -23,7 +23,7 @@ import { useRobotStore } from "@/store/robotStore.js";
 const robotStore = useRobotStore();
 
 app.use(ApiPlugins, {
-    baseURL: 'http://localhost:3320/'
+    baseURL: 'http://localhost:38210/'
 })
 
 app.use(toast)
