@@ -289,7 +289,6 @@ export default {
       });
       this.currentSceneIndex = levelIndex;
       this.game.scene.start(this.scenes[this.currentSceneIndex]);
-      console.log(levelIndex)
       this.saveParty(levelIndex, this.userEmail); // Appeler saveParty avec les données appropriées
     },
     restart() {
@@ -305,14 +304,6 @@ export default {
       useRobotStore().updateCapteurDangle(this.rangeValue2);
       useRobotStore().updateScore(0);
       useRobotStore().updateTemps(0);
-      /**
-      localStorage.setItem('tailleSensorGauche', this.numberValue1);
-      localStorage.setItem('tailleSensorDroit', this.numberValue2);
-      localStorage.setItem('degresGauche', this.rangeValue1);
-      localStorage.setItem('degresDroit', this.rangeValue2);
-      localStorage.setItem('degres2Touche', this.rangeValue3);
-      localStorage.setItem('score', 0);
-      localStorage.setItem('timer', 0);**/
       console.log('Values saved');
     },
   },

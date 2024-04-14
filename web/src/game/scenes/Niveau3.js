@@ -398,7 +398,6 @@ export class Niveau3 extends Scene {
     }
 // Si les deux capteurs sont activés, ajuste l'angle du robot en fonction de leur état
     if (sensorsActivated === 2) {
-      console.log(this.degres2SensorsTouche);
       if (this.degres2SensorsTouche) {
         this.robot.angle += 40;
       } else {
@@ -469,7 +468,6 @@ export class Niveau3 extends Scene {
   // Consomme de l'énergie à chaque frame
   consumeEnergy() {
     this.energy -= 1; 
-    // console.log(this.energy);
     // Si l'énergie est inférieure ou égale à 0, arrête le robot
     if (this.energy <= 0) {
       this.stopEnergy = true; 

@@ -252,7 +252,6 @@ export class Niveau5 extends Scene {
     }
     // Si les deux capteurs sont activés, ajuste l'angle du robot en fonction de leur état
     if (sensorsActivated === 2) {
-      console.log(this.degres2SensorsTouche);
       if (this.degres2SensorsTouche) {
         this.robot.angle += 40;
       } else {

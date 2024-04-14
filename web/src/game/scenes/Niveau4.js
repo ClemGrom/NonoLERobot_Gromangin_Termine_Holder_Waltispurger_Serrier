@@ -164,11 +164,9 @@ export class Niveau4 extends Scene {
     if (this.frameCount % 10 === 0) {
       if (this.longueurSensor1 < this.maxlongueurSensor1) {
         this.longueurSensor1 += 5;
-        // console.log(this.longueurSensor1);
       }
       if (this.longueurSensor2 < this.maxlongueurSensor2) {
         this.longueurSensor2 += 5;
-        // console.log(this.longueurSensor2);
       }
     }
 
@@ -235,11 +233,9 @@ export class Niveau4 extends Scene {
   adjustSensorLength(sensorName) {
     if (sensorName === "sensor1" && this.longueurSensor1 > 0) {
       this.longueurSensor1 -= 5;
-      // console.log(this.longueurSensor1);
     }
     if (sensorName === "sensor2" && this.longueurSensor2 > 0) {
       this.longueurSensor2 -= 5;
-      // console.log(this.longueurSensor2);
     }
   }
 
@@ -282,14 +278,12 @@ export class Niveau4 extends Scene {
           this.robot.angle += angleChange * normalizedDistance;
           this.adjustSensorLength(sensorName);
           sensorsActivated++;
-          // console.log(`${sensorName} is touching a tile or prop at distance ${distance}`);
           break;
         }
       }
     }
 
     if (sensorsActivated === 2) {
-      console.log(this.degres2SensorsTouche)
       if (this.degres2SensorsTouche) {
         this.robot.angle += 40;
       } else{
